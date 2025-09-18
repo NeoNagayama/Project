@@ -1,6 +1,28 @@
 #include "Clear.h"
 #include "DxLib.h"
-void Clear::test()
+#include "fontLoader.h"
+Button Next;
+Button BackToTitle;
+bool isNextSelected = true;
+void ClearInitialProcess()
 {
-    DrawBox(234, 124, 745, 520, GetColor(255, 122, 0), 1);
+    Next.SetButtonPosition(VGet(100, 600, 1), VGet(910, 800, 1), VGet(140, 620, 1), VGet(870, 780, 1));
+    BackToTitle.SetButtonPosition(VGet(1010, 600, 1), VGet(1820, 800, 1), VGet(1050, 620, 1), VGet(1780, 780, 1));
+}
+void ClearMainProcess()
+{
+    if (Input_GetKeyboardDown(KEY_INPUT_D) && isNextSelected == true)
+    {
+        isNextSelected = false;
+    }
+    if (Input_GetKeyboardDown(KEY_INPUT_A) && isNextSelected == false)
+    {
+        isNextSelected = true;
+    }
+    SetBackgroundColor(150, 160, 180, 50);
+    Next.mainProcess(isNextSelected, true,60);
+    Next.SetText("Next Stage");
+    BackToTitle.mainProcess(!isNextSelected, true,60);
+    BackToTitle.SetText("Title");
+    textPositionSet(0, 1920, "STAGE1 CLEAR", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 170));
 }

@@ -11,7 +11,7 @@ private:
     COLOR16 SelectedColor = GetColor(4, 202, 206);
     bool isSelected = false;
 public:
-    void mainProcess(bool isSelected,bool shadow);
+    void mainProcess(bool isSelected,bool shadow,int yoffset);
     void SetButtonPosition(VECTOR SelectedPos, VECTOR SelectedPos2, VECTOR NSelectedPos, VECTOR NSelectedPos2);
     float BoxSizeChange(float actual,float target,bool mode,float from);
     void SetText(std::string text);
