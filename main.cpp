@@ -16,34 +16,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetCameraNearFar(0.1f, 1000.0f);
     SetUseLighting(true);
     COLOR_F col = { 1,1,1,1 };
-    enum SCENES
-    {
-        SCENE_TITLE,
-        SCENE_STAGE1,
-        SCENE_GAMEOVER,
-        SCENE_CLEAR
-    };
-    Stage1 stage;
     gameOver gameover;
-    Clear clear;
     Title title;
     fontLoad();
     SetGlobalAmbientLight(GetColorF(1,0,0,1));
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));
     title.initialProcess();
+    ClearInitialProcess();
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
         Input_UpdateKeyboard();
         switch (scene) {
         case SCENE_STAGE1:
-           
-            stage.test();
+            Stage1MainProcess();
                 break;
         case SCENE_GAMEOVER:
             gameover.test();
             break;
         case SCENE_CLEAR:
-            clear.test();
+            ClearMainProcess();
             break;
         default:
             title.test();

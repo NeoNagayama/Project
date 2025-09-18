@@ -1,8 +1,7 @@
 #pragma once
 #include "DxLib.h"
-class Stage1
-{
-private:
-public:
-    void test();
-};
+
+extern bool isStarted;
+extern bool isEnding;
+void test();
+void Stage1MainProcess();
