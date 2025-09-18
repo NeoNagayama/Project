@@ -1,0 +1,61 @@
+#include "Button.h"
+#include "DxLib.h"
+#include "fontLoader.h"
+
+void Button::mainProcess(bool isSelected, bool shadow)
+{
+    if (isSelected)
+    {
+        ActualPosition = VGet(BoxSizeChange(ActualPosition.x, SelectedPosition1.x, false, NotSelectedPosition1.x), BoxSizeChange(ActualPosition.y, SelectedPosition1.y, false, NotSelectedPosition1.y),1);
+        ActualPosition2 = VGet(BoxSizeChange(ActualPosition2.x, SelectedPosition2.x, true, NotSelectedPosition2.x), BoxSizeChange(ActualPosition2.y, SelectedPosition2.y, true, NotSelectedPosition2.y), 1);
+        DrawBox(Button::ActualPosition.x, Button::ActualPosition.y, Button::ActualPosition2.x, Button::ActualPosition2.y, Button::SelectedColor, 1);
+        textPositionSet(ActualPosition.x, ActualPosition2.x, buttonText, BiggerFontHandle, SORT_CENTER, ActualPosition.y + 30, true, GetColor(255, 255, 255));
+    }
+    else
+    {
+        ActualPosition = VGet(BoxSizeChange(ActualPosition.x, NotSelectedPosition1.x, true, SelectedPosition1.x), BoxSizeChange(ActualPosition.y, NotSelectedPosition1.y, true, SelectedPosition1.y), 1);
+        ActualPosition2 = VGet(BoxSizeChange(ActualPosition2.x, NotSelectedPosition2.x, false, SelectedPosition2.x), BoxSizeChange(ActualPosition2.y, NotSelectedPosition2.y, false, SelectedPosition2.y), 1);
+        DrawBox(Button::ActualPosition.x, Button::ActualPosition.y, Button::ActualPosition2.x, Button::ActualPosition2.y, Button::NotSelectedColor, 1);
+        textPositionSet(ActualPosition.x, ActualPosition2.x, buttonText, fontHandle, SORT_CENTER, ActualPosition.y + 15, true, GetColor(122,122,122));
+    }
+    return;
+}
+void Button::SetButtonPosition(VECTOR SelectedPos, VECTOR SelectedPos2, VECTOR NSelectedPos, VECTOR NSelectedPos2)
+{
+    Button::SelectedPosition1 = SelectedPos;
+    Button::SelectedPosition2 = SelectedPos2;
+    Button::NotSelectedPosition1 = NSelectedPos;
+    Button::NotSelectedPosition2 = NSelectedPos2;
+    ActualPosition = NotSelectedPosition1;
+    ActualPosition2 = NotSelectedPosition2;
+    return;
+}
+float Button::BoxSizeChange(float actual, float target, bool mode ,float from)
+{
+    float rate;
+    if (mode)
+    {
+        rate = (target - from) /4;
+    }
+    else
+    {
+        rate = (from - target) / 4;
+    }
+    if (mode && actual < target)
+    {
+        actual += rate;
+    }
+    else if (!mode && actual > target)
+    {
+        actual -= rate;
+    }
+    else
+    {
+        actual = target;
+    }
+    return actual;
+}
+void Button::SetText(std::string text)
+{
+    buttonText = text;
+}
