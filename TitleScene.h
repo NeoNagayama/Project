@@ -7,6 +7,7 @@ class Title
 private:
     int color = 255;
     bool isStartSelected = true;
+    bool sceneChanging = false;
     Button Start;
     Button Exit;
 public:
