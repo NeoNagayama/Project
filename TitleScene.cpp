@@ -4,6 +4,7 @@
 #include "Button.h"
 #include "fontLoader.h"
 #include "main.h"
+#include "ui.h"
 
 void Title::test()
 {
@@ -34,6 +35,14 @@ void Title::mainProcess()
     textPositionSet(0, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, false, GetColor(255,255,255));
     if (isStartSelected && Input_GetKeyboardDown(KEY_INPUT_SPACE))
     {
-        scene = 1;
+        sceneChanging = true;
+    }
+    if (sceneChanging)
+    {
+        if (fadeout(0.5f))
+        {
+            progress = 0;
+            scene = 1;
+        }
     }
 }

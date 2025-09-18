@@ -1,2 +1,3 @@
 #pragma once
-//test
+extern int progress;
+bool fadeout(float time);
