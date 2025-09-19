@@ -6,57 +6,151 @@
 #include "main.h"
 #include "Clear.h"
 #include "GameOver.h"
+#include "TitleScene.h"
 bool isStarted = true;
 bool isCleared = false;
 bool isDead = false;
-void test()
+bool isPause = false;
+bool PauseControllable = true;
+bool isRestarting = false;
+bool isQuitting = false;
+int choosedButton;
+Button resume;
+Button restart;
+Button Stage1ToTitle;
+enum pause
 {
-    DrawBox(30, 30, 320, 320, GetColor(0, 255, 122), 1);
+    PAUSE_RESUME,
+    PAUSE_RESTART,
+    PAUSE_EXIT
+};
+void Stage1InitialProcess()
+{
+    resume.SetButtonPosition(VGet(960, 540, 1), 400, 100, 0.9f);
+    restart.SetButtonPosition(VGet(960, 740, 1), 400, 100, 0.9f);
+    Stage1ToTitle.SetButtonPosition(VGet(960, 940, 1), 400, 100, 0.9f);
 }
 void Stage1MainProcess()
 {
+
     DrawBox(30, 30, 320, 320, GetColor(0, 255, 122), 1);
     if (isStarted)
     {
         if (fadein(0.5f))
         {
+            progress = 0;
             isStarted = false;
         }
     }
     else
     {
-        if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
+        if (!isPause)
         {
-            isCleared = true;
-        }
-        if (isCleared)
-        {
-            if(fadeout(1))
+            if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
             {
-                ClearInitialize();
-                progress = 0;
-                scene = SCENE_CLEAR;
+                isCleared = true;
+            }
+            if (isCleared)
+            {
+                if (fadeout(1))
+                {
+                    ClearInitialize();
+                    progress = 0;
+                    scene = SCENE_CLEAR;
+                }
+            }
+            if (Input_GetKeyboardDown(KEY_INPUT_F))
+            {
+                isDead = true;
+            }
+            if (isDead)
+            {
+                if (fadeout(1))
+                {
+                    GameOverInitialize();
+                    progress = 0;
+                    scene = SCENE_GAMEOVER;
+                }
             }
         }
-        if (Input_GetKeyboardDown(KEY_INPUT_F))
+        else
         {
-            isDead = true;
-        }
-        if (isDead)
-        {
-            if (fadeout(1))
-            {
-                GameOverInitialize();
-                progress = 0;
-                scene = SCENE_GAMEOVER;
+            SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+            DrawBox(0, 0, 1920, 1080, GetColor(0, 0, 0), 1);
+            SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+            resume.mainProcess(choosedButton == PAUSE_RESUME, true, 40);
+            resume.SetText("Resume");
+            restart.mainProcess(choosedButton == PAUSE_RESTART, true, 40);
+            restart.SetText("Restart");
+            Stage1ToTitle.mainProcess(choosedButton == PAUSE_EXIT, true, 40);
+            Stage1ToTitle.SetText("Title");
+            switch (choosedButton) {
+            case PAUSE_RESUME:
+                if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
+                {
+                    isPause = false;
+                    choosedButton = 0;
+                }
+                break;
+            case PAUSE_RESTART:
+                if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
+                {
+                    PauseControllable = false;
+                    isRestarting = true;
+                }
+                break;
+            default:
+                if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
+                {
+                    isQuitting = true;
+                    PauseControllable = false;
+                }
+                break;
             }
+            if (PauseControllable)
+            {
+                if (Input_GetKeyboardDown(KEY_INPUT_W) && choosedButton>0)
+                {
+                     choosedButton--;
+                }
+                if (Input_GetKeyboardDown(KEY_INPUT_S) && choosedButton < 2)
+                {
+                    choosedButton++;
+                }
+            }
+            if (isRestarting)
+            {
+                if(fadeout(0.5f))
+                {
+                    progress = 255;
+                    Stage1Initialize();
+                }
+            }
+            if (isQuitting)
+            {
+                if (fadeout(0.5f))
+                {
+                    progress = 255;
+                    Titleinitialize();
+                    scene = SCENE_TITLE;
+                }
+            }
+        }
+        if (Input_GetKeyboardDown(KEY_INPUT_ESCAPE))
+        {
+            isPause = isPause ? false : true;
+            choosedButton = 0;
         }
     }
-    
 }
 void Stage1Initialize()
 {
     isStarted = true;
     isCleared = false;
     isDead = false;
+    isPause = false;
+    isRestarting = false;
+    PauseControllable = true;
+    isQuitting = false;
+    choosedButton = 0;
 }

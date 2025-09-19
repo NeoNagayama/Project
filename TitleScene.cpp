@@ -13,8 +13,8 @@ Button Start;
 Button Exit;
 void TitleInitialProcess()
 {
-    Start.SetButtonPosition(VGet(560, 490,1),VGet(1360, 590,1),VGet(610, 505,1),VGet(1310, 575,1));
-    Exit.SetButtonPosition(VGet(560, 690, 1), VGet(1360, 790, 1), VGet(610, 705, 1), VGet(1310, 775, 1));
+    Start.SetButtonPosition(VGet(960,545,1),600,100,0.9f);
+    Exit.SetButtonPosition(VGet(960, 745, 1), 600, 100, 0.9f);
 }
 void TitleMainProcess()
 {

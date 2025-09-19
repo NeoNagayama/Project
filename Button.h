@@ -12,7 +12,7 @@ private:
     bool isSelected = false;
 public:
     void mainProcess(bool isSelected,bool shadow,int yoffset);
-    void SetButtonPosition(VECTOR SelectedPos, VECTOR SelectedPos2, VECTOR NSelectedPos, VECTOR NSelectedPos2);
+    void SetButtonPosition(VECTOR CenterPosition, int width, int height, float reductionRatio);
     float BoxSizeChange(float actual,float target,bool mode,float from);
     void SetText(std::string text);
     VECTOR NotSelectedPosition1 = VGet(1.0f, 1.0f, 2.0f);
