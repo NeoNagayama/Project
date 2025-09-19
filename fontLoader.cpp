@@ -24,7 +24,7 @@ void textPositionSet(int xleft, int xright, std::string text, int FontHandle, in
         }
         DrawStringToHandle(width, y, const_cast<char*>(text.c_str()), FontColor, FontHandle);
     }
-    else if (sort == SORT_LEFT)
+    else if (sort == SORT_RIGHT)
     {
         width = GetDrawStringWidthToHandle(const_cast<char*>(text.c_str()), strlen(const_cast<char*>(text.c_str())), FontHandle);
         width = ((xright - xleft) - width) + xleft;

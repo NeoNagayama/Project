@@ -32,7 +32,6 @@ void Stage1InitialProcess()
 }
 void Stage1MainProcess()
 {
-
     DrawBox(30, 30, 320, 320, GetColor(0, 255, 122), 1);
     if (isStarted)
     {

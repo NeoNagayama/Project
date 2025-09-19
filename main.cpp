@@ -15,18 +15,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     //奥行0.1～1000までをカメラの描画範囲とする
     SetCameraNearFar(0.1f, 1000.0f);
     SetUseLighting(true);
-    COLOR_F col = { 1,1,1,1 };
     fontLoad();
-    SetGlobalAmbientLight(GetColorF(1,0,0,1));
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));
+    //タイトル画面で最初に一度だけ呼ばれる処理
     TitleInitialProcess();
+    //ステージ1で最初に一度だけ呼ばれる処理
     Stage1InitialProcess();
+    //クリア画面で最初に一度だけ呼ばれる処理
     ClearInitialProcess();
+    //ゲームオーバー画面で最初に一度だけ呼ばれる処理
     GameOverInitialProcess();
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
         Input_UpdateKeyboard();
+        //場面の切り替え
         switch (scene) {
+            //場面別の毎フレーム呼ばれる処理
         case SCENE_STAGE1:
             Stage1MainProcess();
                 break;
