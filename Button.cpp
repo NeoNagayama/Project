@@ -19,17 +19,20 @@ void Button::mainProcess(bool isSelected, bool shadow ,int yoffset)
         DrawBox(Button::ActualPosition.x, Button::ActualPosition.y, Button::ActualPosition2.x, Button::ActualPosition2.y, Button::NotSelectedColor, 1);
         textPositionSet(ActualPosition.x, ActualPosition2.x, buttonText, fontHandle, SORT_CENTER, ActualPosition.y + yoffset*0.6, true, GetColor(122,122,122));
     }
-    return;
+    
 }
-void Button::SetButtonPosition(VECTOR SelectedPos, VECTOR SelectedPos2, VECTOR NSelectedPos, VECTOR NSelectedPos2)
+void Button::SetButtonPosition(VECTOR CenterPosition, int width, int height, float reductionRatio)
 {
-    Button::SelectedPosition1 = SelectedPos;
-    Button::SelectedPosition2 = SelectedPos2;
-    Button::NotSelectedPosition1 = NSelectedPos;
-    Button::NotSelectedPosition2 = NSelectedPos2;
+    width /= 2;
+    height /= 2;
+    SelectedPosition1 = VGet(CenterPosition.x - width, CenterPosition.y - height, 1);
+    SelectedPosition2 = VGet(CenterPosition.x + width, CenterPosition.y + height, 1);
+    width *= reductionRatio;
+    height *= reductionRatio;
+    NotSelectedPosition1 = VGet(CenterPosition.x - width, CenterPosition.y - height, 1);
+    NotSelectedPosition2 = VGet(CenterPosition.x + width, CenterPosition.y + height, 1);
     ActualPosition = NotSelectedPosition1;
     ActualPosition2 = NotSelectedPosition2;
-    return;
 }
 float Button::BoxSizeChange(float actual, float target, bool mode ,float from)
 {

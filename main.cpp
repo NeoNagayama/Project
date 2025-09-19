@@ -21,6 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));
     TitleInitialProcess();
+    Stage1InitialProcess();
     ClearInitialProcess();
     GameOverInitialProcess();
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
@@ -37,6 +38,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             break;
         default:
             TitleMainProcess();
+            break;
         }
         WaitTimer(16);
     }

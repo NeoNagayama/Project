@@ -13,8 +13,8 @@ bool isRetrySelected = true;
 bool isSceneChangingFromGameOver = false;
 void GameOverInitialProcess()
 {
-    Retry.SetButtonPosition(VGet(100, 600, 1), VGet(910, 800, 1), VGet(140, 620, 1), VGet(870, 780, 1));
-    GameOverToTitle.SetButtonPosition(VGet(1010, 600, 1), VGet(1820, 800, 1), VGet(1050, 620, 1), VGet(1780, 780, 1));
+    Retry.SetButtonPosition(VGet(500, 700, 1), 800, 200, 0.8f);
+    GameOverToTitle.SetButtonPosition(VGet(1410, 700, 1), 800, 200, 0.8f);
 }
 void GameOverMainProcess()
 {
