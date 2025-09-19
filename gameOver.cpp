@@ -31,7 +31,7 @@ void GameOverMainProcess()
     Retry.SetText("Retry");
     GameOverToTitle.mainProcess(!isRetrySelected, true, 60);
     GameOverToTitle.SetText("Title");
-    textPositionSet(0, 1920, "Mission Failed", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 170));
+    textPositionSet(0, 1920, "Mission Failed", titleFontHandle, SORT_CENTER, 200, true, GetColor(170, 0, 0));
     if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
     {
         isSceneChangingFromGameOver = true;
