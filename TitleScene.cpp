@@ -7,24 +7,22 @@
 #include "ui.h"
 #include "stage1Scene.h"
 
-void Title::test()
-{
-    clsDx();
-    DrawBox(20, 20, 320, 320, GetColor(255, 255, color), 1);
-    printfDx("%d", color);
-}
-void Title::initialProcess()
+bool isStartSelected = true;
+bool sceneChanging = false;
+Button Start;
+Button Exit;
+void TitleInitialProcess()
 {
     Start.SetButtonPosition(VGet(560, 490,1),VGet(1360, 590,1),VGet(610, 505,1),VGet(1310, 575,1));
     Exit.SetButtonPosition(VGet(560, 690, 1), VGet(1360, 790, 1), VGet(610, 705, 1), VGet(1310, 775, 1));
 }
-void Title::mainProcess()
+void TitleMainProcess()
 {
-    if (Input_GetKeyboardDown(KEY_INPUT_S)  && isStartSelected == true)
+    if (Input_GetKeyboardDown(KEY_INPUT_S)  && isStartSelected == true && !sceneChanging)
     {
         isStartSelected = false;
     }
-    if (Input_GetKeyboardDown(KEY_INPUT_W) && isStartSelected == false)
+    if (Input_GetKeyboardDown(KEY_INPUT_W) && isStartSelected == false && !sceneChanging)
     {
         isStartSelected = true;
     }
@@ -42,9 +40,15 @@ void Title::mainProcess()
     {
         if (fadeout(0.5f))
         {
+            Stage1Initialize();
             progress = 255;
             isStarted = true;
             scene = SCENE_STAGE1;
         }
     }
+}
+void Titleinitialize()
+{
+    isStartSelected = true;
+    sceneChanging = false;
 }

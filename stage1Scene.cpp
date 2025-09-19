@@ -4,8 +4,11 @@
 #include "Input.h"
 #include "ui.h"
 #include "main.h"
-bool isStarted = false;
-bool isEnding = false;
+#include "Clear.h"
+#include "GameOver.h"
+bool isStarted = true;
+bool isCleared = false;
+bool isDead = false;
 void test()
 {
     DrawBox(30, 30, 320, 320, GetColor(0, 255, 122), 1);
@@ -24,16 +27,36 @@ void Stage1MainProcess()
     {
         if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
         {
-            isEnding = true;
+            isCleared = true;
         }
-        if (isEnding)
+        if (isCleared)
         {
             if(fadeout(1))
             {
+                ClearInitialize();
                 progress = 0;
                 scene = SCENE_CLEAR;
             }
         }
+        if (Input_GetKeyboardDown(KEY_INPUT_F))
+        {
+            isDead = true;
+        }
+        if (isDead)
+        {
+            if (fadeout(1))
+            {
+                GameOverInitialize();
+                progress = 0;
+                scene = SCENE_GAMEOVER;
+            }
+        }
     }
     
+}
+void Stage1Initialize()
+{
+    isStarted = true;
+    isCleared = false;
+    isDead = false;
 }
