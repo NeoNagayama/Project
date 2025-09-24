@@ -1,9 +1,18 @@
 #include "Player.h"
-void Player::mainProcess()
+void Player::mainProcess(bool mode)
 {
-    KeyInput();
+    /*KeyInput();
     PlayerMoveXY();
-
+    Move(VAdd(BasePosition, offset));*/
+    if (mode)
+    {
+        Vulcan();
+    }
+    else
+    {
+        Flare();
+    }
+    
 }
 void Player::KeyInput()
 {
@@ -43,10 +52,68 @@ void Player::KeyInput()
 void Player::PlayerMoveXY()
 {
     float xSpeed, ySpeed;
-    xSpeed = x * moveSpeed;
-    ySpeed = y * moveSpeed;
-    /*if (Rotation.y == DegToRad(90))
+    xSpeed = (offset.x > moveRange || offset.x < -moveRange) ? 0 : x * moveSpeed;
+    ySpeed = (offset.y > moveRange|| offset.y < -moveRange) ? 0:y * moveSpeed;
+    if (Rotation.y == DegToRad(90))
     {
-        offset=VAdd(VGet)
-    }*/
+        offset = VAdd(VGet(0, ySpeed, -xSpeed), offset);
+    }
+    else if (Rotation.y == DegToRad(-90))
+    {
+        offset = VAdd(VGet(0, ySpeed, xSpeed), offset);
+    }
+    else
+    {
+        offset = VAdd(VGet(xSpeed, ySpeed, 0), offset);
+    }
+    if (offset.x > 400 || offset.x < 400)
+    {
+        offset.x = (offset.x > 400) ? 400 : -400;
+    }
+    if (offset.y > 400 || offset.y < 400)
+    {
+        offset.y = (offset.y > 400) ? 400.0f : -400.0f;
+    }
+    if (offset.z > 400 || offset.z < 400)
+    {
+        offset.z = (offset.z > 400) ? 400 : -400;
+    }
+}
+void Player::Vulcan()
+{
+    clsDx();
+    if (CheckHitKey(KEY_INPUT_SPACE) && firingTimer > firingRate &&ammo>0)
+    {
+        firingTimer = 0;
+        ammo--;
+        DrawBox(200, 200, 900, 900, GetColor(50, 55, 55), true);
+    }
+    firingTimer += 0.016f;
+    printfDx("%d", ammo);
+}
+void Player::Flare()
+{
+    clsDx();
+    if (CheckHitKey(KEY_INPUT_SPACE) && FlareCoolDown > FlareInterval && !Launching)
+    {
+        FlareCoolDown = 0;
+        Launching = true;
+        FlareAmount = 10;
+    }
+    if (Launching)
+    {
+        FlareFiringTimer += 0.016f;
+        if (FlareFiringTimer > FlareFiringRate)
+        {
+            DrawBox(200, 200, 900, 900, GetColor(200, 160, 0), true);
+            FlareFiringTimer = 0;
+            FlareAmount--;
+        }
+        if (FlareAmount <= 0)
+        {
+            Launching = false;
+        }
+    }
+    FlareCoolDown += 0.016f;
+    printfDx("%d", FlareCoolDown);
 }
