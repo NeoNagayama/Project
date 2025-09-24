@@ -139,12 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Base.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Clear.cpp" />
     <ClCompile Include="fontLoader.cpp" />
     <ClCompile Include="gameOver.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="stage1Scene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="ui.cpp" />
@@ -154,12 +156,14 @@
     <None Include="Corner.dft" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Base.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Clear.h" />
     <ClInclude Include="fontLoader.h" />
     <ClInclude Include="gameOver.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="stage1Scene.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="ui.h" />

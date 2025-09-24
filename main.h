@@ -1,5 +1,8 @@
 #pragma once
+# define PI 3.14159265359
+
 extern int scene;
+
 enum SCENES
 {
     SCENE_TITLE,
