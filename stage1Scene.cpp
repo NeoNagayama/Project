@@ -1,12 +1,12 @@
 #include "stage1Scene.h"
 #include "DxLib.h"
-#include "stage1Scene.h"
 #include "Input.h"
 #include "ui.h"
 #include "main.h"
 #include "Clear.h"
 #include "GameOver.h"
 #include "TitleScene.h"
+#include "Player.h"
 bool isStarted = true;
 bool isCleared = false;
 bool isDead = false;
@@ -19,6 +19,7 @@ Button resume;
 Button restart;
 Button Stage1ToTitle;
 Button Buttons[3];
+Player player;
 enum pause
 {
     PAUSE_RESUME,
@@ -36,6 +37,8 @@ void Stage1InitialProcess()
     Buttons[0].SetText("Resume");
     Buttons[1].SetText("Restart");
     Buttons[2].SetText("Quit");
+    player.InitialProcess();
+    SetBackgroundColor(150, 160, 180, 50);
 }
 void Stage1MainProcess()
 {
@@ -52,10 +55,10 @@ void Stage1MainProcess()
     {
         if (!isPause)
         {
-            if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
+            /*if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
             {
                 isCleared = true;
-            }
+            }*/
             if (isCleared)
             {
                 if (fadeout(1))
@@ -65,7 +68,7 @@ void Stage1MainProcess()
                     scene = SCENE_CLEAR;
                 }
             }
-            if (Input_GetKeyboardDown(KEY_INPUT_F))
+            if (player.ammo < 1)
             {
                 isDead = true;
             }
@@ -78,6 +81,7 @@ void Stage1MainProcess()
                     scene = SCENE_GAMEOVER;
                 }
             }
+            player.mainProcess(false);
         }
         else
         {
@@ -156,5 +160,6 @@ void Stage1Initialize()
     isRestarting = false;
     PauseControllable = true;
     isQuitting = false;
+    player.ammo = 200;
     choosedButton = 0;
 }

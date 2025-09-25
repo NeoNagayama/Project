@@ -4,8 +4,9 @@
 class base
 {
 private:
-    int m_Handle;
+    
 public:
+    int ModelHandle;
     VECTOR Position;
     VECTOR Rotation;
     VECTOR Scale;
@@ -13,4 +14,6 @@ public:
     void Rotate(VECTOR Vector);
     void Move(VECTOR Vector);
     float DegToRad(float Euler);
+    VECTOR upper();
+    VECTOR forward();
 };
