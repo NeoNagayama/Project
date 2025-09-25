@@ -10,3 +10,4 @@ enum SCENES
     SCENE_GAMEOVER,
     SCENE_CLEAR
 };
+extern float smooth(float min, float max, float n);

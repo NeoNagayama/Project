@@ -6,6 +6,7 @@
 #include "Clear.h"
 #include "fontLoader.h"
 #include "main.h"
+#include "Player.h"
 int scene = 0;
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -15,6 +16,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     //奥行0.1～1000までをカメラの描画範囲とする
     SetCameraNearFar(0.1f, 1000.0f);
     SetUseLighting(true);
+    SetLightEnable(true);
+    
     fontLoad();
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));
@@ -26,6 +29,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     ClearInitialProcess();
     //ゲームオーバー画面で最初に一度だけ呼ばれる処理
     GameOverInitialProcess();
+
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
         Input_UpdateKeyboard();
         //場面の切り替え
@@ -50,5 +54,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     DxLib_End();				// ＤＸライブラリ使用の終了処理
 
     return 0;				// ソフトの終了 
+}
+
+float smooth(float min, float max, float n) 
+{
+    float middle = max - min;
+    n = n * ((middle - ((middle > n ? middle : n) - (middle < n ? middle : n))) / middle);
+    return n;
 }
 

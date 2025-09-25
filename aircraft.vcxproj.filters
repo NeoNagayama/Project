@@ -50,10 +50,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\Users\student\Downloads\Portfolio\Portfolio\F22\F22 export 2024_9_7.x">
+    <None Include="Corner.dft">
       <Filter>リソース ファイル</Filter>
     </None>
-    <None Include="Corner.dft">
+    <None Include="F22\F22 export 2024_9_7.x">
       <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>

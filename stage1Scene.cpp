@@ -37,6 +37,8 @@ void Stage1InitialProcess()
     Buttons[0].SetText("Resume");
     Buttons[1].SetText("Restart");
     Buttons[2].SetText("Quit");
+    player.InitialProcess();
+    SetBackgroundColor(150, 160, 180, 50);
 }
 void Stage1MainProcess()
 {
