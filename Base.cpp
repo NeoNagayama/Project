@@ -4,7 +4,6 @@ void base::Rotate(VECTOR Vector)
 {
     MV1SetRotationXYZ(ModelHandle, VAdd(MV1GetRotationXYZ(ModelHandle), Vector));
     Rotation = MV1GetRotationXYZ(ModelHandle);
-    Forward = VGet(sin(MV1GetRotationXYZ(ModelHandle).x) * 0.1f, tan(MV1GetRotationXYZ(ModelHandle).y) * 0.1f, cos(MV1GetRotationXYZ(ModelHandle).z) * 0.1f);
 }
 void base::Move(VECTOR Vector)
 {
@@ -32,4 +31,9 @@ VECTOR base::forward()
     forwardDirection.y = sin(Rotation.x);
     forwardDirection.x = 0;
     return forwardDirection;
+}
+void base::SetRotation(VECTOR vector)
+{
+    MV1SetRotationXYZ(ModelHandle, vector);
+    Rotation = vector;
 }

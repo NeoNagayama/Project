@@ -10,10 +10,10 @@ public:
     VECTOR Position;
     VECTOR Rotation;
     VECTOR Scale;
-    VECTOR Forward;
     void Rotate(VECTOR Vector);
     void Move(VECTOR Vector);
     float DegToRad(float Euler);
     VECTOR upper();
     VECTOR forward();
+    void SetRotation(VECTOR vector);
 };
