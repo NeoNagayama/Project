@@ -56,10 +56,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return 0;				// ソフトの終了 
 }
 
-float smooth(float min, float max, float n) 
+float smooth(float from, float to, float t) 
 {
-    float middle = max - min;
-    n = n * ((middle - ((middle > n ? middle : n) - (middle < n ? middle : n))) / middle);
+    
+    //n = n * ((middle - ((middle > n ? middle : n) - (middle < n ? middle : n))) / middle);
+    float n = ((from > to ? from : to) - (from < to ? from : to)) / (t * 0.5f);
     return n;
 }
 

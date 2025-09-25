@@ -39,19 +39,19 @@ void Player::KeyInput()
         if (CheckHitKey(KEY_INPUT_D)&& x <0.7f)
         {
             x += speed;
-            targetAngle = VGet(1, -1, 0);
-            targetAnglePitch = VGet(1, -1, 1);
+            targetAngle = VGet(0.5f, -0.5f, 0);
+            //targetAnglePitch = VGet(1, -1, 1);
         }
         else if (CheckHitKey(KEY_INPUT_A)&& x > -0.7f)
         {
             x -= speed;
-            targetAngle = VGet(-1, -1, 0);
-            targetAnglePitch = VGet(-1, -1, 0);
+            targetAngle = VGet(-0.5f, -0.5f, 0);
+            //targetAnglePitch = VGet(-1, -1, 0);
         }
         else
         {
             targetAngle = VGet(0, -1, 0);
-            targetAnglePitch = VGet(0, -1, 1);
+            //targetAnglePitch = VGet(0, -1, 1);
         }
             y += speed;
     }
@@ -60,42 +60,42 @@ void Player::KeyInput()
         if (CheckHitKey(KEY_INPUT_D) && x < 0.7f)
         {
             x += speed;
-            targetAngle = VGet(1, 1, 0);
-            targetAnglePitch = VGet(1, -1, 1);
+            targetAngle = VGet(0.5f, 0.5f, 0);
+            //targetAnglePitch = VGet(1, -1, 1);
         }
         else if (CheckHitKey(KEY_INPUT_A) && x > -0.7f)
         {
             x -= speed;
-            targetAngle = VGet(-1, 1, 0);
-            targetAnglePitch = VGet(-1, -1, 1);
+            targetAngle = VGet(-0.5f, 0.5f, 0);
+            //targetAnglePitch = VGet(-1, -1, 1);
         }
         else
         {
             targetAngle = VGet(0, 0.99f, 0);
-            targetAnglePitch = VGet(0, 0.99f, 1);
+            //targetAnglePitch = VGet(0, 0.99f, 1);
         }
         y -= speed;
     }
     else if (CheckHitKey(KEY_INPUT_D) && x < 0.7f)
     {
         x += speed;
-        targetAngle = VGet(1, -0.4f, 0);
-        targetAnglePitch = VGet(1, -0.4f, 1);
+        targetAngle = VGet(0.6f, -0.4f, 0);
+        //targetAnglePitch = VGet(1, -0.4f, 1);
 
        
     }
     else if (CheckHitKey(KEY_INPUT_A) && x > -0.7f)
     {
         x -= speed;
-        targetAngle = VGet(-1, -0.4f, 0);
-        targetAnglePitch = VGet(-1, -0.4f, 1);
+        targetAngle = VGet(-0.6f, -0.4f, 0);
+        //targetAnglePitch = VGet(-1, -0.4f, 1);
     }
     else
     {
         if (!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W))
         {
             targetAngle = VGet(0, -0.99, 0);
-            targetAnglePitch = VGet(0, 0, 1);
+            //targetAnglePitch = VGet(0, 0, 1);
             /*if (rotateSpeed > 0)
             {
                 rotateSpeed -= 0.005f;
@@ -210,12 +210,41 @@ void Player::rotatePlayer()
     float difInAngle = ((targetAngle.x * y) - (targetAngle.y * x));
     if (difInAngle > 0.05f)
     {
-        Rotate(VGet(0, 0, -rotateSpeed * smooth(-1, 1, difInAngle)));
+        Rotate(VGet(0, 0, -rotateSpeed * smooth(difInAngle, 0, 2)));
+        
+        
     }
     else if (difInAngle < -0.05f)
     {
-        Rotate(VGet(0, 0, rotateSpeed * smooth(-1, 1, difInAngle)));
+        Rotate(VGet(0, 0, rotateSpeed * smooth(difInAngle, 0, 2)));
+        
     }
+    if (CheckHitKey(KEY_INPUT_A) || CheckHitKey(KEY_INPUT_S) || CheckHitKey(KEY_INPUT_D) || CheckHitKey(KEY_INPUT_W))
+    {
+        if (difInAngle < -0.5f || difInAngle > 0.5f)
+        {
+            targetAnglePitch = VGet(0, 0.3f* ((1-abs(difInAngle))/0.5f), 0.7f );
+        }
+        else
+        {
+            if (!CheckHitKey(KEY_INPUT_A) && CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W))
+            {
+                targetAnglePitch = VGet(0, 0.3f, 0.7f);
+            }
+            else
+            {
+                targetAnglePitch = VGet(0, -0.3f*((0.5f-abs(difInAngle))/0.5f), 0.7f);
+            }
+        }
+    }
+    else
+    {
+        targetAnglePitch = VGet(0, 0, 1);
+    }
+
+    clsDx();
+    printfDx("%f", difInAngle);
+    printfDx("\n%f %f %f", targetAnglePitch.x, targetAnglePitch.z, targetAnglePitch.y);
 }
 void Player::pitch()
 {
@@ -223,15 +252,39 @@ void Player::pitch()
     z = cos(atan2(forward().y - 0, forward().z - 0));
     y = sin(atan2(forward().y - 0, forward().z - 0));
     float difInAngle = (((targetAnglePitch.z*0.4f) * y) - ((targetAnglePitch.y * 0.4f) * z));
-        if (difInAngle > 0.01f)
+    if (Rotation.x <= 0.4f && Rotation.x >= -0.4f)
+    {
+        if (difInAngle > 0.005f && difInAngle < 0.5f)
         {
-            Rotate(VGet( -rotateSpeed * smooth(-1.5f, 1.5f, difInAngle),0,0));
+            Rotate(VGet(-rotateSpeed * smooth(difInAngle, 0, 1), 0, 0));
         }
-        else if (difInAngle < -0.01f)
+        else if (difInAngle < -0.005f && difInAngle > -0.5f)
         {
-            Rotate(VGet( rotateSpeed * smooth(-1.5f, 1.5f, difInAngle),0,0));
+            Rotate(VGet(rotateSpeed * smooth(difInAngle, 0, 1), 0, 0));
         }
-        clsDx();
-        printfDx("%f",difInAngle);
-        printfDx("\n%f %f %f", forward().x, forward().z, forward().y);
+        else if (difInAngle < -0.5f)
+        {
+            Rotate(VGet(-rotateSpeed * smooth(difInAngle, 0, 1), 0, 0));
+        }
+        else if (difInAngle > 0.5f)
+        {
+            Rotate(VGet(rotateSpeed * smooth(difInAngle, 0, 1), 0, 0));
+        }
+        else if(!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W))
+        {
+            Rotation = MV1GetRotationXYZ(ModelHandle);
+            SetRotation(VGet(0, Rotation.y, Rotation.z));
+        }
+    }
+    else if(Rotation.x > 0.4f)
+    {
+        Rotation = MV1GetRotationXYZ(ModelHandle);
+        SetRotation(VGet(0.4f, Rotation.y, Rotation.z));
+    }
+    else
+    {
+        Rotation = MV1GetRotationXYZ(ModelHandle);
+        SetRotation(VGet(-0.4f, Rotation.y, Rotation.z));
+    }
+        
 }
