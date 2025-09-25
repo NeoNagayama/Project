@@ -210,11 +210,11 @@ void Player::rotatePlayer()
     float difInAngle = ((targetAngle.x * y) - (targetAngle.y * x));
     if (difInAngle > 0.05f)
     {
-        Rotate(VGet(0, 0, -rotateSpeed * smooth(-1, 1, difInAngle)));
+        Rotate(VGet(0, 0, -rotateSpeed * smooth(-1, 1, difInAngle ) - 0.01f));
     }
     else if (difInAngle < -0.05f)
     {
-        Rotate(VGet(0, 0, rotateSpeed * smooth(-1, 1, difInAngle)));
+        Rotate(VGet(0, 0, rotateSpeed * smooth(-1, 1, difInAngle ) + 0.01f));
     }
 }
 void Player::pitch()
@@ -223,13 +223,13 @@ void Player::pitch()
     z = cos(atan2(forward().y - 0, forward().z - 0));
     y = sin(atan2(forward().y - 0, forward().z - 0));
     float difInAngle = (((targetAnglePitch.z*0.4f) * y) - ((targetAnglePitch.y * 0.4f) * z));
-        if (difInAngle > 0.01f)
+        if (difInAngle > 0.01f && difInAngle < 0.5f)
         {
-            Rotate(VGet( -rotateSpeed * smooth(-1.5f, 1.5f, difInAngle),0,0));
+            Rotate(VGet( -rotateSpeed * smooth(-1.5f, 1.5f, difInAngle ) - 0.01f,0,0));
         }
-        else if (difInAngle < -0.01f)
+        else if (difInAngle < -0.01f && difInAngle > -0.5f)
         {
-            Rotate(VGet( rotateSpeed * smooth(-1.5f, 1.5f, difInAngle),0,0));
+            Rotate(VGet( rotateSpeed * smooth(-1.5f, 1.5f, difInAngle ) + 0.01f,0,0));
         }
         clsDx();
         printfDx("%f",difInAngle);
