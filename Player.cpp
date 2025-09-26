@@ -5,9 +5,9 @@ int test;
 void Player::InitialProcess()
 {
     ModelHandle = MV1LoadModel("F-14Test.mv1");
-    MV1SetPosition(ModelHandle, VGet(0, -5, -15));
+    MV1SetPosition(ModelHandle, VGet(0, -5, -0));
     MV1SetScale(ModelHandle, VGet(3, 3, 3));
-    Position = VGet(0, -5, -15);
+    Position = VGet(0, -5, -0);
     PlayerLightHandle = CreateDirLightHandle(VGet(0.5f,1,0));
     SetLightEnableHandle(PlayerLightHandle, true);
     SetLightDifColorHandle(PlayerLightHandle, GetColorF(0.9, 0.9, 1, 1));
@@ -27,9 +27,8 @@ void Player::mainProcess(bool mode)
     {
         Flare();
     }
-    
-    test = MV1DrawModel(ModelHandle);
-    
+    clsDx();
+    printfDx("\n%f %f %f", forward().x, forward().z, forward().y);
 }
 void Player::KeyInput()
 {
@@ -172,9 +171,27 @@ void Player::Vulcan()
     {
         firingTimer = 0;
         ammo--;
-        DrawBox(200, 200, 900, 900, GetColor(50, 55, 55), true);
+        for (int i = 0; i < 200; i++)
+        {
+            if (!bullets[i].isActivated)
+            {
+                Position = MV1GetPosition(ModelHandle);
+                bullets[i].isActivated = true;
+                bullets[i].target = VAdd(Position, VGet(0,0,50));
+                bullets[i].forward = VGet(0,0,1);
+                bullets[i].StartPosition = VAdd(Position,VGet(forward().x,-forward().y,forward().z ));
+                break;
+            }
+        }
     }
     firingTimer += 0.016f;
+    for (int i = 0; i < 200; i++)
+    {
+        if (bullets[i].isActivated)
+        {
+            bullets[i].mainProcess();
+        }
+    }
    
 }
 void Player::Flare()
@@ -242,9 +259,7 @@ void Player::rotatePlayer()
         targetAnglePitch = VGet(0, 0, 1);
     }
 
-    clsDx();
-    printfDx("%f", difInAngle);
-    printfDx("\n%f %f %f", targetAnglePitch.x, targetAnglePitch.z, targetAnglePitch.y);
+    
 }
 void Player::pitch()
 {

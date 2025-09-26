@@ -2,6 +2,7 @@
 #include"DxLib.h"
 #include "base.h"
 #include"Input.h"
+#include "bullet.h"
 class Player: public base
 {
 private:
@@ -26,6 +27,7 @@ private:
     bool Launching = false;
     int FlareAmount = 10;
     int maxAmmo = 200;
+    Bullet bullets[200];
 public:
     int ammo = 200;
     void InitialProcess();
