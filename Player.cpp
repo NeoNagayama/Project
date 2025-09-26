@@ -14,6 +14,8 @@ void Player::InitialProcess()
 }
 void Player::mainProcess(bool mode)
 {
+    SetCameraPositionAndTarget_UpVecY(VAdd(VGet(0, 0, -25), BasePosition),BasePosition);
+    BasePosition = VAdd(VGet(0, 0, 1),BasePosition);
     KeyInput();
     PlayerMoveXY();
     Move(VAdd(BasePosition, offset));
@@ -166,7 +168,21 @@ void Player::PlayerMoveXY()
 }
 void Player::Vulcan()
 {
-    
+    Position = MV1GetPosition(ModelHandle);
+    for (int i = 49; i >= 0; i--)
+    {
+        if (i == 0)
+        {
+            bulletPositionX[i] = Position.x;
+            bulletPositionY[i] = Position.y;
+        }
+        else
+        {
+            bulletPositionX[i] = bulletPositionX[i - 1];
+            bulletPositionY[i] = bulletPositionY[i - 1];
+        }
+    }
+    DrawExtendGraph(ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[20],bulletPositionY[20],BasePosition.z), VGet(0, 0, 50))).x - 120, ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[20], bulletPositionY[20], BasePosition.z), VGet(0, 0, 50))).y - 120, ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[20], bulletPositionY[20], BasePosition.z), VGet(0, 0, 50))).x + 120, ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[20], bulletPositionY[20], BasePosition.z), VGet(0, 0, 50))).y + 120, reticleHandle, true);
     if (CheckHitKey(KEY_INPUT_SPACE) && firingTimer > firingRate &&ammo>0)
     {
         firingTimer = 0;
@@ -175,10 +191,10 @@ void Player::Vulcan()
         {
             if (!bullets[i].isActivated)
             {
-                Position = MV1GetPosition(ModelHandle);
+                
                 bullets[i].isActivated = true;
-                bullets[i].target = VAdd(Position, VGet(0,0,50));
-                bullets[i].forward = VGet(0,0,1);
+                bullets[i].target = VAdd(Position, VGet(0,0,90));
+                bullets[i].forward = VGet(0,0,3);
                 bullets[i].StartPosition = VAdd(Position,VGet(forward().x,-forward().y,forward().z ));
                 break;
             }
@@ -207,13 +223,29 @@ void Player::Flare()
         FlareFiringTimer += 0.016f;
         if (FlareFiringTimer > FlareFiringRate)
         {
-            DrawBox(200, 200, 900, 900, GetColor(200, 160, 0), true);
+            for (int i = 0; i < 10; i++)
+            {
+                if (!Flares[i].isActivated)
+                {
+                    Flares[i].isActivated = true;
+                    Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 2.7f),0.3f);
+                    Flares[i].StartPosition = Position;
+                    break;
+                }
+            }
             FlareFiringTimer = 0;
             FlareAmount--;
         }
         if (FlareAmount <= 0)
         {
             Launching = false;
+        }
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        if (Flares[i].isActivated)
+        {
+            Flares[i].mainProcess();
         }
     }
     FlareCoolDown += 0.016f;

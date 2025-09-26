@@ -3,6 +3,7 @@
 #include "base.h"
 #include"Input.h"
 #include "bullet.h"
+#include "Flare.h"
 class Player: public base
 {
 private:
@@ -17,6 +18,8 @@ private:
     VECTOR BasePosition;
     VECTOR targetAngle;
     VECTOR targetAnglePitch;
+    float bulletPositionX[50];
+    float bulletPositionY[50];
     //機銃とフレア用の変数
     float firingTimer = 0;
     float FlareCoolDown = 0;
@@ -28,6 +31,7 @@ private:
     int FlareAmount = 10;
     int maxAmmo = 200;
     Bullet bullets[200];
+    Flare Flares[10];
 public:
     int ammo = 200;
     void InitialProcess();
