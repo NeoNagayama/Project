@@ -45,6 +45,7 @@ void Stage1MainProcess()
     DrawBox(30, 30, 320, 320, GetColor(0, 255, 122), 1);
     if (isStarted)
     {
+        MV1DrawModel(player.ModelHandle);
         if (fadein(0.5f))
         {
             progress = 0;
@@ -53,6 +54,7 @@ void Stage1MainProcess()
     }
     else
     {
+        
         if (!isPause)
         {
             /*if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
@@ -81,10 +83,12 @@ void Stage1MainProcess()
                     scene = SCENE_GAMEOVER;
                 }
             }
-            player.mainProcess(false);
+            player.mainProcess(true);
+            MV1DrawModel(player.ModelHandle);
         }
         else
         {
+            MV1DrawModel(player.ModelHandle);
             SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
             DrawBox(0, 0, 1920, 1080, GetColor(0, 0, 0), 1);
             SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -150,6 +154,7 @@ void Stage1MainProcess()
             choosedButton = 0;
         }
     }
+    
 }
 void Stage1Initialize()
 {
