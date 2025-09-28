@@ -25,7 +25,7 @@ private:
     bool isFiring = false;
     VECTOR vulcanTargetPosition;
     Bullet bullets[10];
-    int firingCount;
+    int LoadedAmmoCount;
 public:
     int Health = 100;;
 
