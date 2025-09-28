@@ -149,6 +149,7 @@
     <ClCompile Include="gameOver.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="stage1Scene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="gameOver.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="Missile.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stage1Scene.h" />
     <ClInclude Include="TitleScene.h" />

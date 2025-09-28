@@ -18,7 +18,8 @@ void Enemy::mainProcess(bool mode)
     else
     {
         BasePosition = VAdd(playerObject->BasePosition, VGet(0, -5, -50));
-        Vulcan();
+        //Vulcan();
+        missile();
     }
         Move(VAdd(VGet(0, 0, 0),BasePosition));
     Position = MV1GetPosition(ModelHandle);
@@ -85,7 +86,6 @@ void Enemy::Vulcan()
             {
                  bullets[i].isActivated = false;
                  playerObject->Health -= 5;
-                 
             }
             isReticleShowUp = true;
         }
@@ -97,6 +97,61 @@ void Enemy::Vulcan()
         VECTOR GraphPosition = ConvWorldPosToScreenPos(VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + 50));
 
         DrawExtendGraph(GraphPosition.x - 120, GraphPosition.y - 120, GraphPosition.x + 120, GraphPosition.y + 120, reticleHandle, true);
+    }
+}
+void Enemy::missile()
+{
+    missilecooldowntimer += 0.016f;
+    if (missileCooldown < missilecooldowntimer &&!isLaunched)
+    {
+        isLaunched = true;
+        isGuideLost = false;
+    }
+    if (isLaunched && !isGuideLost)
+    {
+        textPositionSet(0, 1920, "!MISSILE ALERT!", BiggerFontHandle, SORT_CENTER, 750, false, GetColor(255, 0, 0));
+        missileflyingTimer += 0.016f;
+        if (missileflyingTimer > 1)
+        {
+            
+            missileObject.mainProcess(playerObject->Position,3-missileflyingTimer);
+        }
+        else
+        {
+            missileObject.SetStartPosition(VGet(BasePosition.x, BasePosition.y, BasePosition.z + 25));
+        }
+        if (missileflyingTimer > 3)
+        {
+            isLaunched = false;
+            missileflyingTimer = 0;
+            missilecooldowntimer = 0;
+            playerObject->Health -= 30;
+            missileCooldown =  get_rand(50, 70) * 0.1f;
+        }
+
+    }
+    if (isGuideLost &&missileflyingTimer > 1)
+    {
+        missileObject.guideLosted();
+        DespawnTimer += 0.016f;
+        if (DespawnTimer > 2)
+        {
+            isGuideLost = false;
+            isLaunched = false;
+            missileflyingTimer = 0;
+            missilecooldowntimer = 0;
+            playerObject->Health -= 30;
+            missileCooldown = get_rand(50, 70) * 0.1f;
+        }
+    }
+    else if (isGuideLost)
+    {
+        isGuideLost = false;
+        isLaunched = false;
+        missileflyingTimer = 0;
+        missilecooldowntimer = 0;
+        playerObject->Health -= 30;
+        missileCooldown = get_rand(50, 70) * 0.1f;
     }
 }
 int  Enemy::get_rand(int min,int max)

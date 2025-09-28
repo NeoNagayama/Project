@@ -3,6 +3,8 @@
 #include "stage1Scene.h"
 #include "Bullet.h"
 #include "Player.h"
+#include "Missile.h"
+#include "fontLoader.h"
 class Player;
 class Enemy:public base
 {
@@ -26,9 +28,16 @@ private:
     VECTOR vulcanTargetPosition;
     Bullet bullets[10];
     int LoadedAmmoCount;
+
+    Missile missileObject;
+    float missileCooldown = 0;
+    float missilecooldowntimer = 5;
+    float missileflyingTimer = 0;
+    float DespawnTimer = 0;
+    bool isLaunched = false;
 public:
     int Health = 100;;
-
+    void missile();
     void InitialProcess();
     void Vulcan();
     void mainProcess(bool mode);
@@ -39,4 +48,5 @@ public:
         playerObject = player;
     }
     int get_rand(int min, int max);
+    bool isGuideLost = false;
 };

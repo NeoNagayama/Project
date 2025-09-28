@@ -220,6 +220,7 @@ void Player::Flare()
         FlareCoolDown = 0;
         Launching = true;
         FlareAmount = 10;
+        enemyObject->isGuideLost = true;
     }
     if (Launching)
     {
@@ -232,7 +233,7 @@ void Player::Flare()
                 {
                     Flares[i].isActivated = true;
                     Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 2.7f),0.3f);
-                    Flares[i].StartPosition = Position;
+                    Flares[i].position = Position;
                     break;
                 }
             }
