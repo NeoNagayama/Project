@@ -11,6 +11,7 @@ bool isStarted = true;
 bool isCleared = false;
 bool isDead = false;
 bool isPause = false;
+bool isKilled = false;
 bool PauseControllable = true;
 bool isRestarting = false;
 bool isQuitting = false;
@@ -20,6 +21,7 @@ Button restart;
 Button Stage1ToTitle;
 Button Buttons[3];
 Player player;
+Enemy enemy;
 enum pause
 {
     PAUSE_RESUME,
@@ -38,6 +40,9 @@ void Stage1InitialProcess()
     Buttons[1].SetText("Restart");
     Buttons[2].SetText("Quit");
     player.InitialProcess();
+    enemy.InitialProcess();
+    player.EnemySet(&enemy);
+    enemy.PlayerSet(&player);
     SetBackgroundColor(150, 160, 180, 50);
 }
 void Stage1MainProcess()
@@ -74,6 +79,13 @@ void Stage1MainProcess()
             {
                 isDead = true;
             }
+            if (enemy.Health < 0)
+            {
+                isKilled = true;
+            }
+            player.mainProcess(false);
+            enemy.mainProcess(false);
+            MV1DrawModel(player.ModelHandle);
             if (isDead)
             {
                 if (fadeout(1))
@@ -83,8 +95,16 @@ void Stage1MainProcess()
                     scene = SCENE_GAMEOVER;
                 }
             }
-            player.mainProcess(true);
-            MV1DrawModel(player.ModelHandle);
+            if (isKilled)
+            {
+                if (fadeout(1))
+                {
+                    ClearInitialize();
+                    progress = 0;
+                    scene = SCENE_CLEAR;
+                }
+            }
+            
         }
         else
         {

@@ -14,6 +14,7 @@ void Player::InitialProcess()
 }
 void Player::mainProcess(bool mode)
 {
+    SetHitBox(4, 2);
     SetCameraPositionAndTarget_UpVecY(VAdd(VGet(0, 0, -25), BasePosition),BasePosition);
     BasePosition = VAdd(VGet(0, 0, 1),BasePosition);
     KeyInput();
@@ -29,8 +30,7 @@ void Player::mainProcess(bool mode)
     {
         Flare();
     }
-    clsDx();
-    printfDx("\n%f %f %f", forward().x, forward().z, forward().y);
+    
 }
 void Player::KeyInput()
 {
@@ -205,7 +205,10 @@ void Player::Vulcan()
     {
         if (bullets[i].isActivated)
         {
-            bullets[i].mainProcess();
+            if (bullets[i].mainProcess(enemyObject->hitbox1, enemyObject->hitbox2))
+            {
+                enemyObject->Health -= 3;
+            }
         }
     }
    

@@ -1,5 +1,7 @@
 #pragma once
 #include "DxLib.h"
+#include "stage1Scene.h"
+#include "base.h"
 class Bullet
 {
 private:
@@ -9,5 +11,5 @@ public:
     VECTOR target;
     VECTOR forward;
     VECTOR StartPosition;
-    void mainProcess();
+    bool mainProcess(VECTOR hitbox1,VECTOR hitbox2);
 };
