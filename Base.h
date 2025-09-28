@@ -15,5 +15,9 @@ public:
     float DegToRad(float Euler);
     VECTOR upper();
     VECTOR forward();
+    VECTOR hitbox1;
+    VECTOR hitbox2;
     void SetRotation(VECTOR vector);
+    void SetHitBox(float width, float height);
+    void TestHitBox();
 };

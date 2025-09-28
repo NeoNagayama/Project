@@ -3,10 +3,10 @@
 class Flare
 {
 private:
-    VECTOR position;
+    float timer = 0;
 public:
     bool isActivated = false;
     VECTOR forward;
-    VECTOR StartPosition;
+    VECTOR position;
     void mainProcess();
 };

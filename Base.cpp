@@ -37,3 +37,14 @@ void base::SetRotation(VECTOR vector)
     MV1SetRotationXYZ(ModelHandle, vector);
     Rotation = vector;
 }
+void base::SetHitBox(float width, float height)
+{
+    hitbox1 = VGet(Position.x - width / 2, Position.y - height / 2, Position.z - width / 2);
+    hitbox2 = VGet(Position.x + width / 2, Position.y + height / 2, Position.z + width / 2);
+    TestHitBox();
+}
+void base::TestHitBox()
+{
+    DrawSphere3D(hitbox1, 0.5f, 8, GetColor(255, 255, 0), GetColor(255, 255, 255), true);
+    DrawSphere3D(hitbox2, 0.5f, 8, GetColor(255, 255, 0), GetColor(255, 255, 255), true);
+}
