@@ -15,6 +15,7 @@ bool isKilled = false;
 bool PauseControllable = true;
 bool isRestarting = false;
 bool isQuitting = false;
+int gamePhase = 0;
 int choosedButton;
 Button resume;
 Button restart;
@@ -22,6 +23,12 @@ Button Stage1ToTitle;
 Button Buttons[3];
 Player player;
 Enemy enemy;
+enum Phase
+{
+    PHASE_RUN,
+    PHASE_OVERSHOOT,
+    PHASE_CHASE
+};
 enum pause
 {
     PAUSE_RESUME,
@@ -83,8 +90,29 @@ void Stage1MainProcess()
             {
                 isKilled = true;
             }
-            player.mainProcess(true);
-            enemy.mainProcess(true);
+            if (player.BasePosition.z > 1200.0f && gamePhase == PHASE_RUN)
+            {
+                gamePhase = PHASE_OVERSHOOT;
+            }
+            else if(gamePhase == PHASE_RUN)
+            {
+                player.mainProcess(false);
+                enemy.mainProcess(false);
+            }
+            if (gamePhase == PHASE_OVERSHOOT)
+            {
+                if (enemy.Transition() && player.Transition())
+                {
+                    gamePhase = PHASE_CHASE;
+                }
+            }
+            if (gamePhase == PHASE_CHASE)
+            {
+                clsDx();
+                printfDx("enemyHealth%d \n ammo %d", enemy.Health,player.ammo);
+                player.mainProcess(true);
+                enemy.mainProcess(true);
+            }
             MV1DrawModel(player.ModelHandle);
             if (isDead)
             {
@@ -187,4 +215,6 @@ void Stage1Initialize()
     isQuitting = false;
     player.ammo = 200;
     choosedButton = 0;
+    player.Health = 100;
+    
 }

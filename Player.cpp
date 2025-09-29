@@ -14,8 +14,9 @@ void Player::InitialProcess()
 }
 void Player::mainProcess(bool mode)
 {
-    SetHitBox(4, 2);
-    SetCameraPositionAndTarget_UpVecY(VAdd(VGet(0, 0, -25), BasePosition),BasePosition);
+    SetHitBox(4, 4);
+
+    
     BasePosition = VAdd(VGet(0, 0, 1),BasePosition);
     KeyInput();
     PlayerMoveXY();
@@ -24,10 +25,13 @@ void Player::mainProcess(bool mode)
     pitch();
     if (mode)
     {
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x/2, offset.y/2, -20), BasePosition),  BasePosition);
         Vulcan();
     }
     else
     {
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(0, 0, -25), BasePosition), BasePosition);
+        CameraPosition = VAdd(VGet(0, 0, -25), BasePosition);
         Flare();
     }
     
@@ -194,7 +198,7 @@ void Player::Vulcan()
                 
                 bullets[i].isActivated = true;
                 bullets[i].target = VAdd(Position, VGet(0,0,90));
-                bullets[i].forward = VGet(0,0,3);
+                bullets[i].forward = VGet(0,0,4);
                 bullets[i].StartPosition = VAdd(Position,VGet(forward().x,-forward().y,forward().z ));
                 break;
             }
@@ -338,4 +342,19 @@ void Player::pitch()
         SetRotation(VGet(-0.4f, Rotation.y, Rotation.z));
     }
         
+}
+bool Player::Transition()
+{
+    BasePosition = VAdd(VGet(0, 0, 1), BasePosition);
+    VECTOR targetCameraPosition = VAdd(VGet(offset.x / 2, offset.y / 2, -20), BasePosition);
+    CameraPosition = VAdd(VAdd(CameraPosition,VScale(VNorm(VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z)),0.4f)),VGet(0, 0, 1.0f));
+    VECTOR cameraToTargetVector = VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z);
+    float distance = sqrtf((cameraToTargetVector.x * cameraToTargetVector.x) + (cameraToTargetVector.y * cameraToTargetVector.y) + (cameraToTargetVector.z * cameraToTargetVector.z));
+    SetCameraPositionAndTarget_UpVecY(CameraPosition, BasePosition);
+    Move(VAdd(BasePosition, offset));
+    if (distance <=1.0f)
+    {
+        return true;
+    }
+    return false;
 }

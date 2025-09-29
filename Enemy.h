@@ -18,9 +18,9 @@ class Enemy:public base
 private:
     Player* playerObject;
     
-    float moveSpeed = 0.6f;
+    float moveSpeed = 0.47f;
     float moveRange = 10.0f;
-    float rotateSpeed = 0.04f;
+    float rotateSpeed = 0.08f;
     float x, y;
     VECTOR offset = VGet(0, -5, 0);
     VECTOR BasePosition;
@@ -37,8 +37,8 @@ private:
     int LoadedAmmoCount;
 
     Missile missileObject;
-    float missileCooldown = 0.0f;
-    float missilecooldowntimer = 5.0f;
+    float missileCooldown = 5.0f;
+    float missilecooldowntimer = 0.0f;
     float missileflyingTimer = 0.0f;
     float DespawnTimer = 0.0f;
     bool isLaunched = false;
@@ -49,6 +49,7 @@ private:
     void H_Fluctuating();
     void V_Fluctuating();
     float xSpeed = 0.0f, ySpeed = 0.0f;
+    float transitionMoveZaxis = -50.0f;
 public:
     int Health = 100;;
     void missile();
@@ -65,4 +66,5 @@ public:
     }
     int get_rand(int min, int max);
     bool isGuideLost = false;
+    bool Transition();
 };

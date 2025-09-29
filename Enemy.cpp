@@ -17,8 +17,6 @@ void Enemy::mainProcess(bool mode)
         run();
         EnemyMoveXY();
         roll();
-        clsDx();
-        printfDx("%d", evadeCount);
     }
     else
     {
@@ -27,9 +25,10 @@ void Enemy::mainProcess(bool mode)
         missile();
     }
         Move(VAdd(offset,BasePosition));
+
+        MV1DrawModel(ModelHandle);
     Position = MV1GetPosition(ModelHandle);
-    MV1DrawModel(ModelHandle);
-    SetHitBox(4, 2);
+    SetHitBox(4, 4);
 }
 void Enemy::Vulcan()
 {
@@ -174,23 +173,21 @@ void Enemy::run()
         H_Fluctuating();
         break;
     case TYPE_VERTICAL_FLUCTUATING:
+        V_Fluctuating();
         break;
     default:
-        evadetype = get_rand(-1, 1);
+        evadetype = get_rand(-1, 2);
         break;
     }
 }
 void Enemy::EnemyMoveXY()
 {
-
-    
-    
-    if (targetAngle.x > 0.2f && xSpeed < 0.7f)
+    if (targetAngle.x > 0.2f && xSpeed < 0.6f)
     {
         xSpeed += 0.1f;
         
     }
-    else if (targetAngle.x < -0.2f && xSpeed > -0.7f)
+    else if (targetAngle.x < -0.2f && xSpeed > -0.6f)
     {
        
         xSpeed -= 0.1f;
@@ -200,11 +197,11 @@ void Enemy::EnemyMoveXY()
     {
         xSpeed = 0;
     }
-    if (targetAngle.y > 0.2f && ySpeed < 0.7f)
+    if (targetAngle.y > 0.2f && ySpeed < 0.6f)
     {
         ySpeed += 0.1f;
     }
-    else if (targetAngle.y < -0.2f && ySpeed > -0.7f)
+    else if (targetAngle.y < -0.2f && ySpeed > -0.6f)
     {
         ySpeed -= 0.1f;
     }
@@ -277,7 +274,7 @@ void Enemy::barrelRoll()
         }
         break;
     case 2:
-        targetAngle = VGet(9 - offset.x, -7 - offset.y, 0);
+        targetAngle = VGet(9 - offset.x, -5 - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -286,7 +283,7 @@ void Enemy::barrelRoll()
         }
         break;
     case 3:
-        targetAngle = VGet(-9 - offset.x, -7 - offset.y, 0);
+        targetAngle = VGet(-9 - offset.x, -5 - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -348,5 +345,65 @@ void Enemy::H_Fluctuating()
             evadeCount = 1;
         }
         break;
+    }
+}
+void Enemy::V_Fluctuating()
+{
+    float distance = 0;
+    switch (evadeCount) {
+    case 1:
+        targetAngle = VGet(2 - offset.x, 9 - offset.y, 0);
+        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
+        targetAngle = VNorm(targetAngle);
+        if (distance < 0.08f)
+        {
+            evadeCount = 2;
+        }
+        break;
+    case 2:
+        targetAngle = VGet(-2 - offset.x, -7 - offset.y, 0);
+        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
+        targetAngle = VNorm(targetAngle);
+        if (distance < 0.08f)
+        {
+            evadeCount = 3;
+        }
+        break;
+    case 3:
+        targetAngle = VGet(-2 - offset.x, 9 - offset.y, 0);
+        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
+        targetAngle = VNorm(targetAngle);
+        if (distance < 0.08f)
+        {
+            evadeCount = 0;
+            evadetype = 4;
+        }
+        break;
+    default:
+        targetAngle = VGet(2 - offset.x, -7 - offset.y, 0);
+        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
+        targetAngle = VNorm(targetAngle);
+        if (distance < 0.08f)
+        {
+            evadeCount = 1;
+        }
+        break;
+    }
+}
+bool Enemy::Transition()
+{
+
+    MV1DrawModel(ModelHandle);
+    if (transitionMoveZaxis >= 50.0f)
+    {
+        offset = VGet(playerObject->offset.x + 3, playerObject->offset.y - 2, 0);
+        return true;
+    }
+    else
+    {
+        BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, transitionMoveZaxis));
+        transitionMoveZaxis += 0.8f;
+        Move(VAdd(VGet(playerObject->offset.x + 3, playerObject->offset.y - 2, 0), BasePosition));
+        return false;
     }
 }
