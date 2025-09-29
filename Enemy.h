@@ -5,44 +5,60 @@
 #include "Player.h"
 #include "Missile.h"
 #include "fontLoader.h"
+enum evadeType
+{
+    TYPE_BARRELROLL,
+    TYPE_HORIZONTAL_FLUCTUATING,
+    TYPE_VERTICAL_FLUCTUATING
+
+};
 class Player;
 class Enemy:public base
 {
 private:
     Player* playerObject;
     
-    float moveSpeed = 0.2f;
-    float moveRange = 10;
-    float rotateSpeed = 0.04;
+    float moveSpeed = 0.6f;
+    float moveRange = 10.0f;
+    float rotateSpeed = 0.04f;
     float x, y;
     VECTOR offset = VGet(0, -5, 0);
     VECTOR BasePosition;
     VECTOR targetAngle;
     VECTOR targetAnglePitch;
 
-    float firingTimer = 0;
+    float firingTimer = 0.0f;
     float firingRate = 0.2f;
-    float firingInterval = 2;
-    float firingCooldown = 0;
+    float firingInterval = 2.0f;
+    float firingCooldown = 0.0f;
     bool isFiring = false;
     VECTOR vulcanTargetPosition;
     Bullet bullets[10];
     int LoadedAmmoCount;
 
     Missile missileObject;
-    float missileCooldown = 0;
-    float missilecooldowntimer = 5;
-    float missileflyingTimer = 0;
-    float DespawnTimer = 0;
+    float missileCooldown = 0.0f;
+    float missilecooldowntimer = 5.0f;
+    float missileflyingTimer = 0.0f;
+    float DespawnTimer = 0.0f;
     bool isLaunched = false;
+
+    int evadetype = 0;
+    int evadeCount = 0;
+    void barrelRoll();
+    void H_Fluctuating();
+    void V_Fluctuating();
+    float xSpeed = 0.0f, ySpeed = 0.0f;
 public:
     int Health = 100;;
     void missile();
     void InitialProcess();
     void Vulcan();
     void mainProcess(bool mode);
+    void run();
     void roll();
     void pitch();
+    void EnemyMoveXY();
     void PlayerSet(Player* player)
     {
         playerObject = player;

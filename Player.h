@@ -12,8 +12,8 @@ private:
     Enemy* enemyObject;
     int PlayerLightHandle;
     float moveSpeed= 0.2f;
-    float moveRange = 10;
-    float rotateSpeed = 0.04;
+    float moveRange = 11;
+    float rotateSpeed = 0.04f;
     float x, y;
     void KeyInput();
     void PlayerMoveXY();

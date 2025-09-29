@@ -83,8 +83,8 @@ void Stage1MainProcess()
             {
                 isKilled = true;
             }
-            player.mainProcess(false);
-            enemy.mainProcess(false);
+            player.mainProcess(true);
+            enemy.mainProcess(true);
             MV1DrawModel(player.ModelHandle);
             if (isDead)
             {
