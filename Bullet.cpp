@@ -3,7 +3,7 @@ bool Bullet::mainProcess(VECTOR hitbox1, VECTOR hitbox2)
 {
     StartPosition = VAdd(StartPosition, VScale(VGet(forward.x,-forward.y,forward.z), 1));
     
-    DrawSphere3D(StartPosition, 0.1f, 32, GetColor(255, 255, 0), GetColor(255, 255, 255), true);
+    DrawSphere3D(StartPosition, 0.3f, 32, GetColor(255, 255, 0), GetColor(255, 255, 255), true);
     if (StartPosition.z >= target.z)
     {
         isActivated = false;

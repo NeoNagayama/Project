@@ -12,12 +12,11 @@ private:
     Enemy* enemyObject;
     int PlayerLightHandle;
     float moveSpeed= 0.2f;
-    float moveRange = 10;
-    float rotateSpeed = 0.04;
+    float moveRange = 11;
+    float rotateSpeed = 0.06f;
     float x, y;
     void KeyInput();
     void PlayerMoveXY();
-    VECTOR offset = VGet(0,-5,0);
     VECTOR targetAngle;
     VECTOR targetAnglePitch;
     float bulletPositionX[50];
@@ -34,6 +33,7 @@ private:
     int maxAmmo = 200;
     Bullet bullets[200];
     Flare Flares[10];
+    VECTOR CameraPosition;
 public:
     int Health = 100;
     int ammo = 200;
@@ -48,4 +48,6 @@ public:
     {
         enemyObject = enemy;
     }
+    bool Transition();
+    VECTOR offset = VGet(0, -5, 0);
 };
