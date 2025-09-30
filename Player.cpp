@@ -345,6 +345,7 @@ void Player::pitch()
 }
 bool Player::Transition()
 {
+    rotatePlayer();
     BasePosition = VAdd(VGet(0, 0, 1), BasePosition);
     VECTOR targetCameraPosition = VAdd(VGet(offset.x / 2, offset.y / 2, -20), BasePosition);
     CameraPosition = VAdd(VAdd(CameraPosition,VScale(VNorm(VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z)),0.4f)),VGet(0, 0, 1.0f));

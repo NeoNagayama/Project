@@ -17,7 +17,6 @@ private:
     float x, y;
     void KeyInput();
     void PlayerMoveXY();
-    VECTOR targetAngle;
     VECTOR targetAnglePitch;
     float bulletPositionX[50];
     float bulletPositionY[50];
@@ -35,6 +34,8 @@ private:
     Flare Flares[10];
     VECTOR CameraPosition;
 public:
+
+    VECTOR targetAngle;
     int Health = 100;
     int ammo = 200;
     VECTOR BasePosition;
