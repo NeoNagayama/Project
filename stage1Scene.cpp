@@ -90,7 +90,7 @@ void Stage1MainProcess()
             {
                 isKilled = true;
             }
-            if (player.BasePosition.z > 1200.0f && gamePhase == PHASE_RUN)
+            if (player.BasePosition.z > 10.0f && gamePhase == PHASE_RUN)
             {
                 gamePhase = PHASE_OVERSHOOT;
             }

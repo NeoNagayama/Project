@@ -11,3 +11,4 @@ enum SCENES
     SCENE_CLEAR
 };
 extern float smooth(float min, float max, float n);
+extern float VectorLength(VECTOR from, VECTOR to);

@@ -52,7 +52,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         WaitTimer(16);
     }
 
-    DxLib_End();				// ＤＸライブラリ使用の終了処理
+    DxLib_End();				
 
     return 0;				// ソフトの終了 
 }
@@ -63,5 +63,10 @@ float smooth(float from, float to, float t)
     //n = n * ((middle - ((middle > n ? middle : n) - (middle < n ? middle : n))) / middle);
     float n = ((from > to ? from : to) - (from < to ? from : to)) / (t * 0.5f);
     return n;
+}
+float VectorLength(VECTOR from, VECTOR to)
+{
+    VECTOR difference = VGet(to.x - from.x, to.y - from.y, to.z - from.z);
+    return sqrtf((difference.x * difference.x) + (difference.y * difference.y) + (difference.z * difference.z));
 }
 

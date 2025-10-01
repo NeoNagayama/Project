@@ -392,7 +392,8 @@ void Enemy::V_Fluctuating()
 }
 bool Enemy::Transition()
 {
-
+    playerObject->targetAngle = VGet(0, -0.99, 0);
+    playerObject->rotatePlayer();
     MV1DrawModel(ModelHandle);
     if (transitionMoveZaxis >= 50.0f)
     {
