@@ -8,7 +8,7 @@ void Player::InitialProcess()
     MV1SetPosition(ModelHandle, VGet(0, -5, -0));
     MV1SetScale(ModelHandle, VGet(3, 3, 3));
     Position = VGet(0, -5, -0);
-    PlayerLightHandle = CreateDirLightHandle(VGet(0,1,0));
+    PlayerLightHandle = CreateDirLightHandle(VGet(0,0.7f,-0.3f));
     SetLightEnableHandle(PlayerLightHandle, true);
     SetLightDifColorHandle(PlayerLightHandle, GetColorF(1, 1, 1, 1));
     SetLightSpcColorHandle(PlayerLightHandle, GetColorF(1, 1, 1,1));
