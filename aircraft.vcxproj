@@ -158,7 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Corner.dft" />
+    <None Include="CornerBigger.dft" />
     <None Include="F22\F22 export 2024_9_7.x" />
+    <None Include="Quantify.dft" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h" />

@@ -8,9 +8,11 @@ void Player::InitialProcess()
     MV1SetPosition(ModelHandle, VGet(0, -5, -0));
     MV1SetScale(ModelHandle, VGet(3, 3, 3));
     Position = VGet(0, -5, -0);
-    PlayerLightHandle = CreateDirLightHandle(VGet(0.5f,1,0));
+    PlayerLightHandle = CreateDirLightHandle(VGet(0,1,0));
     SetLightEnableHandle(PlayerLightHandle, true);
-    SetLightDifColorHandle(PlayerLightHandle, GetColorF(0.9, 0.9, 1, 1));
+    SetLightDifColorHandle(PlayerLightHandle, GetColorF(1, 1, 1, 1));
+    SetLightSpcColorHandle(PlayerLightHandle, GetColorF(1, 1, 1,1));
+    SetLightAmbColorHandle(PlayerLightHandle, GetColorF(0.2f, 0.2f, 0.4f, 1));
 }
 void Player::mainProcess(bool mode)
 {
@@ -99,7 +101,7 @@ void Player::KeyInput()
     {
         if (!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W))
         {
-            targetAngle = VGet(0, -0.99, 0);
+            targetAngle = VGet(0, -0.99f, 0);
             //targetAnglePitch = VGet(0, 0, 1);
             /*if (rotateSpeed > 0)
             {
@@ -172,6 +174,7 @@ void Player::PlayerMoveXY()
 }
 void Player::Vulcan()
 {
+    textPositionSet(120, 1920, "VLUCAN: %d", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50), ammo);
     Position = MV1GetPosition(ModelHandle);
     for (int i = 49; i >= 0; i--)
     {
@@ -186,7 +189,8 @@ void Player::Vulcan()
             bulletPositionY[i] = bulletPositionY[i - 1];
         }
     }
-    DrawExtendGraph(ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[20],bulletPositionY[20],BasePosition.z), VGet(0, 0, 50))).x - 120, ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[20], bulletPositionY[20], BasePosition.z), VGet(0, 0, 50))).y - 120, ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[20], bulletPositionY[20], BasePosition.z), VGet(0, 0, 50))).x + 120, ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[20], bulletPositionY[20], BasePosition.z), VGet(0, 0, 50))).y + 120, reticleHandle, true);
+    VECTOR ReticleCenter = ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[15], bulletPositionY[15], BasePosition.z), VGet(0, 0, 50)));
+    DrawExtendGraph((int)ReticleCenter.x-120, (int)ReticleCenter.y + 120, (int)ReticleCenter.x + 120, (int)ReticleCenter.y -120, reticleHandle, true);
     if (CheckHitKey(KEY_INPUT_SPACE) && firingTimer > firingRate &&ammo>0)
     {
         firingTimer = 0;
@@ -225,6 +229,14 @@ void Player::Flare()
         Launching = true;
         FlareAmount = 10;
         enemyObject->isGuideLost = true;
+    }
+    if (FlareCoolDown > FlareInterval)
+    {
+        textPositionSet(120, 1920, "FLARE:READY", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
+    }
+    else
+    {
+        textPositionSet(120, 1920, "FLARE: %d", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50),  5-FlareCoolDown);
     }
     if (Launching)
     {

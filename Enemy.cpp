@@ -99,7 +99,7 @@ void Enemy::Vulcan()
         printfDx("\n%f %f %f", VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), 0.07f).x, VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), 0.07f).y, VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), 0.07f).z);*/
         VECTOR GraphPosition = ConvWorldPosToScreenPos(VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + 50));
 
-        DrawExtendGraph(GraphPosition.x - 120, GraphPosition.y - 120, GraphPosition.x + 120, GraphPosition.y + 120, reticleHandle, true);
+        DrawExtendGraph((int)GraphPosition.x - 120, (int)GraphPosition.y - 120, (int)GraphPosition.x + 120, (int)GraphPosition.y + 120, reticleHandle, true);
     }
 }
 void Enemy::missile()
@@ -143,7 +143,6 @@ void Enemy::missile()
             isLaunched = false;
             missileflyingTimer = 0;
             missilecooldowntimer = 0;
-            playerObject->Health -= 30;
             missileCooldown = get_rand(50, 70) * 0.1f;
         }
     }
@@ -153,7 +152,6 @@ void Enemy::missile()
         isLaunched = false;
         missileflyingTimer = 0;
         missilecooldowntimer = 0;
-        playerObject->Health -= 30;
         missileCooldown = get_rand(50, 70) * 0.1f;
     }
 }
@@ -392,7 +390,7 @@ void Enemy::V_Fluctuating()
 }
 bool Enemy::Transition()
 {
-    playerObject->targetAngle = VGet(0, -0.99, 0);
+    playerObject->targetAngle = VGet(0, -0.99f, 0);
     playerObject->rotatePlayer();
     MV1DrawModel(ModelHandle);
     if (transitionMoveZaxis >= 50.0f)
