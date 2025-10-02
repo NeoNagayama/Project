@@ -13,7 +13,7 @@ private:
     int PlayerLightHandle;
     float moveSpeed= 0.2f;
     float moveRange = 11;
-    float rotateSpeed = 0.06f;
+    float rotateSpeed = 0.08f;
     float x, y;
     void KeyInput();
     void PlayerMoveXY();
@@ -34,7 +34,6 @@ private:
     Flare Flares[10];
     VECTOR CameraPosition;
 public:
-
     VECTOR targetAngle;
     int Health = 100;
     int ammo = 200;

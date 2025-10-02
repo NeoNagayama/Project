@@ -18,7 +18,7 @@ class Enemy:public base
 private:
     Player* playerObject;
     
-    float moveSpeed = 0.47f;
+    float moveSpeed = 0.52f;
     float moveRange = 10.0f;
     float rotateSpeed = 0.08f;
     float x, y;
@@ -49,7 +49,6 @@ private:
     void H_Fluctuating();
     void V_Fluctuating();
     float xSpeed = 0.0f, ySpeed = 0.0f;
-    float transitionMoveZaxis = -50.0f;
 public:
     int Health = 100;;
     void missile();
@@ -67,4 +66,5 @@ public:
     int get_rand(int min, int max);
     bool isGuideLost = false;
     bool Transition();
+    float transitionMoveZaxis = -50.0f;
 };

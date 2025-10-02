@@ -20,4 +20,5 @@ public:
     void SetRotation(VECTOR vector);
     void SetHitBox(float width, float height);
     void TestHitBox();
+    void DrawhitBoxToUI();
 };

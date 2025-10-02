@@ -18,6 +18,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetCameraNearFar(0.1f, 1000.0f);
     SetUseLighting(true);
     SetLightEnable(true);
+    SetUseZBuffer3D(TRUE);
+    SetWriteZBuffer3D(TRUE);
     reticleHandle = LoadGraph("Reticle.png", false);
     fontLoad();
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置

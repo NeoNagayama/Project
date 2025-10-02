@@ -54,9 +54,10 @@ void Stage1InitialProcess()
 }
 void Stage1MainProcess()
 {
-    DrawBox(30, 30, 320, 320, GetColor(0, 255, 122), 1);
     if (isStarted)
     {
+        MV1SetPosition(player.ModelHandle, VGet(0, -5, 0));
+        SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -25), VGet(0, 0, 0));
         MV1DrawModel(player.ModelHandle);
         if (fadein(0.5f))
         {
@@ -64,11 +65,13 @@ void Stage1MainProcess()
             isStarted = false;
         }
     }
+    
     else
     {
         
         if (!isPause)
         {
+            MV1DrawModel(player.ModelHandle);
             /*if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
             {
                 isCleared = true;
@@ -88,14 +91,23 @@ void Stage1MainProcess()
             }
             if (enemy.Health < 0)
             {
+                enemy.Health = 0;
                 isKilled = true;
             }
-            if (player.BasePosition.z > 10.0f && gamePhase == PHASE_RUN)
+            if (player.Health < 0)
+            {
+                player.Health = 0;
+                isDead = true;
+            }
+            textPositionSet(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
+            textPositionSet(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT,500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
+            if (player.BasePosition.z > 2000.0f && gamePhase == PHASE_RUN)
             {
                 gamePhase = PHASE_OVERSHOOT;
             }
             else if(gamePhase == PHASE_RUN)
             {
+                textPositionSet(0, 1800, "PROGRESS: %d", fontHandle, SORT_RIGHT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50), (int)(player.BasePosition.z / 2000 * 100));
                 player.mainProcess(false);
                 enemy.mainProcess(false);
             }
@@ -108,12 +120,10 @@ void Stage1MainProcess()
             }
             if (gamePhase == PHASE_CHASE)
             {
-                clsDx();
-                printfDx("enemyHealth%d \n ammo %d", enemy.Health,player.ammo);
                 player.mainProcess(true);
                 enemy.mainProcess(true);
             }
-            MV1DrawModel(player.ModelHandle);
+            
             if (isDead)
             {
                 if (fadeout(1))
@@ -216,5 +226,10 @@ void Stage1Initialize()
     player.ammo = 200;
     choosedButton = 0;
     player.Health = 100;
-    
+    enemy.Health = 100;
+    player.offset = VGet(0, -5, 0);
+    player.BasePosition.z = 0;
+    gamePhase = 0;
+    isKilled = false;
+    enemy.transitionMoveZaxis = -50.0f;
 }
