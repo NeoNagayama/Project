@@ -18,7 +18,7 @@ class Enemy:public base
 private:
     Player* playerObject;
     
-    float moveSpeed = 0.52f;
+    float moveSpeed = 0.56f;
     float moveRange = 10.0f;
     float rotateSpeed = 0.08f;
     float x, y;
@@ -63,7 +63,7 @@ public:
     {
         playerObject = player;
     }
-    int get_rand(int min, int max);
+    
     bool isGuideLost = false;
     bool Transition();
     float transitionMoveZaxis = -50.0f;

@@ -27,12 +27,12 @@ void Player::mainProcess(bool mode)
     pitch();
     if (mode)
     {
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x/2, offset.y/2, -20), BasePosition),  BasePosition);
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 3, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
         Vulcan();
     }
     else
     {
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(0, 0, -25), BasePosition), BasePosition);
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 3, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
         CameraPosition = VAdd(VGet(0, 0, -25), BasePosition);
         Flare();
     }
@@ -357,17 +357,22 @@ void Player::pitch()
 }
 bool Player::Transition()
 {
+    targetAngle = VGet(0, -0.99f, 0);
     rotatePlayer();
     BasePosition = VAdd(VGet(0, 0, 1), BasePosition);
-    VECTOR targetCameraPosition = VAdd(VGet(offset.x / 2, offset.y / 2, -20), BasePosition);
-    CameraPosition = VAdd(VAdd(CameraPosition,VScale(VNorm(VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z)),0.4f)),VGet(0, 0, 1.0f));
+    VECTOR targetCameraPosition = VAdd(VGet(offset.x , offset.y + 3 , -20), BasePosition);
     VECTOR cameraToTargetVector = VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z);
     float distance = sqrtf((cameraToTargetVector.x * cameraToTargetVector.x) + (cameraToTargetVector.y * cameraToTargetVector.y) + (cameraToTargetVector.z * cameraToTargetVector.z));
-    SetCameraPositionAndTarget_UpVecY(CameraPosition, BasePosition);
+    
     Move(VAdd(BasePosition, offset));
     if (distance <=1.0f)
     {
+        CameraPosition = targetCameraPosition;
+        SetCameraPositionAndTarget_UpVecY(targetCameraPosition, VAdd(VGet(offset.x, offset.y, 20), BasePosition));
         return true;
     }
+
+    CameraPosition = VAdd(VAdd(CameraPosition, VScale(VNorm(VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z)), 0.2f)), VGet(0, 0, 1.0f));
+    SetCameraPositionAndTarget_UpVecY(CameraPosition, VAdd(VGet(offset.x, offset.y, 20), BasePosition));
     return false;
 }
