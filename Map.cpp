@@ -15,32 +15,32 @@ void mapBase::DrawDamageBox(bool upper, bool lower, bool right, bool left, bool 
 {
     if (upper)
     {
-        VECTOR edge1 = VGet(position.x - 15, position.y + 4, position.z - 40);
+        VECTOR edge1 = VGet(position.x - 15, position.y + 7, position.z - 40);
         VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 40);
         DamageBox(edge1, edge2);
     }
     if (lower)
     {
         VECTOR edge1 = VGet(position.x - 15, position.y -15, position.z - 40);
-        VECTOR edge2 = VGet(position.x + 15, position.y -4, position.z + 40);
+        VECTOR edge2 = VGet(position.x + 15, position.y -7, position.z + 40);
         DamageBox(edge1, edge2);
     }
     if (right)
     {
-        VECTOR edge1 = VGet(position.x + 4, position.y - 15, position.z - 40);
+        VECTOR edge1 = VGet(position.x + 7, position.y - 15, position.z - 40);
         VECTOR edge2 = VGet(position.x + 14, position.y + 15, position.z + 40);
         DamageBox(edge1, edge2);
     }
     if (left)
     {
         VECTOR edge1 = VGet(position.x - 15, position.y - 15, position.z - 40);
-        VECTOR edge2 = VGet(position.x -4, position.y + 15, position.z + 40);
+        VECTOR edge2 = VGet(position.x - 7, position.y + 15, position.z + 40);
         DamageBox(edge1, edge2);
     }
     if (center)
     {
-        VECTOR edge1 = VGet( - 4, position.y - 15, position.z - 40);
-        VECTOR edge2 = VGet( 4, position.y + 15, position.z + 40);
+        VECTOR edge1 = VGet( -7, position.y - 15, position.z - 40);
+        VECTOR edge2 = VGet(7, position.y + 15, position.z + 40);
         DamageBox(edge1, edge2); 
     }
 }

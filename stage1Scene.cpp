@@ -56,7 +56,7 @@ void Stage1InitialProcess()
     SetBackgroundColor(150, 160, 180, 50);
     for (int i = 4; i < 25; i++)
     {
-        obstacle[i] = get_rand(0,20);
+        obstacle[i] = get_rand(0,30);
     }
 }
 void Stage1MainProcess()
@@ -69,7 +69,7 @@ void Stage1MainProcess()
         {
             pos -= 25;
         }
-        maps[pos].position.z = pos * 80 + ((int)(((pos * 80) + player.BasePosition.z )/ 2000) * 2000);
+        maps[pos].position.z = 80*(i + (int)player.BasePosition.z/80);
         maps[pos].DrawbaseOutline();
         switch (obstacle[pos]){
         case CENTER:
