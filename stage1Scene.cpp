@@ -7,6 +7,7 @@
 #include "GameOver.h"
 #include "TitleScene.h"
 #include "Player.h"
+#include "Map.h"
 bool isStarted = true;
 bool isCleared = false;
 bool isDead = false;
@@ -23,6 +24,8 @@ Button Stage1ToTitle;
 Button Buttons[3];
 Player player;
 Enemy enemy;
+mapBase maps[25];
+int obstacle[25];
 enum Phase
 {
     PHASE_RUN,
@@ -51,9 +54,76 @@ void Stage1InitialProcess()
     player.EnemySet(&enemy);
     enemy.PlayerSet(&player);
     SetBackgroundColor(150, 160, 180, 50);
+    for (int i = 4; i < 25; i++)
+    {
+        obstacle[i] = get_rand(0,20);
+    }
 }
 void Stage1MainProcess()
 {
+    
+    for (int i = 0; i <  15; i++)
+    {
+        int pos = i + ((int)player.BasePosition.z % 2000) / 80;
+        if (pos > 24)
+        {
+            pos -= 25;
+        }
+        maps[pos].position.z = pos * 80 + ((int)(((pos * 80) + player.BasePosition.z )/ 2000) * 2000);
+        maps[pos].DrawbaseOutline();
+        switch (obstacle[pos]){
+        case CENTER:
+            maps[pos].DrawDamageBox(false, false, false, false, false);
+            break;
+        case UPPER:
+            maps[pos].DrawDamageBox(true, false, false, false, false);
+            break;
+        case LOWER:
+            maps[pos].DrawDamageBox(false, true, false, false, false);
+            break;
+        case RIGHT:
+            maps[pos].DrawDamageBox(false, false, true, false, false);
+            break;
+        case LEFT:
+            maps[pos].DrawDamageBox(false, false, false, true, false);
+            break;
+        case UPPER_LOWER:
+            maps[pos].DrawDamageBox(true, true, false, false, false);
+            break;
+        case UPPER_RIGHT:
+            maps[pos].DrawDamageBox(true, false, true, false, false);
+            break;
+        case UPPER_LEFT:
+            maps[pos].DrawDamageBox(true, false, false, true, false);
+            break;
+        case UPPER_CENTER:
+            maps[pos].DrawDamageBox(true, false, false, false, false);
+            break;
+        case LOWER_RIGHT:
+            maps[pos].DrawDamageBox(false, true, true, false, false);
+            break;
+        case LOWER_LEFT:
+            maps[pos].DrawDamageBox(false, true, false, true, false);
+            break;
+        case LOWER_CENTER:
+            maps[pos].DrawDamageBox(false, true, false, false, false);
+            break;
+        case RIGHT_LEFT:
+            maps[pos].DrawDamageBox(false, false, true, true, false);
+            break;
+        case RIGHT_CENTER:
+            maps[pos].DrawDamageBox(false, false, true, false, false);
+            break;
+        case LEFT_CENTER:
+            maps[pos].DrawDamageBox(false, false, false, true, false);
+            break;
+        default:
+            break;
+        }
+        clsDx();
+        printfDx("%f", maps[pos].position.z);
+        
+    }
     if (isStarted)
     {
         MV1SetPosition(player.ModelHandle, VGet(0, -5, 0));
@@ -113,7 +183,7 @@ void Stage1MainProcess()
             }
             if (gamePhase == PHASE_OVERSHOOT)
             {
-                if (enemy.Transition() && player.Transition())
+                if (enemy.Transition())
                 {
                     gamePhase = PHASE_CHASE;
                 }

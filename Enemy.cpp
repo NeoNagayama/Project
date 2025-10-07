@@ -155,12 +155,7 @@ void Enemy::missile()
         missileCooldown = get_rand(50, 70) * 0.1f;
     }
 }
-int  Enemy::get_rand(int min,int max)
-{
-    static std::mt19937 mt(0);
-    std::uniform_int_distribution<int> get_rand_uni_int(min, max);
-    return get_rand_uni_int(mt);
-}
+
 void Enemy::run()
 {
     switch (evadetype) {
@@ -227,15 +222,15 @@ void Enemy::EnemyMoveXY()
     }
     if (offset.x > moveRange || offset.x < -moveRange)
     {
-        offset.x = (offset.x > moveRange) ? moveRange : -moveRange;
+        offset.x = (offset.x > moveRange) ? moveRange -1 : -moveRange + 1;
     }
     if (offset.y > moveRange || offset.y < -moveRange)
     {
-        offset.y = (offset.y > moveRange) ? moveRange : -moveRange;
+        offset.y = (offset.y > moveRange) ? moveRange -1 : -moveRange + 1;
     }
     if (offset.z > moveRange || offset.z < -moveRange)
     {
-        offset.z = (offset.z > moveRange) ? moveRange : -moveRange;
+        offset.z = (offset.z > moveRange) ? moveRange -1 : -moveRange + 1;
     }
     
 }
@@ -390,10 +385,11 @@ void Enemy::V_Fluctuating()
 }
 bool Enemy::Transition()
 {
-    playerObject->targetAngle = VGet(0, -0.99f, 0);
-    playerObject->rotatePlayer();
+    /*playerObject->BasePosition.z += 1;
+    playerObject->Move(VAdd(playerObject->BasePosition, playerObject->offset));*/
+    
     MV1DrawModel(ModelHandle);
-    if (transitionMoveZaxis >= 50.0f)
+    if (playerObject->Transition() && transitionMoveZaxis >= 50.0f)
     {
         offset = VGet(playerObject->offset.x + 3, playerObject->offset.y - 2, 0);
         return true;
@@ -401,7 +397,7 @@ bool Enemy::Transition()
     else
     {
         BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, transitionMoveZaxis));
-        transitionMoveZaxis += 0.8f;
+        transitionMoveZaxis += 1.2f;
         Move(VAdd(VGet(playerObject->offset.x + 3, playerObject->offset.y - 2, 0), BasePosition));
         return false;
     }

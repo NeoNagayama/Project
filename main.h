@@ -12,3 +12,4 @@ enum SCENES
 };
 extern float smooth(float min, float max, float n);
 extern float VectorLength(VECTOR from, VECTOR to);
+extern int get_rand(int min, int max);

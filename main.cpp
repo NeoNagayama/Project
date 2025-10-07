@@ -7,6 +7,7 @@
 #include "fontLoader.h"
 #include "main.h"
 #include "Player.h"
+#include <random>
 int scene = 0;
 int reticleHandle = 0;
 // ƒvƒƒOƒ‰ƒ€‚Í WinMain ‚©‚çn‚Ü‚è‚Ü‚·
@@ -70,5 +71,11 @@ float VectorLength(VECTOR from, VECTOR to)
 {
     VECTOR difference = VGet(to.x - from.x, to.y - from.y, to.z - from.z);
     return sqrtf((difference.x * difference.x) + (difference.y * difference.y) + (difference.z * difference.z));
+}
+int  get_rand(int min, int max)
+{
+    static std::mt19937 mt(0);
+    std::uniform_int_distribution<int> get_rand_uni_int(min, max);
+    return get_rand_uni_int(mt);
 }
 
