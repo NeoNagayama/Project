@@ -28,6 +28,7 @@ private:
 public:
     VECTOR position = VGet(0,0,0);
     void DrawbaseOutline();
-    void DrawDamageBox(bool upper, bool lower, bool right, bool left, bool center);
-    void DamageBox(VECTOR edge1,VECTOR edge2);
+    void DamageBox(bool upper, bool lower, bool right, bool left, bool center);
+    void DrawDamageBox(VECTOR edge1,VECTOR edge2);
+    bool checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2);
 };

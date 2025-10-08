@@ -56,7 +56,7 @@ void Stage1InitialProcess()
     SetBackgroundColor(150, 160, 180, 50);
     for (int i = 4; i < 25; i++)
     {
-        obstacle[i] = get_rand(0,30);
+        obstacle[i] = get_rand(0,20);
     }
 }
 void Stage1MainProcess()
@@ -73,56 +73,64 @@ void Stage1MainProcess()
         maps[pos].DrawbaseOutline();
         switch (obstacle[pos]){
         case CENTER:
-            maps[pos].DrawDamageBox(false, false, false, false, false);
+            maps[pos].DamageBox(false, false, false, false, false);
             break;
         case UPPER:
-            maps[pos].DrawDamageBox(true, false, false, false, false);
+            maps[pos].DamageBox(true, false, false, false, false);
             break;
         case LOWER:
-            maps[pos].DrawDamageBox(false, true, false, false, false);
+            maps[pos].DamageBox(false, true, false, false, false);
             break;
         case RIGHT:
-            maps[pos].DrawDamageBox(false, false, true, false, false);
+            maps[pos].DamageBox(false, false, true, false, false);
             break;
         case LEFT:
-            maps[pos].DrawDamageBox(false, false, false, true, false);
+            maps[pos].DamageBox(false, false, false, true, false);
             break;
         case UPPER_LOWER:
-            maps[pos].DrawDamageBox(true, true, false, false, false);
+            maps[pos].DamageBox(true, true, false, false, false);
             break;
         case UPPER_RIGHT:
-            maps[pos].DrawDamageBox(true, false, true, false, false);
+            maps[pos].DamageBox(true, false, true, false, false);
             break;
         case UPPER_LEFT:
-            maps[pos].DrawDamageBox(true, false, false, true, false);
+            maps[pos].DamageBox(true, false, false, true, false);
             break;
         case UPPER_CENTER:
-            maps[pos].DrawDamageBox(true, false, false, false, false);
+            maps[pos].DamageBox(true, false, false, false, false);
             break;
         case LOWER_RIGHT:
-            maps[pos].DrawDamageBox(false, true, true, false, false);
+            maps[pos].DamageBox(false, true, true, false, false);
             break;
         case LOWER_LEFT:
-            maps[pos].DrawDamageBox(false, true, false, true, false);
+            maps[pos].DamageBox(false, true, false, true, false);
             break;
         case LOWER_CENTER:
-            maps[pos].DrawDamageBox(false, true, false, false, false);
+            maps[pos].DamageBox(false, true, false, false, false);
             break;
         case RIGHT_LEFT:
-            maps[pos].DrawDamageBox(false, false, true, true, false);
+            maps[pos].DamageBox(false, false, true, true, false);
             break;
         case RIGHT_CENTER:
-            maps[pos].DrawDamageBox(false, false, true, false, false);
+            maps[pos].DamageBox(false, false, true, false, false);
             break;
         case LEFT_CENTER:
-            maps[pos].DrawDamageBox(false, false, false, true, false);
+            maps[pos].DamageBox(false, false, false, true, false);
             break;
         default:
             break;
         }
         clsDx();
         printfDx("%f", maps[pos].position.z);
-        
+        if (i == 14)
+        {
+            int t = 15 + ((int)player.BasePosition.z % 2000) / 80;
+            obstacle[t > 24 ? t - 25 : t] = get_rand(0, 20);
+        }
+        if ()
+        {
+
+        }
     }
     if (isStarted)
     {
