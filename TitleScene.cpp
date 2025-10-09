@@ -36,6 +36,10 @@ void TitleMainProcess()
     {
         sceneChanging = true;
     }
+    else if (!isStartSelected && Input_GetKeyboardDown(KEY_INPUT_SPACE))
+    {
+        Quit = true;
+    }
     if (sceneChanging)
     {
         if (fadeout(0.5f))

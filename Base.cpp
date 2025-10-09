@@ -39,8 +39,8 @@ void base::SetRotation(VECTOR vector)
 }
 void base::SetHitBox(float width, float height)
 {
-    hitbox1 = VGet(Position.x - width / 2, Position.y - height / 2, Position.z - width);
-    hitbox2 = VGet(Position.x + width / 2, Position.y + height / 2, Position.z + width);
+    hitbox1 = VGet(Position.x - width / 2, Position.y+0.5f - height / 2, Position.z - width);
+    hitbox2 = VGet(Position.x + width / 2, Position.y+0.5f + height / 2, Position.z + width);
     DrawhitBoxToUI();
 }
 void base::TestHitBox()
