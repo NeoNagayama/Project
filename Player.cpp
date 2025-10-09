@@ -16,7 +16,7 @@ void Player::InitialProcess()
 }
 void Player::mainProcess(bool mode)
 {
-    SetHitBox(4, 4);
+    SetHitBox(2, 2);
 
     
     BasePosition = VAdd(VGet(0, 0, 1),BasePosition);
@@ -27,12 +27,12 @@ void Player::mainProcess(bool mode)
     pitch();
     if (mode)
     {
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 3, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
         Vulcan();
     }
     else
     {
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 3, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
         CameraPosition = VAdd(VGet(0, 0, -25), BasePosition);
         Flare();
     }

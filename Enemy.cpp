@@ -13,14 +13,14 @@ void Enemy::mainProcess(bool mode)
 {
     if (mode)
     {
-        BasePosition = VAdd(playerObject->BasePosition, VGet(0, -5, 50));
+        BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, 50));
         run();
         EnemyMoveXY();
         roll();
     }
     else
     {
-        BasePosition = VAdd(playerObject->BasePosition, VGet(0, -5, -50));
+        BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, -50));
         Vulcan();
         missile();
     }
@@ -175,6 +175,15 @@ void Enemy::run()
 }
 void Enemy::EnemyMoveXY()
 {
+
+    if (offset.x > moveRangeX || offset.x < minimumMoveRangeX)
+    {
+        targetAngle = VNorm(VGet(1-offset.x,1-offset.y,0));
+    }
+    if (offset.y > moveRangeY || offset.y < minimumMoveRangeY)
+    {
+        targetAngle = VNorm(VGet(1-offset.x, 1-offset.y, 0));
+    }
     if (targetAngle.x > 0.2f && xSpeed < 0.6f)
     {
         xSpeed += 0.1f;
@@ -204,9 +213,9 @@ void Enemy::EnemyMoveXY()
     }
 
     
-    xSpeed = (offset.x > moveRange || offset.x < -moveRange) ?0 : xSpeed *moveSpeed;
+    xSpeed =xSpeed *moveSpeed;
     
-    ySpeed = (offset.y > moveRange || offset.y < -moveRange + 1) ? 0 : ySpeed * moveSpeed;
+    ySpeed =  ySpeed * moveSpeed;
     
     if (Rotation.y == DegToRad(90))
     {
@@ -219,18 +228,6 @@ void Enemy::EnemyMoveXY()
     else
     {
         offset = VAdd(VGet(xSpeed, ySpeed, 0), offset);
-    }
-    if (offset.x > moveRange || offset.x < -moveRange)
-    {
-        offset.x = (offset.x > moveRange) ? moveRange -1 : -moveRange + 1;
-    }
-    if (offset.y > moveRange || offset.y < -moveRange)
-    {
-        offset.y = (offset.y > moveRange) ? moveRange -1 : -moveRange + 1;
-    }
-    if (offset.z > moveRange || offset.z < -moveRange)
-    {
-        offset.z = (offset.z > moveRange) ? moveRange -1 : -moveRange + 1;
     }
     
 }
@@ -256,9 +253,13 @@ void Enemy::barrelRoll()
 {
     
     float distance = 0;
+    int x = 9 > moveRangeX ? moveRangeX : 9;
+    int lowerX = -9 < minimumMoveRangeX ? minimumMoveRangeX : -9;
+    int y = 9 > moveRangeY ? moveRangeY : 9;
+    int lowerY = -5 < minimumMoveRangeY ? minimumMoveRangeY : -5;
     switch (evadeCount) {
     case 1:
-        targetAngle = VGet(9 - offset.x, 9 - offset.y, 0);
+        targetAngle = VGet(x - offset.x, y - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -267,7 +268,7 @@ void Enemy::barrelRoll()
         }
         break;
     case 2:
-        targetAngle = VGet(9 - offset.x, -5 - offset.y, 0);
+        targetAngle = VGet(x - offset.x, lowerY - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -276,7 +277,7 @@ void Enemy::barrelRoll()
         }
         break;
     case 3:
-        targetAngle = VGet(-9 - offset.x, -5 - offset.y, 0);
+        targetAngle = VGet(lowerX - offset.x, lowerY - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -286,7 +287,7 @@ void Enemy::barrelRoll()
         }
         break;
     default:
-        targetAngle = VGet(-9 - offset.x, 9 - offset.y, 0);
+        targetAngle = VGet(lowerX - offset.x, y - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         
@@ -300,9 +301,11 @@ void Enemy::barrelRoll()
 void Enemy::H_Fluctuating()
 {
     float distance = 0;
+    int x = 9 > moveRangeX ? moveRangeX : 9;
+    int lowerX = -9 < minimumMoveRangeX ? minimumMoveRangeX : -9;
     switch (evadeCount) {
     case 1:
-        targetAngle = VGet(9 - offset.x, 2 - offset.y, 0);
+        targetAngle = VGet(x - offset.x, 2 - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -311,7 +314,7 @@ void Enemy::H_Fluctuating()
         }
         break;
     case 2:
-        targetAngle = VGet(-9 - offset.x, -2 - offset.y, 0);
+        targetAngle = VGet(lowerX - offset.x, -2 - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -320,7 +323,7 @@ void Enemy::H_Fluctuating()
         }
         break;
     case 3:
-        targetAngle = VGet(9 - offset.x, -2 - offset.y, 0);
+        targetAngle = VGet(x - offset.x, -2 - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -330,7 +333,7 @@ void Enemy::H_Fluctuating()
         }
         break;
     default:
-        targetAngle = VGet(-9 - offset.x, 2 - offset.y, 0);
+        targetAngle = VGet(lowerX - offset.x, 2 - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -343,9 +346,11 @@ void Enemy::H_Fluctuating()
 void Enemy::V_Fluctuating()
 {
     float distance = 0;
+    int y = 9 > moveRangeY ? moveRangeY : 9;
+    int lowerY = -5 < minimumMoveRangeY ? minimumMoveRangeY : -5;
     switch (evadeCount) {
     case 1:
-        targetAngle = VGet(2 - offset.x, 9 - offset.y, 0);
+        targetAngle = VGet(2 - offset.x, y - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -354,7 +359,7 @@ void Enemy::V_Fluctuating()
         }
         break;
     case 2:
-        targetAngle = VGet(-2 - offset.x, -7 - offset.y, 0);
+        targetAngle = VGet(-2 - offset.x, lowerY - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -363,7 +368,7 @@ void Enemy::V_Fluctuating()
         }
         break;
     case 3:
-        targetAngle = VGet(-2 - offset.x, 9 - offset.y, 0);
+        targetAngle = VGet(-2 - offset.x, y - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)
@@ -373,7 +378,7 @@ void Enemy::V_Fluctuating()
         }
         break;
     default:
-        targetAngle = VGet(2 - offset.x, -7 - offset.y, 0);
+        targetAngle = VGet(2 - offset.x, lowerY - offset.y, 0);
         distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
         targetAngle = VNorm(targetAngle);
         if (distance < 0.08f)

@@ -8,6 +8,8 @@
 #include "TitleScene.h"
 #include "Player.h"
 #include "Map.h"
+#define CLOSEDMOVERANGE 4
+#define MOVERANGE 10
 bool isStarted = true;
 bool isCleared = false;
 bool isDead = false;
@@ -56,7 +58,7 @@ void Stage1InitialProcess()
     SetBackgroundColor(150, 160, 180, 50);
     for (int i = 4; i < 25; i++)
     {
-        obstacle[i] = get_rand(0,20);
+        obstacle[i] = get_rand(0,25);
     }
 }
 void Stage1MainProcess()
@@ -69,60 +71,295 @@ void Stage1MainProcess()
         {
             pos -= 25;
         }
-        maps[pos].position.z = pos * 80 + ((int)(((pos * 80) + player.BasePosition.z )/ 2000) * 2000);
+        maps[pos].position.z = 80*(i + (int)player.BasePosition.z/80);
         maps[pos].DrawbaseOutline();
         switch (obstacle[pos]){
         case CENTER:
-            maps[pos].DrawDamageBox(false, false, false, false, false);
+            if (maps[pos].DamageBox(false, false, false, false, false,player.hitbox1,player.hitbox2) && !isStarted)
+            {
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = MOVERANGE;
+                enemy.minimumMoveRangeX = -MOVERANGE;
+                enemy.moveRangeY = MOVERANGE;
+                enemy.minimumMoveRangeY = -MOVERANGE;
+            }
             break;
         case UPPER:
-            maps[pos].DrawDamageBox(true, false, false, false, false);
+            if (maps[pos].DamageBox(true, false, false, false, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = MOVERANGE;
+                enemy.minimumMoveRangeX = -MOVERANGE;
+                enemy.moveRangeY = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeY = -MOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.moveRangeY = CLOSEDMOVERANGE;
+            }
             break;
         case LOWER:
-            maps[pos].DrawDamageBox(false, true, false, false, false);
+            if (maps[pos].DamageBox(false, true, false, false, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = MOVERANGE;
+                enemy.minimumMoveRangeX = -MOVERANGE;
+                enemy.moveRangeY = MOVERANGE;
+                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
+            }
             break;
         case RIGHT:
-            maps[pos].DrawDamageBox(false, false, true, false, false);
+            if (maps[pos].DamageBox(false, false, true, false, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeX = -MOVERANGE;
+                enemy.moveRangeY = MOVERANGE;
+                enemy.minimumMoveRangeY = -MOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.moveRangeX = CLOSEDMOVERANGE;
+            }
             break;
         case LEFT:
-            maps[pos].DrawDamageBox(false, false, false, true, false);
+            if (maps[pos].DamageBox(false, false, false, true, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = MOVERANGE;
+                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
+                enemy.moveRangeY = MOVERANGE;
+                enemy.minimumMoveRangeY = -MOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
+            }
             break;
         case UPPER_LOWER:
-            maps[pos].DrawDamageBox(true, true, false, false, false);
+            if (maps[pos].DamageBox(true, true, false, false, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = MOVERANGE;
+                enemy.minimumMoveRangeX = -MOVERANGE;
+                enemy.moveRangeY = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.moveRangeY = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
+            }
             break;
         case UPPER_RIGHT:
-            maps[pos].DrawDamageBox(true, false, true, false, false);
+            if (maps[pos].DamageBox(true, false, true, false, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeX = -MOVERANGE;
+                enemy.moveRangeY = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeY = -MOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.moveRangeX = CLOSEDMOVERANGE;
+                enemy.moveRangeY = CLOSEDMOVERANGE;
+            }
             break;
         case UPPER_LEFT:
-            maps[pos].DrawDamageBox(true, false, false, true, false);
+            if (maps[pos].DamageBox(true, false, false, true, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = MOVERANGE;
+                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
+                enemy.moveRangeY = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeY = -MOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
+                enemy.moveRangeY = CLOSEDMOVERANGE;
+            }
             break;
         case UPPER_CENTER:
-            maps[pos].DrawDamageBox(true, false, false, false, false);
+            if (maps[pos].DamageBox(true, false, false, false, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = MOVERANGE;
+                enemy.minimumMoveRangeX = -MOVERANGE;
+                enemy.moveRangeY = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeY = -MOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.moveRangeY = CLOSEDMOVERANGE;
+            }
             break;
         case LOWER_RIGHT:
-            maps[pos].DrawDamageBox(false, true, true, false, false);
+            if (maps[pos].DamageBox(false, true, true, false, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeX = -MOVERANGE;
+                enemy.moveRangeY = MOVERANGE;
+                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.moveRangeX = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
+            }
             break;
         case LOWER_LEFT:
-            maps[pos].DrawDamageBox(false, true, false, true, false);
+            if (maps[pos].DamageBox(false, true, false, true, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = MOVERANGE;
+                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
+                enemy.moveRangeY = MOVERANGE;
+                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
+            }
             break;
         case LOWER_CENTER:
-            maps[pos].DrawDamageBox(false, true, false, false, false);
+            if (maps[pos].DamageBox(false, true, false, false, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = MOVERANGE;
+                enemy.minimumMoveRangeX = -MOVERANGE;
+                enemy.moveRangeY = MOVERANGE;
+                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
+            }
             break;
         case RIGHT_LEFT:
-            maps[pos].DrawDamageBox(false, false, true, true, false);
+            if (maps[pos].DamageBox(false, false, true, true, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
+                enemy.moveRangeY = MOVERANGE;
+                enemy.minimumMoveRangeY = -MOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.moveRangeX = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
+            }
             break;
         case RIGHT_CENTER:
-            maps[pos].DrawDamageBox(false, false, true, false, false);
+            if (maps[pos].DamageBox(false, false, true, false, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = CLOSEDMOVERANGE;
+                enemy.minimumMoveRangeX = -MOVERANGE;
+                enemy.moveRangeY = MOVERANGE;
+                enemy.minimumMoveRangeY = -MOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.moveRangeX = CLOSEDMOVERANGE;
+            }
             break;
         case LEFT_CENTER:
-            maps[pos].DrawDamageBox(false, false, false, true, false);
+            if (maps[pos].DamageBox(false, false, false, true, false, player.hitbox1, player.hitbox2) && !isStarted)
+            {
+
+                isDead = true;
+            }
+            if (i == 1)
+            {
+                enemy.moveRangeX = MOVERANGE;
+                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
+                enemy.moveRangeY = MOVERANGE;
+                enemy.minimumMoveRangeY = -MOVERANGE;
+            }
+            if (i == 2)
+            {
+                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
+            }
             break;
         default:
+            if (i == 1)
+            {
+                enemy.moveRangeX = MOVERANGE;
+                enemy.minimumMoveRangeX = -MOVERANGE;
+                enemy.moveRangeY = MOVERANGE;
+                enemy.minimumMoveRangeY = -MOVERANGE;
+            }
             break;
         }
-        clsDx();
-        printfDx("%f", maps[pos].position.z);
-        
+        if (i == 14)
+        {
+            int t = 15 + ((int)player.BasePosition.z % 2000) / 80;
+            obstacle[t > 24 ? t - 25 : t] = get_rand(0, 20);
+        }
     }
     if (isStarted)
     {
@@ -134,6 +371,10 @@ void Stage1MainProcess()
             progress = 0;
             isStarted = false;
         }
+        isDead = false;
+
+        player.Position = VGet(0, -5, 0);
+        player.SetHitBox(2, 2);
     }
     
     else
@@ -177,7 +418,8 @@ void Stage1MainProcess()
             }
             else if(gamePhase == PHASE_RUN)
             {
-                textPositionSet(0, 1800, "PROGRESS: %d", fontHandle, SORT_RIGHT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50), (int)(player.BasePosition.z / 2000 * 100));
+                DrawBox(1780, 100, 1850, 980, GetColor(180, 180, 180), true, 1);
+                DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z/2000)), 1830, 980, GetColor(0, 255, 0), true);
                 player.mainProcess(false);
                 enemy.mainProcess(false);
             }
@@ -302,4 +544,9 @@ void Stage1Initialize()
     gamePhase = 0;
     isKilled = false;
     enemy.transitionMoveZaxis = -50.0f;
+    enemy.missilecooldowntimer = 0;
+    enemy.missileflyingTimer = 0;
+    enemy.isLaunched = false;
+    enemy.isFiring = false;
+
 }

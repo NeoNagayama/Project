@@ -10,6 +10,7 @@
 #include <random>
 int scene = 0;
 int reticleHandle = 0;
+bool Quit = false;
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -34,7 +35,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     //ゲームオーバー画面で最初に一度だけ呼ばれる処理
     GameOverInitialProcess();
 
-    while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
+    while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen() && !Quit) {
         Input_UpdateKeyboard();
         //場面の切り替え
         switch (scene) {
