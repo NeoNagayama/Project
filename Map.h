@@ -13,14 +13,9 @@ enum DamageBoxType
     UPPER_LOWER,
     UPPER_RIGHT,
     UPPER_LEFT,
-    UPPER_CENTER,
     LOWER_RIGHT,
     LOWER_LEFT,
-    LOWER_CENTER,
     RIGHT_LEFT,
-    RIGHT_CENTER,
-    LEFT_CENTER,
-    CENTER,
     NOT_SELECTED
 };
 class Player;
@@ -33,5 +28,5 @@ public:
     void DrawbaseOutline();
     bool DamageBox(bool upper, bool lower, bool right, bool left, bool center,VECTOR hitbox1,VECTOR hitbox2);
     void DrawDamageBox(VECTOR edge1,VECTOR edge2);
-    bool checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2);
+    bool checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2,bool current);
 };

@@ -63,7 +63,7 @@ void Stage1InitialProcess()
 }
 void Stage1MainProcess()
 {
-    
+    SetupCamera_Perspective(1);
     for (int i = 0; i <  15; i++)
     {
         int pos = i + ((int)player.BasePosition.z % 2000) / 80;
@@ -74,19 +74,6 @@ void Stage1MainProcess()
         maps[pos].position.z = 80*(i + (int)player.BasePosition.z/80);
         maps[pos].DrawbaseOutline();
         switch (obstacle[pos]){
-        case CENTER:
-            if (maps[pos].DamageBox(false, false, false, false, false,player.hitbox1,player.hitbox2) && !isStarted)
-            {
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = MOVERANGE;
-                enemy.minimumMoveRangeX = -MOVERANGE;
-                enemy.moveRangeY = MOVERANGE;
-                enemy.minimumMoveRangeY = -MOVERANGE;
-            }
-            break;
         case UPPER:
             if (maps[pos].DamageBox(true, false, false, false, false, player.hitbox1, player.hitbox2) && !isStarted)
             {
@@ -216,24 +203,6 @@ void Stage1MainProcess()
                 enemy.moveRangeY = CLOSEDMOVERANGE;
             }
             break;
-        case UPPER_CENTER:
-            if (maps[pos].DamageBox(true, false, false, false, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = MOVERANGE;
-                enemy.minimumMoveRangeX = -MOVERANGE;
-                enemy.moveRangeY = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeY = -MOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.moveRangeY = CLOSEDMOVERANGE;
-            }
-            break;
         case LOWER_RIGHT:
             if (maps[pos].DamageBox(false, true, true, false, false, player.hitbox1, player.hitbox2) && !isStarted)
             {
@@ -272,24 +241,6 @@ void Stage1MainProcess()
                 enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
             }
             break;
-        case LOWER_CENTER:
-            if (maps[pos].DamageBox(false, true, false, false, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = MOVERANGE;
-                enemy.minimumMoveRangeX = -MOVERANGE;
-                enemy.moveRangeY = MOVERANGE;
-                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
-            }
-            break;
         case RIGHT_LEFT:
             if (maps[pos].DamageBox(false, false, true, true, false, player.hitbox1, player.hitbox2) && !isStarted)
             {
@@ -309,42 +260,6 @@ void Stage1MainProcess()
                 enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
             }
             break;
-        case RIGHT_CENTER:
-            if (maps[pos].DamageBox(false, false, true, false, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeX = -MOVERANGE;
-                enemy.moveRangeY = MOVERANGE;
-                enemy.minimumMoveRangeY = -MOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.moveRangeX = CLOSEDMOVERANGE;
-            }
-            break;
-        case LEFT_CENTER:
-            if (maps[pos].DamageBox(false, false, false, true, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = MOVERANGE;
-                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
-                enemy.moveRangeY = MOVERANGE;
-                enemy.minimumMoveRangeY = -MOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
-            }
-            break;
         default:
             if (i == 1)
             {
@@ -358,7 +273,7 @@ void Stage1MainProcess()
         if (i == 14)
         {
             int t = 15 + ((int)player.BasePosition.z % 2000) / 80;
-            obstacle[t > 24 ? t - 25 : t] = get_rand(0, 20);
+            obstacle[t > 24 ? t - 25 : t] = get_rand(0, 25);
         }
     }
     if (isStarted)
@@ -396,28 +311,25 @@ void Stage1MainProcess()
                     scene = SCENE_CLEAR;
                 }
             }
-            if (player.ammo < 1)
-            {
-                isDead = true;
-            }
-            if (enemy.Health < 0)
-            {
-                enemy.Health = 0;
-                isKilled = true;
-            }
-            if (player.Health < 0)
+            if (player.ammo < 1 || player.Health <= 0)
             {
                 player.Health = 0;
                 isDead = true;
             }
+            if (enemy.Health <= 0)
+            {
+                enemy.Health = 0;
+                isKilled = true;
+            }
             textPositionSet(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
             textPositionSet(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT,500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
-            if (player.BasePosition.z > 2000.0f && gamePhase == PHASE_RUN)
+            if (player.BasePosition.z > 4000.0f && gamePhase == PHASE_RUN)
             {
                 gamePhase = PHASE_OVERSHOOT;
             }
             else if(gamePhase == PHASE_RUN)
             {
+                textPositionSet(70, 1920, "目標:攻撃を避けて生き残れ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
                 DrawBox(1780, 100, 1850, 980, GetColor(180, 180, 180), true, 1);
                 DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z/2000)), 1830, 980, GetColor(0, 255, 0), true);
                 player.mainProcess(false);
@@ -432,6 +344,7 @@ void Stage1MainProcess()
             }
             if (gamePhase == PHASE_CHASE)
             {
+                textPositionSet(70, 1920, "目標:敵機を撃墜しろ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
                 player.mainProcess(true);
                 enemy.mainProcess(true);
             }

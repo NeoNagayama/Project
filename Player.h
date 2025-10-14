@@ -12,6 +12,7 @@ private:
     Enemy* enemyObject;
     int PlayerLightHandle;
     float moveSpeed= 0.2f;
+    float speedLimit = 0.7f;
     float moveRange = 11;
     float rotateSpeed = 0.08f;
     float x, y;

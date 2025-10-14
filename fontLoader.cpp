@@ -3,11 +3,13 @@
 int fontHandle;
 int BiggerFontHandle;
 int titleFontHandle;
+int japaneseFontHandle;
 void fontLoad()
 {
     fontHandle = LoadFontDataToHandle("Corner.dft", 0);
     BiggerFontHandle = LoadFontDataToHandle("CornerBigger.dft");
     titleFontHandle = LoadFontDataToHandle("Quantify.dft");
+    japaneseFontHandle = LoadFontDataToHandle("NotoSans.dft");
 }
 void textPositionSet(int xleft, int xright, std::string text, int FontHandle, int sort ,int y,bool shadow,unsigned int FontColor, unsigned int shadowcolor ,int value)
 {
