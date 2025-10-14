@@ -34,6 +34,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     ClearInitialProcess();
     //ゲームオーバー画面で最初に一度だけ呼ばれる処理
     GameOverInitialProcess();
+    /*MakeShadowMap()
+    SetShadowMapLightDirection()*/
 
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen() && !Quit) {
         Input_UpdateKeyboard();

@@ -19,35 +19,35 @@ bool mapBase::DamageBox(bool upper, bool lower, bool right, bool left, bool cent
         VECTOR edge1 = VGet(position.x - 15, position.y + 7, position.z - 40);
         VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 40);
         DrawDamageBox(edge1, edge2);
-        isHit = checkHit(edge1,edge2,hitbox1,hitbox2);
+        isHit = checkHit(edge1,edge2,hitbox1,hitbox2,isHit);
     }
     if (lower)
     {
         VECTOR edge1 = VGet(position.x - 15, position.y -15, position.z - 40);
         VECTOR edge2 = VGet(position.x + 15, position.y -7, position.z + 40);
         DrawDamageBox(edge1, edge2);
-        isHit = checkHit(edge1, edge2, hitbox1, hitbox2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
     }
     if (right)
     {
         VECTOR edge1 = VGet(position.x + 7, position.y - 15, position.z - 40);
         VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 40);
         DrawDamageBox(edge1, edge2);
-        isHit = checkHit(edge1, edge2, hitbox1, hitbox2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
     }
     if (left)
     {
         VECTOR edge1 = VGet(position.x - 15, position.y - 15, position.z - 40);
         VECTOR edge2 = VGet(position.x - 7, position.y + 15, position.z + 40);
         DrawDamageBox(edge1, edge2);
-        isHit = checkHit(edge1, edge2, hitbox1, hitbox2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
     }
     if (center)
     {
         VECTOR edge1 = VGet( -7, position.y - 15, position.z - 40);
         VECTOR edge2 = VGet(7, position.y + 15, position.z + 40);
         DrawDamageBox(edge1, edge2);
-        isHit = checkHit(edge1, edge2,hitbox1, hitbox2);
+        isHit = checkHit(edge1, edge2,hitbox1, hitbox2, isHit);
     }
     return isHit;
 }
@@ -66,7 +66,7 @@ void mapBase::DrawDamageBox(VECTOR edge1, VECTOR edge2)
     DrawTriangle3D(edge2, VGet(edge2.x, edge2.y, edge1.z), VGet(edge2.x, edge1.y, edge1.z), GetColor(120, 120, 120), true);
     DrawTriangle3D(edge2, VGet(edge2.x, edge1.y, edge2.z), VGet(edge2.x, edge1.y, edge1.z), GetColor(120, 120, 120), true);
 }
-bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2)
+bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2,bool current)
 {
     if(((playerEdge1.x >= edge1.x && playerEdge1.x <= edge2.x) ||(playerEdge2 .x >= edge1.x && playerEdge2.x <= edge2.x))
         &&((playerEdge1.y >= edge1.y && playerEdge1.y <= edge2.y) || (playerEdge2.y >= edge1.y && playerEdge2.y <= edge2.y))
@@ -76,6 +76,6 @@ bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR pl
     }
     else
     {
-        return false;
+        return current;
     }
 }

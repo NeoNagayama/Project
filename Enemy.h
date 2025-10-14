@@ -18,7 +18,7 @@ class Enemy:public base
 private:
     Player* playerObject;
     
-    float moveSpeed = 0.56f;
+    float moveSpeed = 0.59f;
     float rotateSpeed = 0.08f;
     float x, y;
     VECTOR offset = VGet(0, -5, 0);

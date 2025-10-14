@@ -52,7 +52,7 @@ void Enemy::Vulcan()
                     bullets[i].isActivated = true;
                     bullets[i].StartPosition = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y,BasePosition.z);
                     bullets[i].target = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + 220);
-                    bullets[i].forward = VGet(0, 0, 3);
+                    bullets[i].forward = VGet(0, 0, 5);
                     firingTimer = 0;
                     LoadedAmmoCount += 1;
                     break;
@@ -113,6 +113,7 @@ void Enemy::missile()
     if (isLaunched && !isGuideLost)
     {
         textPositionSet(0, 1920, "!MISSILE ALERT!", BiggerFontHandle, SORT_CENTER, 750, false, GetColor(255, 0, 0));
+        textPositionSet(0, 1920, "PRESS SPACE", fontHandle, SORT_CENTER, 790, false, GetColor(255, 255, 0));
         missileflyingTimer += 0.016f;
         if (missileflyingTimer > 1)
         {

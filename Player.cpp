@@ -19,7 +19,7 @@ void Player::mainProcess(bool mode)
     SetHitBox(2, 2);
 
     
-    BasePosition = VAdd(VGet(0, 0, 1),BasePosition);
+    BasePosition = VAdd(VGet(0, 0, 2),BasePosition);
     KeyInput();
     PlayerMoveXY();
     Move(VAdd(BasePosition, offset));
@@ -27,13 +27,13 @@ void Player::mainProcess(bool mode)
     pitch();
     if (mode)
     {
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
         Vulcan();
     }
     else
     {
         SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
-        CameraPosition = VAdd(VGet(0, 0, -25), BasePosition);
+        CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
         Flare();
     }
     
@@ -41,43 +41,49 @@ void Player::mainProcess(bool mode)
 void Player::KeyInput()
 {
     float speed = 0.1f;
-    if (CheckHitKey(KEY_INPUT_W)&&y <0.7f)
+    if (CheckHitKey(KEY_INPUT_W))
     {
-        if (CheckHitKey(KEY_INPUT_D)&& x <0.7f)
+        if (CheckHitKey(KEY_INPUT_D))
         {
             x += speed;
+            speedLimit = 0.49f;
             targetAngle = VGet(0.5f, -0.5f, 0);
             //targetAnglePitch = VGet(1, -1, 1);
         }
-        else if (CheckHitKey(KEY_INPUT_A)&& x > -0.7f)
+        else if (CheckHitKey(KEY_INPUT_A))
         {
             x -= speed;
+            speedLimit = 0.49f;
             targetAngle = VGet(-0.5f, -0.5f, 0);
             //targetAnglePitch = VGet(-1, -1, 0);
         }
         else
         {
+            speedLimit = 0.7f;
             targetAngle = VGet(0, -1, 0);
             //targetAnglePitch = VGet(0, -1, 1);
         }
             y += speed;
     }
-    else if (CheckHitKey(KEY_INPUT_S)&&y>-0.7f)
+    else if (CheckHitKey(KEY_INPUT_S))
     {
-        if (CheckHitKey(KEY_INPUT_D) && x < 0.7f)
+        if (CheckHitKey(KEY_INPUT_D))
         {
             x += speed;
+            speedLimit = 0.49f;
             targetAngle = VGet(0.5f, 0.5f, 0);
             //targetAnglePitch = VGet(1, -1, 1);
         }
-        else if (CheckHitKey(KEY_INPUT_A) && x > -0.7f)
+        else if (CheckHitKey(KEY_INPUT_A))
         {
             x -= speed;
+            speedLimit = 0.49f;
             targetAngle = VGet(-0.5f, 0.5f, 0);
             //targetAnglePitch = VGet(-1, -1, 1);
         }
         else
         {
+            speedLimit = 0.7f;
             targetAngle = VGet(0, 0.99f, 0);
             //targetAnglePitch = VGet(0, 0.99f, 1);
         }
@@ -86,6 +92,7 @@ void Player::KeyInput()
     else if (CheckHitKey(KEY_INPUT_D) && x < 0.7f)
     {
         x += speed;
+        speedLimit = 0.7f;
         targetAngle = VGet(0.6f, -0.4f, 0);
         //targetAnglePitch = VGet(1, -0.4f, 1);
 
@@ -94,6 +101,7 @@ void Player::KeyInput()
     else if (CheckHitKey(KEY_INPUT_A) && x > -0.7f)
     {
         x -= speed;
+        speedLimit = 0.7f;
         targetAngle = VGet(-0.6f, -0.4f, 0);
         //targetAnglePitch = VGet(-1, -0.4f, 1);
     }
@@ -140,6 +148,22 @@ void Player::KeyInput()
         {
             y = 0;
         }
+    }
+    if (x >= speedLimit)
+    {
+        x = speedLimit;
+    }
+    else if (x <= -speedLimit)
+    {
+        x = -speedLimit;
+    }
+    if (y >=speedLimit)
+    {
+        y = speedLimit;
+    }
+    else if (y <= -speedLimit)
+    {
+        y = -speedLimit;
     }
 }
 void Player::PlayerMoveXY()
@@ -189,7 +213,7 @@ void Player::Vulcan()
             bulletPositionY[i] = bulletPositionY[i - 1];
         }
     }
-    VECTOR ReticleCenter = ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[15], bulletPositionY[15], BasePosition.z), VGet(0, 0, 50)));
+    VECTOR ReticleCenter = ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[10], bulletPositionY[10], BasePosition.z), VGet(0, 0, 50)));
     DrawExtendGraph((int)ReticleCenter.x-120, (int)ReticleCenter.y + 120, (int)ReticleCenter.x + 120, (int)ReticleCenter.y -120, reticleHandle, true);
     if (CheckHitKey(KEY_INPUT_SPACE) && firingTimer > firingRate &&ammo>0)
     {
@@ -202,7 +226,7 @@ void Player::Vulcan()
                 
                 bullets[i].isActivated = true;
                 bullets[i].target = VAdd(Position, VGet(0,0,90));
-                bullets[i].forward = VGet(0,0,4);
+                bullets[i].forward = VGet(0,0,6);
                 bullets[i].StartPosition = VAdd(Position,VGet(forward().x,-forward().y,forward().z ));
                 break;
             }
@@ -248,7 +272,7 @@ void Player::Flare()
                 if (!Flares[i].isActivated)
                 {
                     Flares[i].isActivated = true;
-                    Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 2.7f),0.3f);
+                    Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 4.7f),0.3f);
                     Flares[i].position = Position;
                     break;
                 }
@@ -360,7 +384,8 @@ bool Player::Transition()
     targetAngle = VGet(0, -0.99f, 0);
     rotatePlayer();
     BasePosition = VAdd(VGet(0, 0, 1), BasePosition);
-    VECTOR targetCameraPosition = VAdd(VGet(offset.x , offset.y + 3 , -20), BasePosition);
+    Move(VAdd(BasePosition, offset));
+    VECTOR targetCameraPosition = VAdd(VGet(offset.x , offset.y + 2 , -16), BasePosition);
     VECTOR cameraToTargetVector = VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z);
     float distance = sqrtf((cameraToTargetVector.x * cameraToTargetVector.x) + (cameraToTargetVector.y * cameraToTargetVector.y) + (cameraToTargetVector.z * cameraToTargetVector.z));
     
@@ -372,7 +397,7 @@ bool Player::Transition()
         return true;
     }
 
-    CameraPosition = VAdd(VAdd(CameraPosition, VScale(VNorm(VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z)), 0.2f)), VGet(0, 0, 1.0f));
+    CameraPosition = VAdd(VAdd(CameraPosition, VScale(VNorm(VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z)), 0.07f)), VGet(0, 0, 1.0f));
     SetCameraPositionAndTarget_UpVecY(CameraPosition, VAdd(VGet(offset.x, offset.y, 20), BasePosition));
     return false;
 }
