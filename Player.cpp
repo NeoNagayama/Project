@@ -6,13 +6,17 @@ void Player::InitialProcess()
 {
     ModelHandle = MV1LoadModel("F-14Test.mv1");
     MV1SetPosition(ModelHandle, VGet(0, -5, -0));
-    MV1SetScale(ModelHandle, VGet(3, 3, 3));
+    MV1SetScale(ModelHandle, VGet(3, 3, 3));/*
+    MV1SetMaterialDifColor(ModelHandle, 0, GetColorF(0.6f, 0.6f, 0.6f, 1.0f));
+    MV1SetMaterialSpcColor(ModelHandle, 0, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
+    MV1SetMaterialAmbColor(ModelHandle, 0, GetColorF(0.6f, 0.6f, 0.8f, 1.0f));
+    MV1SetMaterialEmiColor(ModelHandle, 0, GetColorF(0.1f, 0.1f, 0.1f, 0.1f));
+    MV1SetMaterialSpcPower(ModelHandle, 0, 4.0f);*/
     Position = VGet(0, -5, -0);
     PlayerLightHandle = CreateDirLightHandle(VGet(0,0.7f,-0.3f));
     SetLightEnableHandle(PlayerLightHandle, true);
-    SetLightDifColorHandle(PlayerLightHandle, GetColorF(1, 1, 1, 1));
-    SetLightSpcColorHandle(PlayerLightHandle, GetColorF(1, 1, 1,1));
-    SetLightAmbColorHandle(PlayerLightHandle, GetColorF(0.2f, 0.2f, 0.4f, 1));
+    SetLightDifColorHandle(PlayerLightHandle, GetColorF(0.8f, 0.8f, 0.8f, 0.4f));
+    SetLightSpcColorHandle(PlayerLightHandle, GetColorF(0.4f, 0.4f, 0.4f, 0.4f));
 }
 void Player::mainProcess(bool mode)
 {
