@@ -63,6 +63,58 @@ void Stage1InitialProcess()
 }
 void Stage1MainProcess()
 {
+    SetShadowMapDrawArea(shadowHandle, VGet(-120.0f, -1.0f, -20.0f + player.BasePosition.z), VGet(120.0f, 240.0f, 220.0f + player.BasePosition.z));
+    ShadowMap_DrawSetup(shadowHandle);
+    MV1DrawModel(player.ModelHandle);
+    MV1DrawModel(enemy.ModelHandle);
+
+    for (int i = 0; i < 15; i++)
+    {
+        int pos = i + ((int)player.BasePosition.z % 2000) / 80;
+        if (pos > 24)
+        {
+            pos -= 25;
+        }
+        maps[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
+        maps[pos].DrawbaseOutline();
+        switch (obstacle[pos]) {
+        case UPPER:
+            maps[pos].DamageBox(true, false, false, false, false, player.hitbox1, player.hitbox2);
+            break;
+        case LOWER:
+            maps[pos].DamageBox(false, true, false, false, false, player.hitbox1, player.hitbox2);
+            break;
+        case RIGHT:
+            maps[pos].DamageBox(false, false, true, false, false, player.hitbox1, player.hitbox2);
+            break;
+        case LEFT:
+            maps[pos].DamageBox(false, false, false, true, false, player.hitbox1, player.hitbox2);
+            break;
+        case UPPER_LOWER:
+            maps[pos].DamageBox(true, true, false, false, false, player.hitbox1, player.hitbox2);
+            break;
+        case UPPER_RIGHT:
+            maps[pos].DamageBox(true, false, true, false, false, player.hitbox1, player.hitbox2);
+            break;
+        case UPPER_LEFT:
+            maps[pos].DamageBox(true, false, false, true, false, player.hitbox1, player.hitbox2);
+            break;
+        case LOWER_RIGHT:
+            maps[pos].DamageBox(false, true, true, false, false, player.hitbox1, player.hitbox2);
+            break;
+        case LOWER_LEFT:
+            maps[pos].DamageBox(false, true, false, true, false, player.hitbox1, player.hitbox2);
+            break;
+        case RIGHT_LEFT:
+            maps[pos].DamageBox(false, false, true, true, false, player.hitbox1, player.hitbox2);
+            break;
+        default:
+            break;
+        }
+    }
+    ShadowMap_DrawEnd();
+
+    SetUseShadowMap(0, shadowHandle);
     SetupCamera_Perspective(1);
     for (int i = 0; i <  15; i++)
     {

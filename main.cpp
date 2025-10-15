@@ -10,6 +10,7 @@
 #include <random>
 int scene = 0;
 int reticleHandle = 0;
+int shadowHandle;
 bool Quit = false;
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -34,15 +35,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     ClearInitialProcess();
     //ゲームオーバー画面で最初に一度だけ呼ばれる処理
     GameOverInitialProcess();
-    /*MakeShadowMap()
-    SetShadowMapLightDirection()*/
+    SetLightAmbColor(GetColorF(0.2f, 0.2f, 0.2f,0.5f));
+    shadowHandle = MakeShadowMap(4096, 4096);
+    
 
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen() && !Quit) {
         Input_UpdateKeyboard();
+        
         //場面の切り替え
         switch (scene) {
             //場面別の毎フレーム呼ばれる処理
         case SCENE_STAGE1:
+            SetShadowMapLightDirection(shadowHandle, VGet(0.1f, -0.7f, 0.5f));
             Stage1MainProcess();
                 break;
         case SCENE_GAMEOVER:
@@ -52,14 +56,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             ClearMainProcess();
             break;
         default:
+            SetShadowMapLightDirection(shadowHandle, VGet(0.1f, 0.7f, 0.5f));
             TitleMainProcess();
             break;
         }
         WaitTimer(16);
+        SetUseShadowMap(0, -1);
     }
 
     DxLib_End();				
-
+    DeleteShadowMap(shadowHandle);
     return 0;				// ソフトの終了 
 }
 

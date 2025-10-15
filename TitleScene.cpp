@@ -27,8 +27,17 @@ void TitleInitialProcess()
 }
 void TitleMainProcess()
 {
-    SetupCamera_Perspective(0.6f);
-    SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -22), VGet(0, 2.0f, -12));
+
+    SetShadowMapDrawArea(shadowHandle, VGet(-1000.0f, -2.0f, -1000.0f), VGet(1000.0f, 1000.0f, 1000.0f));
+    ShadowMap_DrawSetup(shadowHandle);
+    MV1DrawModel(modelHandle2);
+    MV1DrawModel(modelHandle3);
+    MV1DrawModel(modelhandle);
+    DrawCube3D(VGet(-200.0f, -1.0f, -200.0f), VGet(200.0f, -1.1f, 200.0f), GetColor(120, 120, 120), GetColor(0, 0, 0), TRUE);
+    ShadowMap_DrawEnd();
+    SetUseShadowMap(0, shadowHandle);
+    SetupCamera_Perspective(1.4f);
+    SetCameraPositionAndTarget_UpVecY(VGet(0, 6, -22), VGet(0, 2.0f, -12));
     if (Input_GetKeyboardDown(KEY_INPUT_S)  && isStartSelected == true && !sceneChanging)
     {
         isStartSelected = false;
@@ -49,6 +58,15 @@ void TitleMainProcess()
     MV1DrawModel(modelHandle2);
     MV1DrawModel(modelHandle3);
     MV1DrawModel(modelhandle);
+    MATERIALPARAM Material;
+
+    Material.Diffuse = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
+    Material.Ambient = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
+    Material.Specular = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
+    Material.Emissive = GetColorF(0.0f, 0.0f, 0.0f, 0.0f);
+    Material.Power = 20.0f;
+    SetMaterialParam(Material);
+    DrawCube3D(VGet(-200.0f, -1.0f, -200.0f), VGet(200.0f, -1.1f, 200.0f), GetColor(120, 120, 120), GetColor(0, 0, 0), TRUE);
     if (z < -60)
     {
         z = get_rand(80,90);

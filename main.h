@@ -2,6 +2,7 @@
 # define PI 3.14159265359f
 
 extern int scene;
+extern int shadowHandle;
 extern int reticleHandle;
 enum SCENES
 {
