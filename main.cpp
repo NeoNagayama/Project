@@ -11,6 +11,7 @@
 int scene = 0;
 int reticleHandle = 0;
 int shadowHandle;
+int titleShadowHandle;
 bool Quit = false;
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -37,6 +38,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     GameOverInitialProcess();
     SetLightAmbColor(GetColorF(0.2f, 0.2f, 0.2f,0.5f));
     shadowHandle = MakeShadowMap(4096, 4096);
+    titleShadowHandle = MakeShadowMap(4096, 4096);
+
+    SetShadowMapLightDirection(shadowHandle, VGet(0.1f, -0.7f, 0.5f));
+    SetShadowMapLightDirection(titleShadowHandle, VGet(0.1f, -0.7f, 0.5f));
     
 
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen() && !Quit) {
@@ -46,9 +51,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         switch (scene) {
             //場面別の毎フレーム呼ばれる処理
         case SCENE_STAGE1:
-            SetShadowMapLightDirection(shadowHandle, VGet(0.1f, -0.7f, 0.5f));
             Stage1MainProcess();
-                break;
+            break;
         case SCENE_GAMEOVER:
             GameOverMainProcess();
             break;
@@ -56,16 +60,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             ClearMainProcess();
             break;
         default:
-            SetShadowMapLightDirection(shadowHandle, VGet(0.1f, 0.7f, 0.5f));
             TitleMainProcess();
             break;
         }
         WaitTimer(16);
         SetUseShadowMap(0, -1);
     }
-
-    DxLib_End();				
     DeleteShadowMap(shadowHandle);
+    DeleteShadowMap(titleShadowHandle);
+    DxLib_End();
     return 0;				// ソフトの終了 
 }
 

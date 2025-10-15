@@ -513,5 +513,15 @@ void Stage1Initialize()
     enemy.missileflyingTimer = 0;
     enemy.isLaunched = false;
     enemy.isFiring = false;
-
+    for (int i = 0; i < 25; i++)
+    {
+        if (i < 4)
+        {
+            obstacle[i] = 0;
+        }
+        else
+        {
+            obstacle[i] = get_rand(0, 25);
+        }
+    }
 }

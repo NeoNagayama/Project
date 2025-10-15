@@ -3,6 +3,7 @@
 
 extern int scene;
 extern int shadowHandle;
+extern int titleShadowHandle;
 extern int reticleHandle;
 enum SCENES
 {

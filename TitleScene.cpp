@@ -20,7 +20,7 @@ void TitleInitialProcess()
     Start.SetButtonPosition(VGet(1550,545,1),600,100,0.9f);
     Exit.SetButtonPosition(VGet(1550, 745, 1), 600, 100, 0.9f);
     modelhandle = MV1LoadModel("F-14Test.mv1");
-    MV1SetPosition(modelhandle,VGet(-1, 0.19f, -18.3f));
+    MV1SetPosition(modelhandle,VGet(-0.4, 0.04f, -19.2f));
     MV1SetRotationXYZ(modelhandle, VGet(0, 2.53f, 0));
     modelHandle2 = MV1LoadModel("F-14Test.mv1");
     modelHandle3 = MV1LoadModel("F-14Test.mv1");
@@ -28,16 +28,15 @@ void TitleInitialProcess()
 void TitleMainProcess()
 {
 
-    SetShadowMapDrawArea(shadowHandle, VGet(-1000.0f, -2.0f, -1000.0f), VGet(1000.0f, 1000.0f, 1000.0f));
-    ShadowMap_DrawSetup(shadowHandle);
+    SetShadowMapDrawArea(titleShadowHandle, VGet(-200.0f, -100.0f, -200.0f), VGet(200.0f, 100.0f, 200.0f));
+    ShadowMap_DrawSetup(titleShadowHandle);
     MV1DrawModel(modelHandle2);
     MV1DrawModel(modelHandle3);
     MV1DrawModel(modelhandle);
-    DrawCube3D(VGet(-200.0f, -1.0f, -200.0f), VGet(200.0f, -1.1f, 200.0f), GetColor(120, 120, 120), GetColor(0, 0, 0), TRUE);
     ShadowMap_DrawEnd();
-    SetUseShadowMap(0, shadowHandle);
-    SetupCamera_Perspective(1.4f);
-    SetCameraPositionAndTarget_UpVecY(VGet(0, 6, -22), VGet(0, 2.0f, -12));
+    SetUseShadowMap(0, titleShadowHandle);
+    SetupCamera_Perspective(0.55f);
+    SetCameraPositionAndTarget_UpVecY(VGet(0, 0.2f, -22), VGet(0, 0.21f, -12));
     if (Input_GetKeyboardDown(KEY_INPUT_S)  && isStartSelected == true && !sceneChanging)
     {
         isStartSelected = false;
@@ -53,20 +52,12 @@ void TitleMainProcess()
     printfDx("%f", yaxis);
     MV1SetPosition(modelHandle2, VGet(x, 4, z));
     MV1SetPosition(modelHandle3, VGet(x -3, 4, z-2));
-    MV1SetRotationXYZ(modelHandle2, VGet(0, 2.3f, 0));
-    MV1SetRotationXYZ(modelHandle3, VGet(0, 2.3f, 0));
+    MV1SetRotationXYZ(modelHandle2, VGet(0, 2.1f, 0));
+    MV1SetRotationXYZ(modelHandle3, VGet(0, 2.1f, 0));
     MV1DrawModel(modelHandle2);
     MV1DrawModel(modelHandle3);
     MV1DrawModel(modelhandle);
-    MATERIALPARAM Material;
-
-    Material.Diffuse = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
-    Material.Ambient = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
-    Material.Specular = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
-    Material.Emissive = GetColorF(0.0f, 0.0f, 0.0f, 0.0f);
-    Material.Power = 20.0f;
-    SetMaterialParam(Material);
-    DrawCube3D(VGet(-200.0f, -1.0f, -200.0f), VGet(200.0f, -1.1f, 200.0f), GetColor(120, 120, 120), GetColor(0, 0, 0), TRUE);
+    DrawCube3D(VGet(-200.0f, -0.01f, -200.0f), VGet(200.0f, -1.1f, 200.0f), GetColor(120, 120, 120), GetColor(0, 0, 0), TRUE);
     if (z < -60)
     {
         z = get_rand(80,90);
