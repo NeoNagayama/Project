@@ -81,3 +81,67 @@ bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR pl
         return current;
     }
 }
+
+bool antiAir::DamageZone(bool upper, bool lower, bool right, bool left, VECTOR hitbox1, VECTOR hitbox2)
+{
+    bool isHit = false;
+    if (upper)
+    {
+        VECTOR edge1 = VGet(position.x - 15, position.y + 7, position.z - 40);
+        VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 40);
+        DrawDamageBoxTransparent(edge1, edge2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+    }
+    if (lower)
+    {
+        VECTOR edge1 = VGet(position.x - 15, position.y - 15, position.z - 40);
+        VECTOR edge2 = VGet(position.x + 15, position.y - 7, position.z + 40);
+        DrawDamageBoxTransparent(edge1, edge2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+    }
+    if (right)
+    {
+        VECTOR edge1 = VGet(position.x + 7, position.y - 15, position.z - 40);
+        VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 40);
+        DrawDamageBoxTransparent(edge1, edge2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+    }
+    if (left)
+    {
+        VECTOR edge1 = VGet(position.x - 15, position.y - 15, position.z - 40);
+        VECTOR edge2 = VGet(position.x - 7, position.y + 15, position.z + 40);
+        DrawDamageBoxTransparent(edge1, edge2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+    }
+    return isHit;
+}
+void antiAir::DrawDamageBoxTransparent(VECTOR edge1, VECTOR edge2)
+{
+    MATERIALPARAM Material;
+
+    Material.Diffuse = GetColorF(1.0f, 0, 0, 1.0f);
+    Material.Ambient = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
+    Material.Specular = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
+    Material.Emissive = GetColorF(0.0f, 0.0f, 0.0f, 0.0f);
+    Material.Power = 20.0f;
+    SetMaterialParam(Material);
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 40);
+    DrawCube3D(edge1, edge2, GetColor(120, 0, 0), GetColor(0, 0, 0), TRUE);
+    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+bool explosion::DrawExplosion()
+{
+    DrawSphere3D(position, radius, 4, GetColor(255, 100, 0), GetColor(255, 100, 0), true);
+    radius -= damping;
+    if (radius <= 0)
+    {
+        return true;
+    }
+    return false;
+}
+void explosion::SetPosition(VECTOR edge1, VECTOR edge2)
+{
+    position = VGet(get_rand(edge1.x, edge2.x), get_rand(edge1.y, edge2.y), get_rand(edge1.z, edge2.z));
+    radius = maxRadius;
+}

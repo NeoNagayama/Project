@@ -45,7 +45,7 @@ public:
     void mainProcess(bool mode);
     void rotatePlayer();
     void pitch();
-    void transitionProcess();
+    void transitionProcess(bool mode);
     void autoEvade();
     void EnemySet(Enemy* enemy)
     {

@@ -30,6 +30,7 @@ Button Buttons[3];
 Player player;
 Enemy enemy;
 mapBase maps[25];
+antiAir AAs[25];
 timer objectiveShowTimer;
 timer CountDownTimer;
 int obstacle[25];
@@ -82,39 +83,79 @@ void Stage1MainProcess()
         }
         maps[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
         maps[pos].DrawbaseOutline();
-        switch (obstacle[pos]) {
-        case UPPER:
-            maps[pos].DamageBox(true, false, false, false, false, player.hitbox1, player.hitbox2);
-            break;
-        case LOWER:
-            maps[pos].DamageBox(false, true, false, false, false, player.hitbox1, player.hitbox2);
-            break;
-        case RIGHT:
-            maps[pos].DamageBox(false, false, true, false, false, player.hitbox1, player.hitbox2);
-            break;
-        case LEFT:
-            maps[pos].DamageBox(false, false, false, true, false, player.hitbox1, player.hitbox2);
-            break;
-        case UPPER_LOWER:
-            maps[pos].DamageBox(true, true, false, false, false, player.hitbox1, player.hitbox2);
-            break;
-        case UPPER_RIGHT:
-            maps[pos].DamageBox(true, false, true, false, false, player.hitbox1, player.hitbox2);
-            break;
-        case UPPER_LEFT:
-            maps[pos].DamageBox(true, false, false, true, false, player.hitbox1, player.hitbox2);
-            break;
-        case LOWER_RIGHT:
-            maps[pos].DamageBox(false, true, true, false, false, player.hitbox1, player.hitbox2);
-            break;
-        case LOWER_LEFT:
-            maps[pos].DamageBox(false, true, false, true, false, player.hitbox1, player.hitbox2);
-            break;
-        case RIGHT_LEFT:
-            maps[pos].DamageBox(false, false, true, true, false, player.hitbox1, player.hitbox2);
-            break;
-        default:
-            break;
+        if (2 <= get_rand(0,8))
+        {
+            switch (obstacle[pos]) {
+            case UPPER:
+                maps[pos].DamageBox(true, false, false, false, false, player.hitbox1, player.hitbox2);
+                break;
+            case LOWER:
+                maps[pos].DamageBox(false, true, false, false, false, player.hitbox1, player.hitbox2);
+                break;
+            case RIGHT:
+                maps[pos].DamageBox(false, false, true, false, false, player.hitbox1, player.hitbox2);
+                break;
+            case LEFT:
+                maps[pos].DamageBox(false, false, false, true, false, player.hitbox1, player.hitbox2);
+                break;
+            case UPPER_LOWER:
+                maps[pos].DamageBox(true, true, false, false, false, player.hitbox1, player.hitbox2);
+                break;
+            case UPPER_RIGHT:
+                maps[pos].DamageBox(true, false, true, false, false, player.hitbox1, player.hitbox2);
+                break;
+            case UPPER_LEFT:
+                maps[pos].DamageBox(true, false, false, true, false, player.hitbox1, player.hitbox2);
+                break;
+            case LOWER_RIGHT:
+                maps[pos].DamageBox(false, true, true, false, false, player.hitbox1, player.hitbox2);
+                break;
+            case LOWER_LEFT:
+                maps[pos].DamageBox(false, true, false, true, false, player.hitbox1, player.hitbox2);
+                break;
+            case RIGHT_LEFT:
+                maps[pos].DamageBox(false, false, true, true, false, player.hitbox1, player.hitbox2);
+                break;
+            default:
+                break;
+            }
+        }
+        else
+        {
+            switch (obstacle[pos]) {
+            case UPPER:
+                AAs[pos].DamageZone(true, false, false, false,  player.hitbox1, player.hitbox2);
+                break;
+            case LOWER:
+                AAs[pos].DamageZone(false, true, false, false,  player.hitbox1, player.hitbox2);
+                break;
+            case RIGHT:
+                AAs[pos].DamageZone(false, false, true, false,  player.hitbox1, player.hitbox2);
+                break;
+            case LEFT:
+                AAs[pos].DamageZone(false, false, false, true,  player.hitbox1, player.hitbox2);
+                break;
+            case UPPER_LOWER:
+                AAs[pos].DamageZone(true, true, false, false,  player.hitbox1, player.hitbox2);
+                break;
+            case UPPER_RIGHT:
+                AAs[pos].DamageZone(true, false, true, false,  player.hitbox1, player.hitbox2);
+                break;
+            case UPPER_LEFT:
+                AAs[pos].DamageZone(true, false, false, true,  player.hitbox1, player.hitbox2);
+                break;
+            case LOWER_RIGHT:
+                AAs[pos].DamageZone(false, true, true, false,  player.hitbox1, player.hitbox2);
+                break;
+            case LOWER_LEFT:
+                AAs[pos].DamageZone(false, true, false, true,  player.hitbox1, player.hitbox2);
+                break;
+            case RIGHT_LEFT:
+                AAs[pos].DamageZone(false, false, true, true,  player.hitbox1, player.hitbox2);
+                break;
+            default:
+                break;
+            }
         }
     }
     ShadowMap_DrawEnd();
@@ -335,7 +376,7 @@ void Stage1MainProcess()
     }
     if (isStarted)
     {
-        player.transitionProcess();
+        player.transitionProcess(false);
         player.SetHitBox(2, 2);
         MV1DrawModel(player.ModelHandle);
         if (fadein(0.5f) && !isObjectiveAppeared)
@@ -397,7 +438,7 @@ void Stage1MainProcess()
             }
             DrawTextWithSort(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
             DrawTextWithSort(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT,500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
-            if (player.BasePosition.z > 400.0f && gamePhase == PHASE_RUN)
+            if (player.BasePosition.z > 4000.0f && gamePhase == PHASE_RUN)
             {
                 gamePhase = PHASE_OVERSHOOT;
             }
@@ -405,7 +446,7 @@ void Stage1MainProcess()
             {
                 DrawTextWithSort(70, 1920, "目標:攻撃を避けて生き残れ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
                 DrawBox(1780, 100, 1850, 980, GetColor(180, 180, 180), true, 1);
-                DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z/2000)), 1830, 980, GetColor(0, 255, 0), true);
+                DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z/4000)), 1830, 980, GetColor(0, 255, 0), true);
                 player.mainProcess(false);
                 enemy.mainProcess(false);
             }
@@ -421,7 +462,7 @@ void Stage1MainProcess()
             {
                 if (isObjectiveAppeared)
                 {
-                    player.transitionProcess();
+                    player.transitionProcess(true);
                     if (fadeInText(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0, 0.2f))
                     {
                         DrawTextWithSort(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0);
