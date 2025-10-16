@@ -36,7 +36,7 @@ void TitleMainProcess()
     ShadowMap_DrawEnd();
     SetUseShadowMap(0, titleShadowHandle);
     SetupCamera_Perspective(0.55f);
-    SetCameraPositionAndTarget_UpVecY(VGet(0, 0.2f, -22), VGet(0, 0.21f, -12));
+    SetCameraPositionAndTarget_UpVecY(VGet(0, 0.2f, -22), VGet(0, 1.2f, -12));
     if (Input_GetKeyboardDown(KEY_INPUT_S)  && isStartSelected == true && !sceneChanging)
     {
         isStartSelected = false;
@@ -45,8 +45,8 @@ void TitleMainProcess()
     {
         isStartSelected = true;
     }
-    z -= 0.2f;
-    x += 0.23f;
+    z -= 0.3f;
+    x += 0.34f;
     //x += 0.2f;
     clsDx();
     printfDx("%f", yaxis);
@@ -67,7 +67,7 @@ void TitleMainProcess()
     Start.SetText("Start");
     Exit.mainProcess(!isStartSelected,true,30);
     Exit.SetText("Exit");
-    textPositionSet(1000, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255,255,255));
+    DrawTextWithSort(1000, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255,255,255));
     if (isStartSelected && Input_GetKeyboardDown(KEY_INPUT_SPACE))
     {
         sceneChanging = true;

@@ -157,10 +157,12 @@
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Corner.dft" />
-    <None Include="CornerBigger.dft" />
     <None Include="F22\F22 export 2024_9_7.x" />
-    <None Include="Quantify.dft" />
+    <None Include="fonts\Corner.dft" />
+    <None Include="fonts\CornerBigger.dft" />
+    <None Include="fonts\gameFont.dft" />
+    <None Include="fonts\NotoSans.dft" />
+    <None Include="fonts\Quantify.dft" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h" />

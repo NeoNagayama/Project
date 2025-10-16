@@ -5,6 +5,7 @@ extern int fontHandle;
 extern int BiggerFontHandle;
 extern int titleFontHandle;
 extern int japaneseFontHandle;
+extern int biggerJpFontHandle;
 enum sortType
 {
     SORT_LEFT,
@@ -12,5 +13,7 @@ enum sortType
     SORT_RIGHT
 };
 void fontLoad();
-void textPositionSet(int xleft, int xright, std::string text, int FontHandle, int sort, int y, bool shadow, unsigned int FontColor, unsigned int shadowcolor = GetColor(50, 50, 50),int value = 0);
+void DrawTextWithSort(int xleft, int xright, std::string text, int FontHandle, int sort, int y, bool shadow, unsigned int FontColor, unsigned int shadowcolor = GetColor(50, 50, 50),int value = 0);
+bool fadeInText(int xleft, int xright, std::string text, int FontHandle, int sort, int y, bool shadow, unsigned int FontColor, unsigned int shadowcolor = GetColor(50, 50, 50), int value = 0, float time = 1.5f);
+void resetAlpha();
 

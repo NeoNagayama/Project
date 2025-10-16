@@ -44,7 +44,9 @@ public:
     void Vulcan();
     void mainProcess(bool mode);
     void rotatePlayer();
-    void pitch();;
+    void pitch();
+    void transitionProcess();
+    void autoEvade();
     void EnemySet(Enemy* enemy)
     {
         enemyObject = enemy;

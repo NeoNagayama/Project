@@ -18,8 +18,11 @@ bool isKilled = false;
 bool PauseControllable = true;
 bool isRestarting = false;
 bool isQuitting = false;
+bool isObjectiveAppeared = false;
+
 int gamePhase = 0;
 int choosedButton;
+int countDown = 3;
 Button resume;
 Button restart;
 Button Stage1ToTitle;
@@ -27,6 +30,8 @@ Button Buttons[3];
 Player player;
 Enemy enemy;
 mapBase maps[25];
+timer objectiveShowTimer;
+timer CountDownTimer;
 int obstacle[25];
 enum Phase
 {
@@ -56,7 +61,7 @@ void Stage1InitialProcess()
     player.EnemySet(&enemy);
     enemy.PlayerSet(&player);
     SetBackgroundColor(150, 160, 180, 50);
-    for (int i = 4; i < 25; i++)
+    for (int i = 8; i < 25; i++)
     {
         obstacle[i] = get_rand(0,25);
     }
@@ -330,18 +335,34 @@ void Stage1MainProcess()
     }
     if (isStarted)
     {
-        MV1SetPosition(player.ModelHandle, VGet(0, -5, 0));
-        SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -25), VGet(0, 0, 0));
+        player.transitionProcess();
+        player.SetHitBox(2, 2);
         MV1DrawModel(player.ModelHandle);
-        if (fadein(0.5f))
+        if (fadein(0.5f) && !isObjectiveAppeared)
         {
             progress = 0;
-            isStarted = false;
+            isObjectiveAppeared = true;
+        }
+        if (isObjectiveAppeared && fadeInText(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50),0,0.2f))
+        {
+            DrawTextWithSort(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50));
+            DrawTextWithSort(0, 1920, "スタートまで%d", biggerJpFontHandle, SORT_CENTER, 380, true, GetColor(255, 255, 255), GetColor(50, 50, 50),countDown);
+            if (CountDownTimer.MeasureTimer(1))
+            {
+                CountDownTimer.RestartTimer();
+                countDown -= 1;
+            }
+            if (objectiveShowTimer.MeasureTimer(3))
+            {
+                isStarted = false;
+                isObjectiveAppeared = false;
+                objectiveShowTimer.RestartTimer();
+                CountDownTimer.RestartTimer();
+                countDown = 3;
+                resetAlpha();
+            }
         }
         isDead = false;
-
-        player.Position = VGet(0, -5, 0);
-        player.SetHitBox(2, 2);
     }
     
     else
@@ -350,6 +371,7 @@ void Stage1MainProcess()
         if (!isPause)
         {
             MV1DrawModel(player.ModelHandle);
+            MV1DrawModel(enemy.ModelHandle);
             /*if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
             {
                 isCleared = true;
@@ -373,15 +395,15 @@ void Stage1MainProcess()
                 enemy.Health = 0;
                 isKilled = true;
             }
-            textPositionSet(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
-            textPositionSet(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT,500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
-            if (player.BasePosition.z > 4000.0f && gamePhase == PHASE_RUN)
+            DrawTextWithSort(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
+            DrawTextWithSort(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT,500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
+            if (player.BasePosition.z > 400.0f && gamePhase == PHASE_RUN)
             {
                 gamePhase = PHASE_OVERSHOOT;
             }
             else if(gamePhase == PHASE_RUN)
             {
-                textPositionSet(70, 1920, "目標:攻撃を避けて生き残れ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
+                DrawTextWithSort(70, 1920, "目標:攻撃を避けて生き残れ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
                 DrawBox(1780, 100, 1850, 980, GetColor(180, 180, 180), true, 1);
                 DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z/2000)), 1830, 980, GetColor(0, 255, 0), true);
                 player.mainProcess(false);
@@ -391,13 +413,39 @@ void Stage1MainProcess()
             {
                 if (enemy.Transition())
                 {
+                    isObjectiveAppeared = true;
                     gamePhase = PHASE_CHASE;
                 }
             }
             if (gamePhase == PHASE_CHASE)
             {
-                textPositionSet(70, 1920, "目標:敵機を撃墜しろ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
-                player.mainProcess(true);
+                if (isObjectiveAppeared)
+                {
+                    player.transitionProcess();
+                    if (fadeInText(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0, 0.2f))
+                    {
+                        DrawTextWithSort(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0);
+                        DrawTextWithSort(0, 1920, "スタートまで%d", biggerJpFontHandle, SORT_CENTER, 380, true, GetColor(255, 255, 255), GetColor(50, 50, 50), countDown);
+                        if (CountDownTimer.MeasureTimer(1))
+                        {
+                            CountDownTimer.RestartTimer();
+                            countDown -= 1;
+                        }
+                        if (objectiveShowTimer.MeasureTimer(3))
+                        {
+                            isObjectiveAppeared = false;
+                            countDown = 3;
+                            objectiveShowTimer.RestartTimer();
+                            CountDownTimer.RestartTimer();
+                            resetAlpha();
+                        }
+                    }
+                }
+                else
+                {
+                    player.mainProcess(true);
+                }
+                DrawTextWithSort(70, 1920, "目標:敵機を撃墜しろ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
                 enemy.mainProcess(true);
             }
             
@@ -515,7 +563,7 @@ void Stage1Initialize()
     enemy.isFiring = false;
     for (int i = 0; i < 25; i++)
     {
-        if (i < 4)
+        if (i < 8)
         {
             obstacle[i] = 0;
         }
