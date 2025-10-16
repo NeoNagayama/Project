@@ -10,14 +10,14 @@ void Button::mainProcess(bool isSelected, bool shadow ,int yoffset)
         ActualPosition2 = VGet(BoxSizeChange(ActualPosition2.x, SelectedPosition2.x, true, NotSelectedPosition2.x), BoxSizeChange(ActualPosition2.y, SelectedPosition2.y, true, NotSelectedPosition2.y), 1);
         DrawBox((int)Button::ActualPosition.x, (int)Button::ActualPosition.y, (int)Button::ActualPosition2.x, (int)Button::ActualPosition2.y, Button::SelectedColor, 1);
         DrawBox((int)Button::ActualPosition.x, (int)Button::ActualPosition.y, (int)Button::ActualPosition2.x, (int)Button::ActualPosition2.y, GetColor(255,255,255), 0,3);
-        textPositionSet((int)ActualPosition.x, (int)ActualPosition2.x, buttonText, BiggerFontHandle, SORT_CENTER, (int)ActualPosition.y + (int)yoffset*0.6f, true, GetColor(255, 255, 255));
+        DrawTextWithSort((int)ActualPosition.x, (int)ActualPosition2.x, buttonText, BiggerFontHandle, SORT_CENTER, (int)ActualPosition.y + (int)yoffset*0.6f, true, GetColor(255, 255, 255));
     }
     else
     {
         ActualPosition = VGet(BoxSizeChange(ActualPosition.x, NotSelectedPosition1.x, true, SelectedPosition1.x), BoxSizeChange(ActualPosition.y, NotSelectedPosition1.y, true, SelectedPosition1.y), 1);
         ActualPosition2 = VGet(BoxSizeChange(ActualPosition2.x, NotSelectedPosition2.x, false, SelectedPosition2.x), BoxSizeChange(ActualPosition2.y, NotSelectedPosition2.y, false, SelectedPosition2.y), 1);
         DrawBox((int)Button::ActualPosition.x, (int)Button::ActualPosition.y, (int)Button::ActualPosition2.x, (int)Button::ActualPosition2.y, Button::NotSelectedColor, 1);
-        textPositionSet((int)ActualPosition.x, (int)ActualPosition2.x, buttonText, fontHandle, SORT_CENTER, (int)ActualPosition.y + (int)yoffset*0.6f, true, GetColor(122,122,122));
+        DrawTextWithSort((int)ActualPosition.x, (int)ActualPosition2.x, buttonText, fontHandle, SORT_CENTER, (int)ActualPosition.y + (int)yoffset*0.6f, true, GetColor(122,122,122));
     }
     
 }

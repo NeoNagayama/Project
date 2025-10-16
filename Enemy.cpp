@@ -25,8 +25,6 @@ void Enemy::mainProcess(bool mode)
         missile();
     }
         Move(VAdd(offset,BasePosition));
-
-        MV1DrawModel(ModelHandle);
     Position = MV1GetPosition(ModelHandle);
     SetHitBox(4, 4);
 }
@@ -112,8 +110,8 @@ void Enemy::missile()
     }
     if (isLaunched && !isGuideLost)
     {
-        textPositionSet(0, 1920, "!MISSILE ALERT!", BiggerFontHandle, SORT_CENTER, 750, false, GetColor(255, 0, 0));
-        textPositionSet(0, 1920, "PRESS SPACE", fontHandle, SORT_CENTER, 790, false, GetColor(255, 255, 0));
+        DrawTextWithSort(0, 1920, "!MISSILE ALERT!", BiggerFontHandle, SORT_CENTER, 750, false, GetColor(255, 0, 0));
+        DrawTextWithSort(0, 1920, "PRESS SPACE", fontHandle, SORT_CENTER, 790, false, GetColor(255, 255, 0));
         missileflyingTimer += 0.016f;
         if (missileflyingTimer > 1)
         {
