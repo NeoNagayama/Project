@@ -6,7 +6,7 @@ void mapBase::DrawbaseOutline()
     Material.Diffuse = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
     Material.Ambient = GetColorF(0.4f, 0.4f, 0.4f, 1.0f);
     Material.Specular = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
-    Material.Emissive = GetColorF(0.0f, 0.0f, 0.0f, 0.0f);
+    Material.Emissive = GetColorF(0.1f, 0.1f, 0.1f, 0.0f);
     Material.Power = 1.0f;
     SetMaterialParam(Material);
     VECTOR edgePosition1 = VGet(position.x - 15, position.y - 15, position.z - 40);
@@ -60,13 +60,13 @@ void mapBase::DrawDamageBox(VECTOR edge1, VECTOR edge2)
 {
     MATERIALPARAM Material;
 
-    Material.Diffuse = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
-    Material.Ambient = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
-    Material.Specular = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
-    Material.Emissive = GetColorF(0.0f, 0.0f, 0.0f, 0.0f);
-    Material.Power = 20.0f;
+    Material.Diffuse = GetColorF(0, 0, 0, 0.2f);
+    Material.Ambient = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
+    Material.Specular = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
+    Material.Emissive = GetColorF(0.1f, 0.1f, 0.1f, 0.0f);
+    Material.Power = 3.0f;
     SetMaterialParam(Material);
-    DrawCube3D(edge1, edge2, GetColor(120, 120, 120), GetColor(0, 0, 0), TRUE);
+    DrawCube3D(edge1, edge2, GetColor(120, 120, 120), GetColor(60, 60, 60), TRUE);
 }
 bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2,bool current)
 {
@@ -80,4 +80,83 @@ bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR pl
     {
         return current;
     }
+}
+
+bool antiAir::DamageZone(bool upper, bool lower, bool right, bool left, VECTOR hitbox1, VECTOR hitbox2)
+{
+    bool isHit = false;
+    if (upper)
+    {
+        VECTOR edge1 = VGet(position.x - 15, position.y + 7, position.z - 40);
+        VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 40);
+        DrawDamageBoxTransparent(edge1, edge2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+    }
+    if (lower)
+    {
+        VECTOR edge1 = VGet(position.x - 15, position.y - 15, position.z - 40);
+        VECTOR edge2 = VGet(position.x + 15, position.y - 7, position.z + 40);
+        DrawDamageBoxTransparent(edge1, edge2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+    }
+    if (right)
+    {
+        VECTOR edge1 = VGet(position.x + 7, position.y - 15, position.z - 40);
+        VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 40);
+        DrawDamageBoxTransparent(edge1, edge2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+    }
+    if (left)
+    {
+        VECTOR edge1 = VGet(position.x - 15, position.y - 15, position.z - 40);
+        VECTOR edge2 = VGet(position.x - 7, position.y + 15, position.z + 40);
+        DrawDamageBoxTransparent(edge1, edge2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+    }
+    if (firingTimer.MeasureTimer(1.2f) &&count < 2)
+    {
+        count++;
+        firingTimer.RestartTimer();
+    }
+    return isHit;
+}
+void antiAir::DrawDamageBoxTransparent(VECTOR edge1, VECTOR edge2)
+{
+    MATERIALPARAM Material;
+
+    Material.Diffuse = GetColorF(0, 0, 0, 0.2f);
+    Material.Ambient = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
+    Material.Specular = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
+    Material.Emissive = GetColorF(0.2f, 0.0f, 0.0f, 0.0f);
+    Material.Power = 3.0f;
+    SetMaterialParam(Material);
+    SetWriteZBuffer3D(FALSE);
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 90);
+    DrawCube3D(edge1, edge2, GetColor(120, 0, 0), GetColor(120, 0, 0), TRUE);
+    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+    SetWriteZBuffer3D( TRUE);
+    for (int i = 0; i < count; i++)
+    {
+        if (expls[i].DrawExplosion())
+        {
+            expls[i].SetPosition(edge1,edge2);
+        }
+    }
+
+}
+
+bool explosion::DrawExplosion()
+{
+    DrawSphere3D(position, radius, 4, GetColor(255, 100, 0), GetColor(255, 100, 0), true);
+    radius -= damping;
+    if (radius <= 0)
+    {
+        return true;
+    }
+    return false;
+}
+void explosion::SetPosition(VECTOR edge1, VECTOR edge2)
+{
+    position = VGet(get_rand(edge1.x, edge2.x), get_rand(edge1.y, edge2.y), get_rand(edge1.z, edge2.z));
+    radius = maxRadius;
 }

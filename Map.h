@@ -30,3 +30,26 @@ public:
     void DrawDamageBox(VECTOR edge1,VECTOR edge2);
     bool checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2,bool current);
 };
+
+class explosion
+{
+private:
+    VECTOR position = VGet(0,-20,0);
+    float maxRadius=6;
+    float radius=3;
+    float damping=0.05f;
+public:
+    bool DrawExplosion();
+    void SetPosition(VECTOR edge1,VECTOR edge2);
+
+};
+class antiAir :public mapBase
+{
+private:
+    float count = 0;
+    timer firingTimer;
+    explosion expls[3];
+public:
+    bool DamageZone(bool upper, bool lower, bool right, bool left, VECTOR hitbox1, VECTOR hitbox2);
+    void DrawDamageBoxTransparent(VECTOR edge1, VECTOR edge2);
+};

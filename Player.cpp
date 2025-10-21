@@ -42,12 +42,20 @@ void Player::mainProcess(bool mode)
     }
     
 }
-void Player::transitionProcess()
+void Player::transitionProcess(bool mode)
 {
     BasePosition = VAdd(VGet(0, 0, 2), BasePosition);
     Move(VAdd(BasePosition, offset));
     rotatePlayer();
-    SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+    if (mode)
+    {
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+    }
+    else
+    {
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+    }
+    
     CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
 }
 void Player::KeyInput()
