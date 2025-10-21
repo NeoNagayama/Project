@@ -19,6 +19,7 @@ bool PauseControllable = true;
 bool isRestarting = false;
 bool isQuitting = false;
 bool isObjectiveAppeared = false;
+bool isGetDamage = false;
 
 int gamePhase = 0;
 int choosedButton;
@@ -33,7 +34,9 @@ mapBase maps[25];
 antiAir AAs[25];
 timer objectiveShowTimer;
 timer CountDownTimer;
+timer damageRate;
 int obstacle[25];
+int obstacleType[25];
 enum Phase
 {
     PHASE_RUN,
@@ -66,6 +69,10 @@ void Stage1InitialProcess()
     {
         obstacle[i] = get_rand(0,25);
     }
+    for (int i = 0; i < 25; i++)
+    {
+        obstacleType[i] = get_rand(0, 8);
+    }
 }
 void Stage1MainProcess()
 {
@@ -83,7 +90,8 @@ void Stage1MainProcess()
         }
         maps[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
         maps[pos].DrawbaseOutline();
-        if (2 <= get_rand(0,8))
+
+        if (obstacleType[pos] < 2)
         {
             switch (obstacle[pos]) {
             case UPPER:
@@ -120,49 +128,22 @@ void Stage1MainProcess()
                 break;
             }
         }
-        else
-        {
-            switch (obstacle[pos]) {
-            case UPPER:
-                AAs[pos].DamageZone(true, false, false, false,  player.hitbox1, player.hitbox2);
-                break;
-            case LOWER:
-                AAs[pos].DamageZone(false, true, false, false,  player.hitbox1, player.hitbox2);
-                break;
-            case RIGHT:
-                AAs[pos].DamageZone(false, false, true, false,  player.hitbox1, player.hitbox2);
-                break;
-            case LEFT:
-                AAs[pos].DamageZone(false, false, false, true,  player.hitbox1, player.hitbox2);
-                break;
-            case UPPER_LOWER:
-                AAs[pos].DamageZone(true, true, false, false,  player.hitbox1, player.hitbox2);
-                break;
-            case UPPER_RIGHT:
-                AAs[pos].DamageZone(true, false, true, false,  player.hitbox1, player.hitbox2);
-                break;
-            case UPPER_LEFT:
-                AAs[pos].DamageZone(true, false, false, true,  player.hitbox1, player.hitbox2);
-                break;
-            case LOWER_RIGHT:
-                AAs[pos].DamageZone(false, true, true, false,  player.hitbox1, player.hitbox2);
-                break;
-            case LOWER_LEFT:
-                AAs[pos].DamageZone(false, true, false, true,  player.hitbox1, player.hitbox2);
-                break;
-            case RIGHT_LEFT:
-                AAs[pos].DamageZone(false, false, true, true,  player.hitbox1, player.hitbox2);
-                break;
-            default:
-                break;
-            }
-        }
     }
     ShadowMap_DrawEnd();
 
     SetUseShadowMap(0, shadowHandle);
     SetupCamera_Perspective(1);
-    for (int i = 0; i <  15; i++)
+    for (int i = 14; i >-1 ; i--)
+    {
+        int pos = i + ((int)player.BasePosition.z % 2000) / 80;
+        if (pos > 24)
+        {
+            pos -= 25;
+        }
+        maps[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
+        maps[pos].DrawbaseOutline();
+    }
+    for (int i = 14; i > -1; i--)
     {
         int pos = i + ((int)player.BasePosition.z % 2000) / 80;
         if (pos > 24)
@@ -170,208 +151,98 @@ void Stage1MainProcess()
             pos -= 25;
         }
         maps[pos].position.z = 80*(i + (int)player.BasePosition.z/80);
-        maps[pos].DrawbaseOutline();
-        switch (obstacle[pos]){
-        case UPPER:
-            if (maps[pos].DamageBox(true, false, false, false, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
+        AAs[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
+        if ( obstacleType[pos] < 2)
+        {
+            switch (obstacle[pos]) {
+            case UPPER:
+                Obstacle_Draw(pos, true, false, false, false);
+                break;
+            case LOWER:
+                Obstacle_Draw(pos, false, true, false, false);
+                break;
+            case RIGHT:
+                Obstacle_Draw(pos, false, false, true, false);
+                break;
+            case LEFT:
+                Obstacle_Draw(pos, false, false, false, true);
+                break;
+            case UPPER_LOWER:
+                Obstacle_Draw(pos, true, true, false, false);
+                break;
+            case UPPER_RIGHT:
+                Obstacle_Draw(pos, true, false, true, false);
+                break;
+            case UPPER_LEFT:
+                Obstacle_Draw(pos, true, false, false, true);
+                break;
+            case LOWER_RIGHT:
+                Obstacle_Draw(pos, false, true, true, false);
+                break;
+            case LOWER_LEFT:
+                Obstacle_Draw(pos, false, true, false, true);
+                break;
+            case RIGHT_LEFT:
+                Obstacle_Draw(pos, false, false, true, true);
+                break;
+            default:
+                Obstacle_Draw(pos, false, false, false, false);
+                break;
             }
-            if (i == 1)
-            {
-                enemy.moveRangeX = MOVERANGE;
-                enemy.minimumMoveRangeX = -MOVERANGE;
-                enemy.moveRangeY = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeY = -MOVERANGE;
+        }
+        else
+        {
+            switch (obstacle[pos]) {
+            case UPPER:
+                AAGun_Draw(pos, true, false, false, false);
+                break;
+            case LOWER:
+                AAGun_Draw(pos, false, true, false, false);
+                break;
+            case RIGHT:
+                AAGun_Draw(pos, false, false, true, false);
+                break;
+            case LEFT:
+                AAGun_Draw(pos, false, false, false, true);
+                break;
+            case UPPER_LOWER:
+                AAGun_Draw(pos, true, true, false, false);
+                break;
+            case UPPER_RIGHT:
+                AAGun_Draw(pos, true, false, true, false);
+                break;
+            case UPPER_LEFT:
+                AAGun_Draw(pos, true, false, false, true);
+                break;
+            case LOWER_RIGHT:
+                AAGun_Draw(pos, false, true, true, false);
+                break;
+            case LOWER_LEFT:
+                AAGun_Draw(pos, false, true, false, true);
+                break;
+            case RIGHT_LEFT:
+                AAGun_Draw(pos, false, false, true, true);
+                break;
+            default:
+                AAGun_Draw(pos, false, false, false, false);
+                break;
             }
-            if (i == 2)
-            {
-                enemy.moveRangeY = CLOSEDMOVERANGE;
-            }
-            break;
-        case LOWER:
-            if (maps[pos].DamageBox(false, true, false, false, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = MOVERANGE;
-                enemy.minimumMoveRangeX = -MOVERANGE;
-                enemy.moveRangeY = MOVERANGE;
-                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
-            }
-            break;
-        case RIGHT:
-            if (maps[pos].DamageBox(false, false, true, false, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeX = -MOVERANGE;
-                enemy.moveRangeY = MOVERANGE;
-                enemy.minimumMoveRangeY = -MOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.moveRangeX = CLOSEDMOVERANGE;
-            }
-            break;
-        case LEFT:
-            if (maps[pos].DamageBox(false, false, false, true, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = MOVERANGE;
-                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
-                enemy.moveRangeY = MOVERANGE;
-                enemy.minimumMoveRangeY = -MOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
-            }
-            break;
-        case UPPER_LOWER:
-            if (maps[pos].DamageBox(true, true, false, false, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = MOVERANGE;
-                enemy.minimumMoveRangeX = -MOVERANGE;
-                enemy.moveRangeY = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.moveRangeY = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
-            }
-            break;
-        case UPPER_RIGHT:
-            if (maps[pos].DamageBox(true, false, true, false, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeX = -MOVERANGE;
-                enemy.moveRangeY = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeY = -MOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.moveRangeX = CLOSEDMOVERANGE;
-                enemy.moveRangeY = CLOSEDMOVERANGE;
-            }
-            break;
-        case UPPER_LEFT:
-            if (maps[pos].DamageBox(true, false, false, true, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = MOVERANGE;
-                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
-                enemy.moveRangeY = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeY = -MOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
-                enemy.moveRangeY = CLOSEDMOVERANGE;
-            }
-            break;
-        case LOWER_RIGHT:
-            if (maps[pos].DamageBox(false, true, true, false, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeX = -MOVERANGE;
-                enemy.moveRangeY = MOVERANGE;
-                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.moveRangeX = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
-            }
-            break;
-        case LOWER_LEFT:
-            if (maps[pos].DamageBox(false, true, false, true, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = MOVERANGE;
-                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
-                enemy.moveRangeY = MOVERANGE;
-                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeY = -CLOSEDMOVERANGE;
-            }
-            break;
-        case RIGHT_LEFT:
-            if (maps[pos].DamageBox(false, false, true, true, false, player.hitbox1, player.hitbox2) && !isStarted)
-            {
-
-                isDead = true;
-            }
-            if (i == 1)
-            {
-                enemy.moveRangeX = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
-                enemy.moveRangeY = MOVERANGE;
-                enemy.minimumMoveRangeY = -MOVERANGE;
-            }
-            if (i == 2)
-            {
-                enemy.moveRangeX = CLOSEDMOVERANGE;
-                enemy.minimumMoveRangeX = -CLOSEDMOVERANGE;
-            }
-            break;
-        default:
-            if (i == 1)
-            {
-                enemy.moveRangeX = MOVERANGE;
-                enemy.minimumMoveRangeX = -MOVERANGE;
-                enemy.moveRangeY = MOVERANGE;
-                enemy.minimumMoveRangeY = -MOVERANGE;
-            }
-            break;
         }
         if (i == 14)
         {
             int t = 15 + ((int)player.BasePosition.z % 2000) / 80;
             obstacle[t > 24 ? t - 25 : t] = get_rand(0, 25);
+            obstacleType[t > 24 ? t - 25 : t] = get_rand(0, 8);
+        }
+        
+
+    }
+    if (isGetDamage)
+    {
+        if (damageRate.MeasureTimer(0.5f))
+        {
+            isGetDamage = false;
+            damageRate.RestartTimer();
         }
     }
     if (isStarted)
@@ -613,4 +484,27 @@ void Stage1Initialize()
             obstacle[i] = get_rand(0, 25);
         }
     }
+}
+void Obstacle_Draw(int pos, bool upper, bool lower, bool right, bool left) 
+{
+    if (maps[pos].DamageBox(upper, lower, right, left, false, player.hitbox1, player.hitbox2) && !isStarted)
+    {
+        isDead = true;
+    }
+    enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
+    enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
+    enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
+    enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
+}
+void AAGun_Draw(int pos, bool upper, bool lower, bool right, bool left)
+{
+    if (AAs[pos].DamageZone(upper, lower, right, left,player.hitbox1, player.hitbox2) && !isGetDamage)
+    {
+        player.Health -= 5;
+        isGetDamage = true;
+    }
+    enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
+    enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
+    enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
+    enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
 }
