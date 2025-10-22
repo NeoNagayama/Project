@@ -12,6 +12,8 @@ int scene = 0;
 int reticleHandle = 0;
 int shadowHandle;
 int titleShadowHandle;
+int backGroundHandle;
+int reticleInsideGaugeHandle;
 bool Quit = false;
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -19,12 +21,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetGraphMode(1920, 1080, 32) ,ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);
     //SetFullScreenResolutionMode(DX_FSRESOLUTIONMODE_MAXIMUM);
     //奥行0.1～1000までをカメラの描画範囲とする
-    SetCameraNearFar(0.1f, 1000.0f);
+    SetCameraNearFar(0.1f, 5000.0f);
     SetUseLighting(true);
     SetLightEnable(true);
     SetUseZBuffer3D(TRUE);
     SetWriteZBuffer3D(TRUE);
     reticleHandle = LoadGraph("Reticle.png", false);
+    reticleInsideGaugeHandle = LoadGraph("ReticleInsideGauge.png", false);
+    backGroundHandle = LoadGraph("backGround2.jpg");
     fontLoad();
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));
@@ -39,14 +43,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetLightAmbColor(GetColorF(0.2f, 0.2f, 0.2f,0.5f));
     shadowHandle = MakeShadowMap(4096, 4096);
     titleShadowHandle = MakeShadowMap(4096, 4096);
-
     SetShadowMapLightDirection(shadowHandle, VGet(0.1f, -0.7f, 0.5f));
     SetShadowMapLightDirection(titleShadowHandle, VGet(0.1f, -0.7f, 0.5f));
     
 
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen() && !Quit) {
         Input_UpdateKeyboard();
-        
         //場面の切り替え
         switch (scene) {
             //場面別の毎フレーム呼ばれる処理
@@ -60,6 +62,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             ClearMainProcess();
             break;
         default:
+            MATERIALPARAM Material;
+
+            Material.Diffuse = GetColorF(0, 0, 0, 0.2f);
+            Material.Ambient = GetColorF(0.2f, 0.2f, 0.28f, 0.2f);
+            Material.Specular = GetColorF(0.2f, 0.2f, 0.4f, 0.2f);
+            Material.Emissive = GetColorF(0.1f, 0.1f, 0.1f, 0.0f);
+            Material.Power = 3.0f;
+            SetMaterialParam(Material);
+            DrawGraph3D(0, 650,  1800, backGroundHandle, false);
             TitleMainProcess();
             break;
         }

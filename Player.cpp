@@ -46,6 +46,7 @@ void Player::transitionProcess(bool mode)
 {
     BasePosition = VAdd(VGet(0, 0, 2), BasePosition);
     Move(VAdd(BasePosition, offset));
+    targetAngle = VGet(0, -0.99f, 0);
     rotatePlayer();
     if (mode)
     {
@@ -218,7 +219,7 @@ void Player::PlayerMoveXY()
 }
 void Player::Vulcan()
 {
-    DrawTextWithSort(120, 1920, "VLUCAN: %d", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50), ammo);
+    DrawTextWithSort(120, 1920, "VULCAN: %d", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50), ammo);
     Position = MV1GetPosition(ModelHandle);
     for (int i = 49; i >= 0; i--)
     {
@@ -234,7 +235,11 @@ void Player::Vulcan()
         }
     }
     VECTOR ReticleCenter = ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[10], bulletPositionY[10], BasePosition.z), VGet(0, 0, 50)));
-    DrawExtendGraph((int)ReticleCenter.x-120, (int)ReticleCenter.y + 120, (int)ReticleCenter.x + 120, (int)ReticleCenter.y -120, reticleHandle, true);
+    DrawExtendGraph((int)ReticleCenter.x- 70, (int)ReticleCenter.y + 70, (int)ReticleCenter.x + 70, (int)ReticleCenter.y - 70, reticleHandle, true);
+
+    clsDx();
+    printfDx("%d", (ammo / maxAmmo) * 100);
+    DrawCircleGauge((int)ReticleCenter.x, (int)ReticleCenter.y, (double)((float)ammo / (float)maxAmmo) * 100, reticleInsideGaugeHandle, 0,0.1);
     if (CheckHitKey(KEY_INPUT_SPACE) && firingTimer > firingRate &&ammo>0)
     {
         firingTimer = 0;
@@ -381,7 +386,7 @@ void Player::pitch()
         {
             Rotate(VGet(rotateSpeed * smooth(difInAngle, 0, 1), 0, 0));
         }
-        else if(!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W))
+        else if(!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W) )
         {
             Rotation = MV1GetRotationXYZ(ModelHandle);
             SetRotation(VGet(0, Rotation.y, Rotation.z));
@@ -413,14 +418,18 @@ bool Player::Transition()
     Move(VAdd(BasePosition, offset));
     if (distance <=1.0f)
     {
-        CameraPosition = targetCameraPosition;
-        SetCameraPositionAndTarget_UpVecY(targetCameraPosition, VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+
+        rotatePlayer();
+        CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition);
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
         return true;
     }
-
-    CameraPosition = VAdd(VAdd(CameraPosition, VScale(VNorm(VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z)), 0.07f)), VGet(0, 0, 2.0f));
-    SetCameraPositionAndTarget_UpVecY(VGet(offset.x,offset.y + 2,CameraPosition.z), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
-    return false;
+    else
+    {
+        CameraPosition = VAdd(VAdd(CameraPosition, VScale(VNorm(VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z)), 0.17f)), VGet(0, 0, 2.0f));
+        SetCameraPositionAndTarget_UpVecY(VGet(offset.x, offset.y + 2, CameraPosition.z), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+        return false;
+    }
 }
 void Player::autoEvade()
 {
@@ -428,9 +437,12 @@ void Player::autoEvade()
     float distance = sqrtf((-offset.x * -offset.x) + (-offset.y * -offset.y));
     if (distance >= 1)
     {
+
         targetAngle = VNorm(VGet(-offset.x, -offset.y, 0));
-        rotatePlayer();
+        
         offset = VAdd(VScale(targetAngle, 0.7f * moveSpeed), offset);
+        targetAngle.y = -targetAngle.y;
+        rotatePlayer();
     }
     else
     {

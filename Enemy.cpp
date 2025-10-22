@@ -97,7 +97,7 @@ void Enemy::Vulcan()
         printfDx("\n%f %f %f", VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), 0.07f).x, VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), 0.07f).y, VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), 0.07f).z);*/
         VECTOR GraphPosition = ConvWorldPosToScreenPos(VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + 50));
 
-        DrawExtendGraph((int)GraphPosition.x - 120, (int)GraphPosition.y - 120, (int)GraphPosition.x + 120, (int)GraphPosition.y + 120, reticleHandle, true);
+        DrawExtendGraph((int)GraphPosition.x - 70, (int)GraphPosition.y - 70, (int)GraphPosition.x + 70, (int)GraphPosition.y + 70, reticleHandle, true);
     }
 }
 void Enemy::missile()
@@ -393,7 +393,7 @@ bool Enemy::Transition()
     playerObject->Move(VAdd(playerObject->BasePosition, playerObject->offset));*/
     
     MV1DrawModel(ModelHandle);
-    if (playerObject->Transition() && transitionMoveZaxis >= 50.0f)
+    if (playerObject->Transition() && transitionMoveZaxis >= 30.0f)
     {
         offset = VGet(playerObject->offset.x + 3, playerObject->offset.y - 2, 0);
         return true;

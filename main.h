@@ -6,6 +6,8 @@ extern int scene;
 extern int shadowHandle;
 extern int titleShadowHandle;
 extern int reticleHandle;
+extern int reticleInsideGaugeHandle;
+extern int backGroundHandle;
 enum SCENES
 {
     SCENE_TITLE,

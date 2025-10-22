@@ -48,8 +48,6 @@ void TitleMainProcess()
     z -= 0.3f;
     x += 0.34f;
     //x += 0.2f;
-    clsDx();
-    printfDx("%f", yaxis);
     MV1SetPosition(modelHandle2, VGet(x, 4, z));
     MV1SetPosition(modelHandle3, VGet(x -3, 4, z-2));
     MV1SetRotationXYZ(modelHandle2, VGet(0, 2.1f, 0));

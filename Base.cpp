@@ -57,7 +57,7 @@ void base::DrawhitBoxToUI()
     SetDrawZ(0.1f);
     DrawBox(screenPos1.x, screenPos1.y, screenPos2.x, screenPos2.y, GetColor(0,255,0),false,0.2f);
     DrawBox(screenPos3.x, screenPos3.y, screenPos4.x, screenPos4.y, GetColor(0, 255, 255), false, 0.2f);*/
-    DrawLine3D((hitbox1), VGet(hitbox1.x, hitbox1.y, hitbox2.z),GetColor(0, 255, 0));
+    /*DrawLine3D((hitbox1), VGet(hitbox1.x, hitbox1.y, hitbox2.z),GetColor(0, 255, 0));
     DrawLine3D((hitbox1), VGet(hitbox2.x, hitbox1.y, hitbox1.z), GetColor(0, 255, 0));
     DrawLine3D((hitbox1), VGet(hitbox1.x, hitbox2.y, hitbox1.z), GetColor(0, 255, 0));
     DrawLine3D((hitbox2), VGet(hitbox2.x, hitbox1.y, hitbox2.z), GetColor(0, 255, 0));
@@ -68,5 +68,6 @@ void base::DrawhitBoxToUI()
     DrawLine3D(VGet(hitbox1.x, hitbox2.y, hitbox2.z), VGet(hitbox1.x, hitbox2.y, hitbox1.z), GetColor(0, 255, 0));
     DrawLine3D(VGet(hitbox1.x, hitbox2.y, hitbox2.z), VGet(hitbox1.x, hitbox1.y, hitbox2.z), GetColor(0, 255, 0));
     DrawLine3D(VGet(hitbox1.x, hitbox1.y, hitbox2.z), VGet(hitbox2.x, hitbox1.y, hitbox2.z), GetColor(0, 255, 0));
-    DrawLine3D(VGet(hitbox1.x, hitbox2.y, hitbox1.z), VGet(hitbox2.x, hitbox2.y, hitbox1.z), GetColor(0, 255, 0));
+    DrawLine3D(VGet(hitbox1.x, hitbox2.y, hitbox1.z), VGet(hitbox2.x, hitbox2.y, hitbox1.z), GetColor(0, 255, 0));*/
+    DrawCube3D(hitbox1, hitbox2, GetColor(0, 255, 0), GetColor(0, 255, 0), false);
 }
