@@ -8,17 +8,24 @@
 #include "main.h"
 #include "Player.h"
 #include <random>
+//現在の場面
 int scene = 0;
+//照準用の画像のハンドル
 int reticleHandle = 0;
+//インゲームのシャドウマップのハンドル
 int shadowHandle;
+//タイトル画面のシャドウマップのハンドル
 int titleShadowHandle;
+//背景画像のハンドル
 int backGroundHandle;
+//照準内の残弾ゲージのハンドル
 int reticleInsideGaugeHandle;
+//ゲームを終了するための条件用の変数
 bool Quit = false;
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    SetGraphMode(1920, 1080, 32) ,ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);
+    SetGraphMode(1920, 1080, 32) ,ChangeWindowMode(FALSE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);
     //SetFullScreenResolutionMode(DX_FSRESOLUTIONMODE_MAXIMUM);
     //奥行0.1～1000までをカメラの描画範囲とする
     SetCameraNearFar(0.1f, 5000.0f);
@@ -28,11 +35,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetWriteZBuffer3D(TRUE);
     reticleHandle = LoadGraph("Reticle.png", false);
     reticleInsideGaugeHandle = LoadGraph("ReticleInsideGauge.png", false);
-    backGroundHandle = LoadGraph("backGround2.jpg");
+    backGroundHandle = LoadGraph("backGround.jpg");
     fontLoad();
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));
-    //タイトル画面で最初に一度だけ呼ばれる処理
+    //タイトル画面で最初に一度だけ呼ばれる処理 
     TitleInitialProcess();
     //ステージ1で最初に一度だけ呼ばれる処理
     Stage1InitialProcess();
@@ -40,12 +47,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     ClearInitialProcess();
     //ゲームオーバー画面で最初に一度だけ呼ばれる処理
     GameOverInitialProcess();
-    SetLightAmbColor(GetColorF(0.2f, 0.2f, 0.2f,0.5f));
+    //インゲームのシャドウマップを作成
     shadowHandle = MakeShadowMap(4096, 4096);
+    //タイトル画面のシャドウマップを作成
     titleShadowHandle = MakeShadowMap(4096, 4096);
+    //インゲームとタイトルのシャドウマップ用のライトの方向を設定
     SetShadowMapLightDirection(shadowHandle, VGet(0.1f, -0.7f, 0.5f));
     SetShadowMapLightDirection(titleShadowHandle, VGet(0.1f, -0.7f, 0.5f));
-    
+
+    MATERIALPARAM Material;
+
+    Material.Diffuse = GetColorF(0, 0, 0, 0.2f);
+    Material.Ambient = GetColorF(0.2f, 0.2f, 0.24f, 0.2f);
+    Material.Specular = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
+    Material.Emissive = GetColorF(0.1f, 0.1f, 0.1f, 0.0f);
+    Material.Power = 3.0f;
+    SetMaterialParam(Material);
 
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen() && !Quit) {
         Input_UpdateKeyboard();
@@ -62,14 +79,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             ClearMainProcess();
             break;
         default:
-            MATERIALPARAM Material;
-
-            Material.Diffuse = GetColorF(0, 0, 0, 0.2f);
-            Material.Ambient = GetColorF(0.2f, 0.2f, 0.28f, 0.2f);
-            Material.Specular = GetColorF(0.2f, 0.2f, 0.4f, 0.2f);
-            Material.Emissive = GetColorF(0.1f, 0.1f, 0.1f, 0.0f);
-            Material.Power = 3.0f;
-            SetMaterialParam(Material);
+            //背景の描画
             DrawGraph3D(0, 650,  1800, backGroundHandle, false);
             TitleMainProcess();
             break;

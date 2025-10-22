@@ -69,20 +69,17 @@ void Player::KeyInput()
             x += speed;
             speedLimit = 0.49f;
             targetAngle = VGet(0.5f, -0.5f, 0);
-            //targetAnglePitch = VGet(1, -1, 1);
         }
         else if (CheckHitKey(KEY_INPUT_A))
         {
             x -= speed;
             speedLimit = 0.49f;
             targetAngle = VGet(-0.5f, -0.5f, 0);
-            //targetAnglePitch = VGet(-1, -1, 0);
         }
         else
         {
             speedLimit = 0.7f;
             targetAngle = VGet(0, -1, 0);
-            //targetAnglePitch = VGet(0, -1, 1);
         }
             y += speed;
     }
@@ -93,20 +90,17 @@ void Player::KeyInput()
             x += speed;
             speedLimit = 0.49f;
             targetAngle = VGet(0.5f, 0.5f, 0);
-            //targetAnglePitch = VGet(1, -1, 1);
         }
         else if (CheckHitKey(KEY_INPUT_A))
         {
             x -= speed;
             speedLimit = 0.49f;
             targetAngle = VGet(-0.5f, 0.5f, 0);
-            //targetAnglePitch = VGet(-1, -1, 1);
         }
         else
         {
             speedLimit = 0.7f;
             targetAngle = VGet(0, 0.99f, 0);
-            //targetAnglePitch = VGet(0, 0.99f, 1);
         }
         y -= speed;
     }
@@ -115,7 +109,6 @@ void Player::KeyInput()
         x += speed;
         speedLimit = 0.7f;
         targetAngle = VGet(0.6f, -0.4f, 0);
-        //targetAnglePitch = VGet(1, -0.4f, 1);
 
        
     }
@@ -124,27 +117,13 @@ void Player::KeyInput()
         x -= speed;
         speedLimit = 0.7f;
         targetAngle = VGet(-0.6f, -0.4f, 0);
-        //targetAnglePitch = VGet(-1, -0.4f, 1);
     }
     else
     {
         if (!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W))
         {
             targetAngle = VGet(0, -0.99f, 0);
-            //targetAnglePitch = VGet(0, 0, 1);
-            /*if (rotateSpeed > 0)
-            {
-                rotateSpeed -= 0.005f;
-            }
-            else
-            {
-                rotateSpeed = 0;
-            }*/
         }
-        /*else
-        {
-            
-        }*/
         if (x > 0.1f)
         {
             x -= speed;
@@ -406,8 +385,6 @@ void Player::pitch()
 }
 bool Player::Transition()
 {
-    /*targetAngle = VGet(0, -0.99f, 0);
-    rotatePlayer();*/
     autoEvade();
     BasePosition = VAdd(VGet(0, 0, 2), BasePosition);
     Move(VAdd(BasePosition, offset));

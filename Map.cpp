@@ -1,14 +1,6 @@
 #include "Map.h"
 void mapBase::DrawbaseOutline()
 {
-    MATERIALPARAM Material;
-
-    Material.Diffuse = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
-    Material.Ambient = GetColorF(0.4f, 0.4f, 0.4f, 1.0f);
-    Material.Specular = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
-    Material.Emissive = GetColorF(0.1f, 0.1f, 0.1f, 0.0f);
-    Material.Power = 1.0f;
-    SetMaterialParam(Material);
     VECTOR edgePosition1 = VGet(position.x - 15, position.y - 15, position.z - 40);
     VECTOR edgePosition2 = VGet(position.x + 15, position.y + 15, position.z + 40);
     DrawCube3D(edgePosition1, VGet(edgePosition1.x - 1, edgePosition2.y, edgePosition2.z), GetColor(100, 100, 100), GetColor(0, 0, 0), TRUE);
@@ -58,14 +50,6 @@ bool mapBase::DamageBox(bool upper, bool lower, bool right, bool left, bool cent
 }
 void mapBase::DrawDamageBox(VECTOR edge1, VECTOR edge2)
 {
-    MATERIALPARAM Material;
-
-    Material.Diffuse = GetColorF(0, 0, 0, 0.2f);
-    Material.Ambient = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
-    Material.Specular = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
-    Material.Emissive = GetColorF(0.1f, 0.1f, 0.1f, 0.0f);
-    Material.Power = 3.0f;
-    SetMaterialParam(Material);
     DrawCube3D(edge1, edge2, GetColor(120, 120, 120), GetColor(60, 60, 60), TRUE);
 }
 bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2,bool current)
@@ -122,16 +106,8 @@ bool antiAir::DamageZone(bool upper, bool lower, bool right, bool left, VECTOR h
 }
 void antiAir::DrawDamageBoxTransparent(VECTOR edge1, VECTOR edge2)
 {
-    MATERIALPARAM Material;
-
-    Material.Diffuse = GetColorF(0, 0, 0, 0.2f);
-    Material.Ambient = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
-    Material.Specular = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
-    Material.Emissive = GetColorF(0.2f, 0.0f, 0.0f, 0.0f);
-    Material.Power = 3.0f;
-    SetMaterialParam(Material);
     SetWriteZBuffer3D(FALSE);
-    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 90);
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 120);
     DrawCube3D(edge1, edge2, GetColor(120, 0, 0), GetColor(120, 0, 0), TRUE);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
     SetWriteZBuffer3D( TRUE);

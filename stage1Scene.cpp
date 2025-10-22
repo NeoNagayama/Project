@@ -308,7 +308,7 @@ void Stage1MainProcess()
             }
             DrawTextWithSort(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
             DrawTextWithSort(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT,500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
-            if (player.BasePosition.z > 400.0f && gamePhase == PHASE_RUN)
+            if (player.BasePosition.z > 4000.0f && gamePhase == PHASE_RUN)
             {
                 gamePhase = PHASE_OVERSHOOT;
             }

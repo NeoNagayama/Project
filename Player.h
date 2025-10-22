@@ -35,10 +35,7 @@ private:
     Flare Flares[10];
     VECTOR CameraPosition;
 public:
-    VECTOR targetAngle;
-    int Health = 100;
     int ammo = 200;
-    VECTOR BasePosition;
     void InitialProcess();
     void Flare();
     void Vulcan();
@@ -52,5 +49,4 @@ public:
         enemyObject = enemy;
     }
     bool Transition();
-    VECTOR offset = VGet(0, -5, 0);
 };

@@ -37,11 +37,11 @@ void TitleMainProcess()
     SetUseShadowMap(0, titleShadowHandle);
     SetupCamera_Perspective(0.55f);
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0.2f, -22), VGet(0, 1.2f, -12));
-    if (Input_GetKeyboardDown(KEY_INPUT_S)  && isStartSelected == true && !sceneChanging)
+    if ((Input_GetKeyboardDown(KEY_INPUT_S) || Input_GetKeyboardDown(KEY_INPUT_DOWN))  && isStartSelected == true && !sceneChanging)
     {
         isStartSelected = false;
     }
-    if (Input_GetKeyboardDown(KEY_INPUT_W) && isStartSelected == false && !sceneChanging)
+    if ((Input_GetKeyboardDown(KEY_INPUT_W) || Input_GetKeyboardDown(KEY_INPUT_UP)) && isStartSelected == false && !sceneChanging)
     {
         isStartSelected = true;
     }
@@ -66,11 +66,11 @@ void TitleMainProcess()
     Exit.mainProcess(!isStartSelected,true,30);
     Exit.SetText("Exit");
     DrawTextWithSort(1000, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255,255,255));
-    if (isStartSelected && Input_GetKeyboardDown(KEY_INPUT_SPACE))
+    if (isStartSelected && (Input_GetKeyboardDown(KEY_INPUT_SPACE)||Input_GetKeyboardDown(KEY_INPUT_RETURN)))
     {
         sceneChanging = true;
     }
-    else if (!isStartSelected && Input_GetKeyboardDown(KEY_INPUT_SPACE))
+    else if (!isStartSelected && (Input_GetKeyboardDown(KEY_INPUT_SPACE) || Input_GetKeyboardDown(KEY_INPUT_RETURN)))
     {
         Quit = true;
     }

@@ -93,10 +93,7 @@ void Enemy::Vulcan()
     }
     if (isReticleShowUp)
     {
-        /*clsDx();
-        printfDx("\n%f %f %f", VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), 0.07f).x, VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), 0.07f).y, VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), 0.07f).z);*/
         VECTOR GraphPosition = ConvWorldPosToScreenPos(VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + 50));
-
         DrawExtendGraph((int)GraphPosition.x - 70, (int)GraphPosition.y - 70, (int)GraphPosition.x + 70, (int)GraphPosition.y + 70, reticleHandle, true);
     }
 }
