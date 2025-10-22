@@ -37,19 +37,17 @@ void TitleMainProcess()
     SetUseShadowMap(0, titleShadowHandle);
     SetupCamera_Perspective(0.55f);
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0.2f, -22), VGet(0, 1.2f, -12));
-    if (Input_GetKeyboardDown(KEY_INPUT_S)  && isStartSelected == true && !sceneChanging)
+    if ((Input_GetKeyboardDown(KEY_INPUT_S) || Input_GetKeyboardDown(KEY_INPUT_DOWN))  && isStartSelected == true && !sceneChanging)
     {
         isStartSelected = false;
     }
-    if (Input_GetKeyboardDown(KEY_INPUT_W) && isStartSelected == false && !sceneChanging)
+    if ((Input_GetKeyboardDown(KEY_INPUT_W) || Input_GetKeyboardDown(KEY_INPUT_UP)) && isStartSelected == false && !sceneChanging)
     {
         isStartSelected = true;
     }
     z -= 0.3f;
     x += 0.34f;
     //x += 0.2f;
-    clsDx();
-    printfDx("%f", yaxis);
     MV1SetPosition(modelHandle2, VGet(x, 4, z));
     MV1SetPosition(modelHandle3, VGet(x -3, 4, z-2));
     MV1SetRotationXYZ(modelHandle2, VGet(0, 2.1f, 0));
@@ -68,11 +66,11 @@ void TitleMainProcess()
     Exit.mainProcess(!isStartSelected,true,30);
     Exit.SetText("Exit");
     DrawTextWithSort(1000, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255,255,255));
-    if (isStartSelected && Input_GetKeyboardDown(KEY_INPUT_SPACE))
+    if (isStartSelected && (Input_GetKeyboardDown(KEY_INPUT_SPACE)||Input_GetKeyboardDown(KEY_INPUT_RETURN)))
     {
         sceneChanging = true;
     }
-    else if (!isStartSelected && Input_GetKeyboardDown(KEY_INPUT_SPACE))
+    else if (!isStartSelected && (Input_GetKeyboardDown(KEY_INPUT_SPACE) || Input_GetKeyboardDown(KEY_INPUT_RETURN)))
     {
         Quit = true;
     }

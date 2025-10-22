@@ -1,5 +1,4 @@
 #include "stage1Scene.h"
-#include "DxLib.h"
 #include "Input.h"
 #include "ui.h"
 #include "main.h"
@@ -130,7 +129,7 @@ void Stage1MainProcess()
         }
     }
     ShadowMap_DrawEnd();
-
+    DrawGraph3D(0, 500, player.BasePosition.z + 1000, backGroundHandle, false);
     SetUseShadowMap(0, shadowHandle);
     SetupCamera_Perspective(1);
     for (int i = 14; i >-1 ; i--)
@@ -156,37 +155,37 @@ void Stage1MainProcess()
         {
             switch (obstacle[pos]) {
             case UPPER:
-                Obstacle_Draw(pos, true, false, false, false);
+                Obstacle_Draw(i,pos, true, false, false, false);
                 break;
             case LOWER:
-                Obstacle_Draw(pos, false, true, false, false);
+                Obstacle_Draw(i, pos, false, true, false, false);
                 break;
             case RIGHT:
-                Obstacle_Draw(pos, false, false, true, false);
+                Obstacle_Draw(i, pos, false, false, true, false);
                 break;
             case LEFT:
-                Obstacle_Draw(pos, false, false, false, true);
+                Obstacle_Draw(i, pos, false, false, false, true);
                 break;
             case UPPER_LOWER:
-                Obstacle_Draw(pos, true, true, false, false);
+                Obstacle_Draw(i, pos, true, true, false, false);
                 break;
             case UPPER_RIGHT:
-                Obstacle_Draw(pos, true, false, true, false);
+                Obstacle_Draw(i, pos, true, false, true, false);
                 break;
             case UPPER_LEFT:
-                Obstacle_Draw(pos, true, false, false, true);
+                Obstacle_Draw(i, pos, true, false, false, true);
                 break;
             case LOWER_RIGHT:
-                Obstacle_Draw(pos, false, true, true, false);
+                Obstacle_Draw(i, pos, false, true, true, false);
                 break;
             case LOWER_LEFT:
-                Obstacle_Draw(pos, false, true, false, true);
+                Obstacle_Draw(i, pos, false, true, false, true);
                 break;
             case RIGHT_LEFT:
-                Obstacle_Draw(pos, false, false, true, true);
+                Obstacle_Draw(i, pos, false, false, true, true);
                 break;
             default:
-                Obstacle_Draw(pos, false, false, false, false);
+                Obstacle_Draw(i, pos, false, false, false, false);
                 break;
             }
         }
@@ -194,37 +193,37 @@ void Stage1MainProcess()
         {
             switch (obstacle[pos]) {
             case UPPER:
-                AAGun_Draw(pos, true, false, false, false);
+                AAGun_Draw(i, pos, true, false, false, false);
                 break;
             case LOWER:
-                AAGun_Draw(pos, false, true, false, false);
+                AAGun_Draw(i, pos, false, true, false, false);
                 break;
             case RIGHT:
-                AAGun_Draw(pos, false, false, true, false);
+                AAGun_Draw(i, pos, false, false, true, false);
                 break;
             case LEFT:
-                AAGun_Draw(pos, false, false, false, true);
+                AAGun_Draw(i, pos, false, false, false, true);
                 break;
             case UPPER_LOWER:
-                AAGun_Draw(pos, true, true, false, false);
+                AAGun_Draw(i, pos, true, true, false, false);
                 break;
             case UPPER_RIGHT:
-                AAGun_Draw(pos, true, false, true, false);
+                AAGun_Draw(i,pos, true, false, true, false);
                 break;
             case UPPER_LEFT:
-                AAGun_Draw(pos, true, false, false, true);
+                AAGun_Draw(i, pos, true, false, false, true);
                 break;
             case LOWER_RIGHT:
-                AAGun_Draw(pos, false, true, true, false);
+                AAGun_Draw(i, pos, false, true, true, false);
                 break;
             case LOWER_LEFT:
-                AAGun_Draw(pos, false, true, false, true);
+                AAGun_Draw(i, pos, false, true, false, true);
                 break;
             case RIGHT_LEFT:
-                AAGun_Draw(pos, false, false, true, true);
+                AAGun_Draw(i, pos, false, false, true, true);
                 break;
             default:
-                AAGun_Draw(pos, false, false, false, false);
+                AAGun_Draw(i, pos, false, false, false, false);
                 break;
             }
         }
@@ -485,26 +484,46 @@ void Stage1Initialize()
         }
     }
 }
-void Obstacle_Draw(int pos, bool upper, bool lower, bool right, bool left) 
+void Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left) 
 {
     if (maps[pos].DamageBox(upper, lower, right, left, false, player.hitbox1, player.hitbox2) && !isStarted)
     {
         isDead = true;
     }
-    enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
-    enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
-    enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
-    enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
+    if (i == 1)
+    {
+        enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
+        enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
+        enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
+        enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
+    }
+    if (i == 2)
+    {
+        enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeX;
+        enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
+        enemy.moveRangeX = right ? CLOSEDMOVERANGE : enemy.moveRangeX;
+        enemy.moveRangeY = upper ? CLOSEDMOVERANGE : enemy.moveRangeY;
+    }
 }
-void AAGun_Draw(int pos, bool upper, bool lower, bool right, bool left)
+void AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
 {
     if (AAs[pos].DamageZone(upper, lower, right, left,player.hitbox1, player.hitbox2) && !isGetDamage)
     {
         player.Health -= 5;
         isGetDamage = true;
     }
-    enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
-    enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
-    enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
-    enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
+    if (i == 1)
+    {
+        enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
+        enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
+        enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
+        enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
+    }
+    if (i == 2)
+    {
+        enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeX;
+        enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
+        enemy.moveRangeX = right ? CLOSEDMOVERANGE : enemy.moveRangeX;
+        enemy.moveRangeY = upper ? CLOSEDMOVERANGE : enemy.moveRangeY;
+    }
 }

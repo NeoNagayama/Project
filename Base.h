@@ -10,6 +10,11 @@ public:
     VECTOR Position;
     VECTOR Rotation;
     VECTOR Scale;
+
+    VECTOR BasePosition;
+    VECTOR targetAngle;
+    int Health = 100;
+    VECTOR offset = VGet(0, -5, 0);
     void Rotate(VECTOR Vector);
     void Move(VECTOR Vector);
     float DegToRad(float Euler);
