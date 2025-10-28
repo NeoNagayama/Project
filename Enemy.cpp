@@ -136,8 +136,8 @@ void Enemy::missile()
 }
 void Enemy::MissileLaunch()
 {
-    DrawTextWithSort(0, 1920, "!MISSILE ALERT!", BiggerFontHandle, SORT_CENTER, 750, false, GetColor(255, 0, 0));
-    DrawTextWithSort(0, 1920, "PRESS SPACE", fontHandle, SORT_CENTER, 790, false, GetColor(255, 255, 0));
+    MissileAlert.DrawTextWithSort(0, 1920, "!MISSILE ALERT!", BiggerFontHandle, SORT_CENTER, 750, false, GetColor(255, 0, 0));
+    MissileAlert.DrawTextWithSort(0, 1920, "PRESS SPACE", fontHandle, SORT_CENTER, 790, false, GetColor(255, 255, 0));
     missileflyingTimer += 0.016f;
     if (missileflyingTimer > 1)
     {
@@ -187,7 +187,7 @@ void Enemy::EnemyMoveXY()
         targetAngle = VNorm(VGet(1-offset.x, 1-offset.y, 0));
     }
 
-    
+    Acceleration();
     xSpeed =xSpeed *moveSpeed;
     
     ySpeed =  ySpeed * moveSpeed;
@@ -257,10 +257,10 @@ void Enemy::roll()
 void Enemy::barrelRoll()
 {
     EvadePosDistance = 0;
-    int x = 9 > moveRangeX ? moveRangeX : 9;
-    int lowerX = -9 < minimumMoveRangeX ? minimumMoveRangeX : -9;
-    int y = 9 > moveRangeY ? moveRangeY : 9;
-    int lowerY = -5 < minimumMoveRangeY ? minimumMoveRangeY : -5;
+    int x = maxMoveRange > moveRangeX ? moveRangeX : maxMoveRange;
+    int lowerX = -maxMoveRange < minimumMoveRangeX ? minimumMoveRangeX : -maxMoveRange;
+    int y = maxMoveRange > moveRangeY ? moveRangeY : maxMoveRange;
+    int lowerY = -maxMoveRange < minimumMoveRangeY ? minimumMoveRangeY : -maxMoveRange;
     switch (evadeCount) {
     case 1:
 
@@ -283,8 +283,8 @@ void Enemy::barrelRoll()
 void Enemy::H_Fluctuating()
 {
     EvadePosDistance = 0;
-    int x = 9 > moveRangeX ? moveRangeX : 9;
-    int lowerX = -9 < minimumMoveRangeX ? minimumMoveRangeX : -9;
+    int x = maxMoveRange > moveRangeX ? moveRangeX : maxMoveRange;
+    int lowerX = -maxMoveRange < minimumMoveRangeX ? minimumMoveRangeX : -maxMoveRange;
     switch (evadeCount) {
     case 1:
 
@@ -305,8 +305,8 @@ void Enemy::H_Fluctuating()
 void Enemy::V_Fluctuating()
 {
     EvadePosDistance = 0;
-    int y = 9 > moveRangeY ? moveRangeY : 9;
-    int lowerY = -5 < minimumMoveRangeY ? minimumMoveRangeY : -5;
+    int y = maxMoveRange > moveRangeY ? moveRangeY : maxMoveRange;
+    int lowerY = -maxMoveRange < minimumMoveRangeY ? minimumMoveRangeY : -maxMoveRange;
     switch (evadeCount) {
     case 1:
         EvadeMove(2, y, 2);
@@ -327,7 +327,7 @@ void Enemy::EvadeMove(int x,int y,int count)
     targetAngle = VGet(x - offset.x, y - offset.y, 0);
     EvadePosDistance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
     targetAngle = VNorm(targetAngle);
-    if (EvadePosDistance < 0.08f)
+    if (EvadePosDistance < evadeTargetDistance)
     {
         evadeCount = count;
         if (count == 0)
@@ -342,21 +342,21 @@ bool Enemy::Transition()
     playerObject->Move(VAdd(playerObject->BasePosition, playerObject->offset));*/
     
     MV1DrawModel(ModelHandle);
-    if (playerObject->Transition() && transitionMoveZaxis >= 30.0f)
+    if (playerObject->Transition() && transitionMoveZaxis >= transitionTargetPosz)
     {
-        offset = VGet(playerObject->offset.x + 3, playerObject->offset.y - 2, 0);
+        offset = VGet(playerObject->offset.x + transitionOffsetX, playerObject->offset.y - transitionOffsetY, 0);
         return true;
     }
-    else if (transitionMoveZaxis >= 30.0f)
+    else if (transitionMoveZaxis >= transitionTargetPosz)
     {
-        Move(VAdd(VGet(playerObject->offset.x + 3, playerObject->offset.y - 2, 0), BasePosition));
+        Move(VAdd(VGet(playerObject->offset.x + transitionOffsetX, playerObject->offset.y - transitionOffsetY, 0), BasePosition));
         return false;
     }
     else
     {
         BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, transitionMoveZaxis));
-        transitionMoveZaxis += 1.2f;
-        Move(VAdd(VGet(playerObject->offset.x + 3, playerObject->offset.y - 2, 0), BasePosition));
+        transitionMoveZaxis += transitionMoveSpeed;
+        Move(VAdd(VGet(playerObject->offset.x + transitionOffsetX, playerObject->offset.y - transitionOffsetY, 0), BasePosition));
         return false;
     }
 }

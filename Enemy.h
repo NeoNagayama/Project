@@ -17,8 +17,16 @@ class Player;
 class Enemy:public base
 {
 private:
+    UIText MissileAlert;
     //プレイヤーのポインター
     Player* playerObject;
+    const float maxMoveRange = 10.0f;
+    const float evadeTargetDistance = 0.08f;
+    const float transitionTargetPosz = 30.0f;
+    const float transitionMoveSpeed = 1.2f;
+    const int transitionOffsetX = 3;
+    const int transitionOffsetY = 2;
+
     //左右移動の速度
     const float moveSpeed = 0.59f;
     //ロールの速度

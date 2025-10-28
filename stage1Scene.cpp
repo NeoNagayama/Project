@@ -34,6 +34,10 @@ antiAir AAs[25];
 timer objectiveShowTimer;
 timer CountDownTimer;
 timer damageRate;
+UIText objectiveText;
+UIText countDownText;
+UIText playerHealthText;
+UIText enemyHealthText;
 int obstacle[25];
 int obstacleType[25];
 enum Phase
@@ -375,10 +379,10 @@ void Briefing()
         progress = 0;
         isObjectiveAppeared = true;
     }
-    if (isObjectiveAppeared && fadeInText(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0, 0.2f))
+    if (isObjectiveAppeared && objectiveText.fadeInText(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0, 0.2f))
     {
-        DrawTextWithSort(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50));
-        DrawTextWithSort(0, 1920, "スタートまで%d", biggerJpFontHandle, SORT_CENTER, 380, true, GetColor(255, 255, 255), GetColor(50, 50, 50), countDown);
+        objectiveText.DrawTextWithSort(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50));
+        countDownText.DrawTextWithSort(0, 1920, "スタートまで%d", biggerJpFontHandle, SORT_CENTER, 380, true, GetColor(255, 255, 255), GetColor(50, 50, 50), countDown);
         if (CountDownTimer.MeasureTimer(1))
         {
             CountDownTimer.RestartTimer();
@@ -391,7 +395,7 @@ void Briefing()
             objectiveShowTimer.RestartTimer();
             CountDownTimer.RestartTimer();
             countDown = 3;
-            resetAlpha();
+            objectiveText.resetAlpha();
         }
     }
     isDead = false;
@@ -411,8 +415,8 @@ void Ingame()
         enemy.Health = 0;
         isKilled = true;
     }
-    DrawTextWithSort(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
-    DrawTextWithSort(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT, 500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
+    playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
+    enemyHealthText.DrawTextWithSort(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT, 500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
     if (player.BasePosition.z > 4000.0f && gamePhase == PHASE_RUN)
     {
         gamePhase = PHASE_OVERSHOOT;
@@ -462,7 +466,7 @@ void IngameToClear()
 }
 void RunPhase()
 {
-    DrawTextWithSort(70, 1920, "目標:攻撃を避けて生き残れ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
+    objectiveText.DrawTextWithSort(70, 1920, "目標:攻撃を避けて生き残れ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
     DrawBox(1780, 100, 1850, 980, GetColor(180, 180, 180), true, 1);
     DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z / 4000)), 1830, 980, GetColor(0, 255, 0), true);
     player.mainProcess(false);
@@ -481,10 +485,10 @@ void ChasePhase()
     if (isObjectiveAppeared)
     {
         player.transitionProcess(true);
-        if (fadeInText(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0, 0.2f))
+        if (objectiveText.fadeInText(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0, 0.2f))
         {
-            DrawTextWithSort(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0);
-            DrawTextWithSort(0, 1920, "スタートまで%d", biggerJpFontHandle, SORT_CENTER, 380, true, GetColor(255, 255, 255), GetColor(50, 50, 50), countDown);
+            objectiveText.DrawTextWithSort(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0);
+            countDownText.DrawTextWithSort(0, 1920, "スタートまで%d", biggerJpFontHandle, SORT_CENTER, 380, true, GetColor(255, 255, 255), GetColor(50, 50, 50), countDown);
             if (CountDownTimer.MeasureTimer(1))
             {
                 CountDownTimer.RestartTimer();
@@ -496,7 +500,7 @@ void ChasePhase()
                 countDown = 3;
                 objectiveShowTimer.RestartTimer();
                 CountDownTimer.RestartTimer();
-                resetAlpha();
+                objectiveText.resetAlpha();
             }
         }
     }
@@ -504,7 +508,7 @@ void ChasePhase()
     {
         player.mainProcess(true);
     }
-    DrawTextWithSort(70, 1920, "目標:敵機を撃墜しろ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
+    objectiveText.DrawTextWithSort(70, 1920, "目標:敵機を撃墜しろ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
     enemy.mainProcess(true);
 }
 void PauseScreen()

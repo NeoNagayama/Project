@@ -15,7 +15,7 @@ void fontLoad()
     japaneseFontHandle = LoadFontDataToHandle("fonts/NotoSans.dft");
     biggerJpFontHandle = CreateFontToHandle("fonts/NotoSansJP-VariableFont_wght.ttf",70,5,DX_FONTTYPE_ANTIALIASING);
 }
-void DrawTextWithSort(int xleft, int xright, std::string text, int FontHandle, int sort ,int y,bool shadow,unsigned int FontColor, unsigned int shadowcolor ,int value)
+void UIText::DrawTextWithSort(int xleft, int xright, std::string text, int FontHandle, int sort ,int y,bool shadow,unsigned int FontColor, unsigned int shadowcolor ,int value)
 {
     int width;
     if (sort == SORT_CENTER)
@@ -53,7 +53,7 @@ void DrawTextWithSort(int xleft, int xright, std::string text, int FontHandle, i
         DrawFormatStringToHandle(xleft,  y, FontColor, FontHandle, const_cast<char*>(text.c_str()), value);
     }
 }
-bool fadeInText(int xleft, int xright, std::string text, int FontHandle, int sort, int y, bool shadow, unsigned int FontColor, unsigned int shadowcolor, int value,float time)
+bool UIText::fadeInText(int xleft, int xright, std::string text, int FontHandle, int sort, int y, bool shadow, unsigned int FontColor, unsigned int shadowcolor, int value,float time)
 {
     int width;
     TextAlpha += 255 / (time / 0.016f);
@@ -104,7 +104,7 @@ bool fadeInText(int xleft, int xright, std::string text, int FontHandle, int sor
     }
     return false;
 }
-void resetAlpha()
+void UIText::resetAlpha()
 {
     TextAlpha = 0;
     ShadowAlpha = 0;

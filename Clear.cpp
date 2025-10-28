@@ -6,6 +6,7 @@
 #include "main.h"
 Button Next;
 Button BackToTitle;
+UIText ClearText;
 bool isNextSelected = true;
 bool isSceneChanging = false;
 
@@ -29,7 +30,7 @@ void ClearMainProcess()
     Next.SetText("Next Stage");
     BackToTitle.mainProcess(!isNextSelected, true,60);
     BackToTitle.SetText("Title");
-    DrawTextWithSort(0, 1920, "STAGE1 CLEAR", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 170));
+    ClearText.DrawTextWithSort(0, 1920, "STAGE1 CLEAR", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 170));
     if (!isNextSelected && Input_GetKeyboardDown(KEY_INPUT_SPACE))
     {
         isSceneChanging = true;

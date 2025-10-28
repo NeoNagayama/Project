@@ -14,6 +14,7 @@ float z = 80;
 float x = -100;
 Button Start;
 Button Exit;
+UIText GameTitle;
 int modelhandle,modelHandle2,modelHandle3;
 void TitleInitialProcess()
 {
@@ -84,7 +85,7 @@ void TitleButtons()
 void TitleMenu()
 {
     TitleButtons();
-    DrawTextWithSort(1000, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 255));
+    GameTitle.DrawTextWithSort(1000, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 255));
     if (isStartSelected && (Input_GetKeyboardDown(KEY_INPUT_SPACE) || Input_GetKeyboardDown(KEY_INPUT_RETURN)))
     {
         sceneChanging = true;

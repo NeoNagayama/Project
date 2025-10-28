@@ -9,6 +9,7 @@
 #include "stage1Scene.h"
 Button Retry;
 Button GameOverToTitle;
+UIText GameOverText;
 bool isRetrySelected = true;
 bool isSceneChangingFromGameOver = false;
 void GameOverInitialProcess()
@@ -31,7 +32,7 @@ void GameOverMainProcess()
     Retry.SetText("Retry");
     GameOverToTitle.mainProcess(!isRetrySelected, true, 60);
     GameOverToTitle.SetText("Title");
-    DrawTextWithSort(0, 1920, "Mission Failed", titleFontHandle, SORT_CENTER, 200, true, GetColor(170, 0, 0));
+    GameOverText.DrawTextWithSort(0, 1920, "Mission Failed", titleFontHandle, SORT_CENTER, 200, true, GetColor(170, 0, 0));
     if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
     {
         isSceneChangingFromGameOver = true;

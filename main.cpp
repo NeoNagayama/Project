@@ -22,6 +22,7 @@ int backGroundHandle;
 int reticleInsideGaugeHandle;
 //ゲームを終了するための条件用の変数
 bool Quit = false;
+
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {

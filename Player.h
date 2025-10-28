@@ -5,10 +5,13 @@
 #include "bullet.h"
 #include "Flare.h"
 #include "Enemy.h"
+#include "Text.h"
 class Enemy;
 class Player: public base
 {
 private:
+    UIText VulcanText;
+    UIText FlareText;
     Enemy* enemyObject;
     int PlayerLightHandle;
     const float moveSpeed= 0.2f;
