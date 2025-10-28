@@ -4,7 +4,7 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Missile.h"
-#include "fontLoader.h"
+#include "Text.h"
 //回避軌道のenum
 enum evadeType
 {
@@ -20,11 +20,11 @@ private:
     //プレイヤーのポインター
     Player* playerObject;
     //左右移動の速度
-    float moveSpeed = 0.59f;
+    const float moveSpeed = 0.59f;
     //ロールの速度
-    float rotateSpeed = 0.08f;
+    const float rotateSpeed = 0.08f;
     //機銃の連射のレート
-    float firingRate = 0.2f;
+    const float firingRate = 0.2f;
     //機銃の射撃の間隔
     float firingInterval = 2.0f;
     //機銃の到達する位置
@@ -47,6 +47,11 @@ private:
     void H_Fluctuating();
     //上下に蛇行する関数
     void V_Fluctuating();
+    void EvadeMove(int x ,int y,int count);
+    void Acceleration();
+    void MissileLaunch();
+    void FireVulcan(float hormingForcex, float hormingForcey, float distance);
+    float EvadePosDistance = 0;
     //位置フレームあたりに上下左右に移動する速度
     float xSpeed = 0.0f, ySpeed = 0.0f;
 public:

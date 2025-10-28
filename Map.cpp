@@ -10,13 +10,13 @@ void mapBase::DrawbaseOutline()
 }
 bool mapBase::DamageBox(bool upper, bool lower, bool right, bool left, bool center, VECTOR hitbox1, VECTOR hitbox2)
 {
-    bool isHit = false;
+    isHit = false;
     if (upper)
     {
         VECTOR edge1 = VGet(position.x - 15, position.y + 7, position.z - 40);
         VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 40);
         DrawDamageBox(edge1, edge2);
-        isHit = checkHit(edge1,edge2,hitbox1,hitbox2,isHit);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
     }
     if (lower)
     {
@@ -68,7 +68,7 @@ bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR pl
 
 bool antiAir::DamageZone(bool upper, bool lower, bool right, bool left, VECTOR hitbox1, VECTOR hitbox2)
 {
-    bool isHit = false;
+    isHit = false;
     if (upper)
     {
         VECTOR edge1 = VGet(position.x - 15, position.y + 7, position.z - 40);

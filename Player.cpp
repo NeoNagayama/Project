@@ -6,12 +6,7 @@ void Player::InitialProcess()
 {
     ModelHandle = MV1LoadModel("F-14Test.mv1");
     MV1SetPosition(ModelHandle, VGet(0, -5, -0));
-    MV1SetScale(ModelHandle, VGet(3, 3, 3));/*
-    MV1SetMaterialDifColor(ModelHandle, 0, GetColorF(0.6f, 0.6f, 0.6f, 1.0f));
-    MV1SetMaterialSpcColor(ModelHandle, 0, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
-    MV1SetMaterialAmbColor(ModelHandle, 0, GetColorF(0.6f, 0.6f, 0.8f, 1.0f));
-    MV1SetMaterialEmiColor(ModelHandle, 0, GetColorF(0.1f, 0.1f, 0.1f, 0.1f));
-    MV1SetMaterialSpcPower(ModelHandle, 0, 4.0f);*/
+    MV1SetScale(ModelHandle, VGet(3, 3, 3));
     Position = VGet(0, -5, -0);
     PlayerLightHandle = CreateDirLightHandle(VGet(0,0.7f,-0.3f));
     SetLightEnableHandle(PlayerLightHandle, true);
@@ -64,45 +59,11 @@ void Player::KeyInput()
     float speed = 0.1f;
     if (CheckHitKey(KEY_INPUT_W))
     {
-        if (CheckHitKey(KEY_INPUT_D))
-        {
-            x += speed;
-            speedLimit = 0.49f;
-            targetAngle = VGet(0.5f, -0.5f, 0);
-        }
-        else if (CheckHitKey(KEY_INPUT_A))
-        {
-            x -= speed;
-            speedLimit = 0.49f;
-            targetAngle = VGet(-0.5f, -0.5f, 0);
-        }
-        else
-        {
-            speedLimit = 0.7f;
-            targetAngle = VGet(0, -1, 0);
-        }
-            y += speed;
+        InputUp(speed);
     }
     else if (CheckHitKey(KEY_INPUT_S))
     {
-        if (CheckHitKey(KEY_INPUT_D))
-        {
-            x += speed;
-            speedLimit = 0.49f;
-            targetAngle = VGet(0.5f, 0.5f, 0);
-        }
-        else if (CheckHitKey(KEY_INPUT_A))
-        {
-            x -= speed;
-            speedLimit = 0.49f;
-            targetAngle = VGet(-0.5f, 0.5f, 0);
-        }
-        else
-        {
-            speedLimit = 0.7f;
-            targetAngle = VGet(0, 0.99f, 0);
-        }
-        y -= speed;
+        InputDown(speed);
     }
     else if (CheckHitKey(KEY_INPUT_D) && x < 0.7f)
     {
@@ -120,35 +81,86 @@ void Player::KeyInput()
     }
     else
     {
-        if (!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W))
-        {
-            targetAngle = VGet(0, -0.99f, 0);
-        }
-        if (x > 0.1f)
-        {
-            x -= speed;
-        }
-        else if (x < -0.1f)
-        {
-            x += speed;
-        }
-        else
-        {
-            x = 0;
-        }
-        if (y > 0.1f)
-        {
-            y -= speed;
-        }
-        else if (y < -0.1f)
-        {
-            y += speed;
-        }
-        else
-        {
-            y = 0;
-        }
+        InputNeutral(speed);
     }
+    Limit();
+}
+void Player::InputUp(float speed)
+{
+    if (CheckHitKey(KEY_INPUT_D))
+    {
+        x += speed;
+        speedLimit = 0.49f;
+        targetAngle = VGet(0.5f, -0.5f, 0);
+    }
+    else if (CheckHitKey(KEY_INPUT_A))
+    {
+        x -= speed;
+        speedLimit = 0.49f;
+        targetAngle = VGet(-0.5f, -0.5f, 0);
+    }
+    else
+    {
+        speedLimit = 0.7f;
+        targetAngle = VGet(0, -1, 0);
+    }
+    y += speed;
+}
+void Player::InputDown(float speed)
+{
+    if (CheckHitKey(KEY_INPUT_D))
+    {
+        x += speed;
+        speedLimit = 0.49f;
+        targetAngle = VGet(0.5f, 0.5f, 0);
+    }
+    else if (CheckHitKey(KEY_INPUT_A))
+    {
+        x -= speed;
+        speedLimit = 0.49f;
+        targetAngle = VGet(-0.5f, 0.5f, 0);
+    }
+    else
+    {
+        speedLimit = 0.7f;
+        targetAngle = VGet(0, 0.99f, 0);
+    }
+    y -= speed;
+}
+void Player::InputNeutral(float speed)
+{
+
+    if (!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W))
+    {
+        targetAngle = VGet(0, -0.99f, 0);
+    }
+    if (x > 0.1f)
+    {
+        x -= speed;
+    }
+    else if (x < -0.1f)
+    {
+        x += speed;
+    }
+    else
+    {
+        x = 0;
+    }
+    if (y > 0.1f)
+    {
+        y -= speed;
+    }
+    else if (y < -0.1f)
+    {
+        y += speed;
+    }
+    else
+    {
+        y = 0;
+    }
+}
+void Player::Limit()
+{
     if (x >= speedLimit)
     {
         x = speedLimit;
@@ -157,7 +169,7 @@ void Player::KeyInput()
     {
         x = -speedLimit;
     }
-    if (y >=speedLimit)
+    if (y >= speedLimit)
     {
         y = speedLimit;
     }
@@ -219,7 +231,12 @@ void Player::Vulcan()
     clsDx();
     printfDx("%d", (ammo / maxAmmo) * 100);
     DrawCircleGauge((int)ReticleCenter.x, (int)ReticleCenter.y, (double)((float)ammo / (float)maxAmmo) * 100, reticleInsideGaugeHandle, 0,0.1);
-    if (CheckHitKey(KEY_INPUT_SPACE) && firingTimer > firingRate &&ammo>0)
+    VulcanProjectile();
+   
+}
+void Player::VulcanProjectile()
+{
+    if (CheckHitKey(KEY_INPUT_SPACE) && firingTimer > firingRate && ammo > 0)
     {
         firingTimer = 0;
         ammo--;
@@ -227,11 +244,11 @@ void Player::Vulcan()
         {
             if (!bullets[i].isActivated)
             {
-                
+
                 bullets[i].isActivated = true;
-                bullets[i].target = VAdd(Position, VGet(0,0,90));
-                bullets[i].forward = VGet(0,0,6);
-                bullets[i].StartPosition = VAdd(Position,VGet(forward().x,-forward().y,forward().z ));
+                bullets[i].target = VAdd(Position, VGet(0, 0, 90));
+                bullets[i].forward = VGet(0, 0, 6);
+                bullets[i].StartPosition = VAdd(Position, VGet(forward().x, -forward().y, forward().z));
                 break;
             }
         }
@@ -247,7 +264,6 @@ void Player::Vulcan()
             }
         }
     }
-   
 }
 void Player::Flare()
 {
@@ -268,26 +284,7 @@ void Player::Flare()
     }
     if (Launching)
     {
-        FlareFiringTimer += 0.016f;
-        if (FlareFiringTimer > FlareFiringRate)
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                if (!Flares[i].isActivated)
-                {
-                    Flares[i].isActivated = true;
-                    Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 4.7f),0.3f);
-                    Flares[i].position = Position;
-                    break;
-                }
-            }
-            FlareFiringTimer = 0;
-            FlareAmount--;
-        }
-        if (FlareAmount <= 0)
-        {
-            Launching = false;
-        }
+        FlareLaunch();
     }
     for (int i = 0; i < 10; i++)
     {
@@ -299,6 +296,29 @@ void Player::Flare()
     FlareCoolDown += 0.016f;
     
 }
+void Player::FlareLaunch()
+{
+    FlareFiringTimer += 0.016f;
+    if (FlareFiringTimer > FlareFiringRate)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            if (!Flares[i].isActivated)
+            {
+                Flares[i].isActivated = true;
+                Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 4.7f), 0.3f);
+                Flares[i].position = Position;
+                break;
+            }
+        }
+        FlareFiringTimer = 0;
+        FlareAmount--;
+    }
+    if (FlareAmount <= 0)
+    {
+        Launching = false;
+    }
+}
 void Player::rotatePlayer()
 {
     float x, y;
@@ -308,8 +328,6 @@ void Player::rotatePlayer()
     if (difInAngle > 0.05f)
     {
         Rotate(VGet(0, 0, -rotateSpeed * smooth(difInAngle, 0, 2)));
-        
-        
     }
     else if (difInAngle < -0.05f)
     {

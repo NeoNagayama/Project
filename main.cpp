@@ -4,7 +4,7 @@
 #include "Input.h"
 #include"gameOver.h"
 #include "Clear.h"
-#include "fontLoader.h"
+#include "Text.h"
 #include "main.h"
 #include "Player.h"
 #include <random>

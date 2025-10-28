@@ -40,41 +40,7 @@ void Enemy::Vulcan()
     }
     else if (isFiring)
     {
-        firingTimer += 0.016f;
-        if (firingTimer > firingRate)
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                if (bullets[i].isActivated == false)
-                {
-                    bullets[i].isActivated = true;
-                    bullets[i].StartPosition = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y,BasePosition.z);
-                    bullets[i].target = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + 220);
-                    bullets[i].forward = VGet(0, 0, 5);
-                    firingTimer = 0;
-                    LoadedAmmoCount += 1;
-                    break;
-                }
-                
-            }
-            
-        }
-        hormingForcex = playerObject->Position.x - vulcanTargetPosition.x;
-        hormingForcey = playerObject->Position.y - vulcanTargetPosition.y;
-        distance = sqrtf((hormingForcex * hormingForcex)+ (hormingForcey * hormingForcey));
-        if (distance > 0.3f)
-        {
-            vulcanTargetPosition = VAdd(VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), 0.12f), vulcanTargetPosition);
-        }
-        if (LoadedAmmoCount  >= 10)
-        {
-                
-            isFiring = false;
-            LoadedAmmoCount = 0;
-            firingInterval = get_rand(2, 10) * 0.1f;
-            firingCooldown = 0;
-        }
-        
+        FireVulcan(hormingForcex,hormingForcey,distance);
     }
     bool isReticleShowUp = false;
     for (int i = 0; i < 10; i++)
@@ -97,6 +63,43 @@ void Enemy::Vulcan()
         DrawExtendGraph((int)GraphPosition.x - 70, (int)GraphPosition.y - 70, (int)GraphPosition.x + 70, (int)GraphPosition.y + 70, reticleHandle, true);
     }
 }
+void Enemy::FireVulcan(float hormingForcex,float hormingForcey,float distance)
+{
+    firingTimer += 0.016f;
+    if (firingTimer > firingRate)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            if (bullets[i].isActivated == false)
+            {
+                bullets[i].isActivated = true;
+                bullets[i].StartPosition = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z);
+                bullets[i].target = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + 220);
+                bullets[i].forward = VGet(0, 0, 5);
+                firingTimer = 0;
+                LoadedAmmoCount += 1;
+                break;
+            }
+
+        }
+
+    }
+    hormingForcex = playerObject->Position.x - vulcanTargetPosition.x;
+    hormingForcey = playerObject->Position.y - vulcanTargetPosition.y;
+    distance = sqrtf((hormingForcex * hormingForcex) + (hormingForcey * hormingForcey));
+    if (distance > 0.3f)
+    {
+        vulcanTargetPosition = VAdd(VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), 0.12f), vulcanTargetPosition);
+    }
+    if (LoadedAmmoCount >= 10)
+    {
+
+        isFiring = false;
+        LoadedAmmoCount = 0;
+        firingInterval = get_rand(2, 10) * 0.1f;
+        firingCooldown = 0;
+    }
+}
 void Enemy::missile()
 {
     missilecooldowntimer += 0.016f;
@@ -107,27 +110,7 @@ void Enemy::missile()
     }
     if (isLaunched && !isGuideLost)
     {
-        DrawTextWithSort(0, 1920, "!MISSILE ALERT!", BiggerFontHandle, SORT_CENTER, 750, false, GetColor(255, 0, 0));
-        DrawTextWithSort(0, 1920, "PRESS SPACE", fontHandle, SORT_CENTER, 790, false, GetColor(255, 255, 0));
-        missileflyingTimer += 0.016f;
-        if (missileflyingTimer > 1)
-        {
-            
-            missileObject.mainProcess(playerObject->Position,3-missileflyingTimer);
-        }
-        else
-        {
-            missileObject.SetStartPosition(VGet(BasePosition.x, BasePosition.y, BasePosition.z + 25));
-        }
-        if (missileflyingTimer > 3)
-        {
-            isLaunched = false;
-            missileflyingTimer = 0;
-            missilecooldowntimer = 0;
-            playerObject->Health -= 30;
-            missileCooldown =  get_rand(50, 70) * 0.1f;
-        }
-
+        MissileLaunch();
     }
     if (isGuideLost &&missileflyingTimer > 1)
     {
@@ -148,6 +131,29 @@ void Enemy::missile()
         isLaunched = false;
         missileflyingTimer = 0;
         missilecooldowntimer = 0;
+        missileCooldown = get_rand(50, 70) * 0.1f;
+    }
+}
+void Enemy::MissileLaunch()
+{
+    DrawTextWithSort(0, 1920, "!MISSILE ALERT!", BiggerFontHandle, SORT_CENTER, 750, false, GetColor(255, 0, 0));
+    DrawTextWithSort(0, 1920, "PRESS SPACE", fontHandle, SORT_CENTER, 790, false, GetColor(255, 255, 0));
+    missileflyingTimer += 0.016f;
+    if (missileflyingTimer > 1)
+    {
+
+        missileObject.mainProcess(playerObject->Position, 3 - missileflyingTimer);
+    }
+    else
+    {
+        missileObject.SetStartPosition(VGet(BasePosition.x, BasePosition.y, BasePosition.z + 25));
+    }
+    if (missileflyingTimer > 3)
+    {
+        isLaunched = false;
+        missileflyingTimer = 0;
+        missilecooldowntimer = 0;
+        playerObject->Health -= 30;
         missileCooldown = get_rand(50, 70) * 0.1f;
     }
 }
@@ -180,33 +186,6 @@ void Enemy::EnemyMoveXY()
     {
         targetAngle = VNorm(VGet(1-offset.x, 1-offset.y, 0));
     }
-    if (targetAngle.x > 0.2f && xSpeed < 0.6f)
-    {
-        xSpeed += 0.1f;
-        
-    }
-    else if (targetAngle.x < -0.2f && xSpeed > -0.6f)
-    {
-       
-        xSpeed -= 0.1f;
-       
-    }
-    else
-    {
-        xSpeed = 0;
-    }
-    if (targetAngle.y > 0.2f && ySpeed < 0.6f)
-    {
-        ySpeed += 0.1f;
-    }
-    else if (targetAngle.y < -0.2f && ySpeed > -0.6f)
-    {
-        ySpeed -= 0.1f;
-    }
-    else
-    {
-        ySpeed = 0;
-    }
 
     
     xSpeed =xSpeed *moveSpeed;
@@ -226,6 +205,36 @@ void Enemy::EnemyMoveXY()
         offset = VAdd(VGet(xSpeed, ySpeed, 0), offset);
     }
     
+}
+void Enemy::Acceleration()
+{
+    if (targetAngle.x > 0.2f && xSpeed < 0.6f)
+    {
+        xSpeed += 0.1f;
+
+    }
+    else if (targetAngle.x < -0.2f && xSpeed > -0.6f)
+    {
+
+        xSpeed -= 0.1f;
+
+    }
+    else
+    {
+        xSpeed = 0;
+    }
+    if (targetAngle.y > 0.2f && ySpeed < 0.6f)
+    {
+        ySpeed += 0.1f;
+    }
+    else if (targetAngle.y < -0.2f && ySpeed > -0.6f)
+    {
+        ySpeed -= 0.1f;
+    }
+    else
+    {
+        ySpeed = 0;
+    }
 }
 void Enemy::roll()
 {
@@ -247,141 +256,84 @@ void Enemy::roll()
 }
 void Enemy::barrelRoll()
 {
-    
-    float distance = 0;
+    EvadePosDistance = 0;
     int x = 9 > moveRangeX ? moveRangeX : 9;
     int lowerX = -9 < minimumMoveRangeX ? minimumMoveRangeX : -9;
     int y = 9 > moveRangeY ? moveRangeY : 9;
     int lowerY = -5 < minimumMoveRangeY ? minimumMoveRangeY : -5;
     switch (evadeCount) {
     case 1:
-        targetAngle = VGet(x - offset.x, y - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        if (distance < 0.08f)
-        {
-            evadeCount = 2;
-        }
+
+        EvadeMove(x, y, 2);
         break;
     case 2:
-        targetAngle = VGet(x - offset.x, lowerY - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        if (distance < 0.08f)
-        {
-            evadeCount = 3;
-        }
+
+        EvadeMove(x, lowerY, 3);
         break;
     case 3:
-        targetAngle = VGet(lowerX - offset.x, lowerY - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        if (distance < 0.08f)
-        {
-            evadeCount = 0;
-            evadetype = 4;
-        }
+
+        EvadeMove(lowerX, lowerY, 0);
         break;
     default:
-        targetAngle = VGet(lowerX - offset.x, y - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        
-        if (distance < 0.08f)
-        {
-            evadeCount = 1;
-        }
+
+        EvadeMove(lowerX, y, 1);
         break;
     }
 }
 void Enemy::H_Fluctuating()
 {
-    float distance = 0;
+    EvadePosDistance = 0;
     int x = 9 > moveRangeX ? moveRangeX : 9;
     int lowerX = -9 < minimumMoveRangeX ? minimumMoveRangeX : -9;
     switch (evadeCount) {
     case 1:
-        targetAngle = VGet(x - offset.x, 2 - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        if (distance < 0.08f)
-        {
-            evadeCount = 2;
-        }
+
+        EvadeMove(x, 2, 2);
         break;
     case 2:
-        targetAngle = VGet(lowerX - offset.x, -2 - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        if (distance < 0.08f)
-        {
-            evadeCount = 3;
-        }
+
+        EvadeMove(lowerX, -2, 3);
         break;
     case 3:
-        targetAngle = VGet(x - offset.x, -2 - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        if (distance < 0.08f)
-        {
-            evadeCount = 0;
-            evadetype = 4;
-        }
+        EvadeMove(x, -2, 0);
         break;
     default:
-        targetAngle = VGet(lowerX - offset.x, 2 - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        if (distance < 0.08f)
-        {
-            evadeCount = 1;
-        }
+        EvadeMove(lowerX, 2, 1);
         break;
     }
 }
 void Enemy::V_Fluctuating()
 {
-    float distance = 0;
+    EvadePosDistance = 0;
     int y = 9 > moveRangeY ? moveRangeY : 9;
     int lowerY = -5 < minimumMoveRangeY ? minimumMoveRangeY : -5;
     switch (evadeCount) {
     case 1:
-        targetAngle = VGet(2 - offset.x, y - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        if (distance < 0.08f)
-        {
-            evadeCount = 2;
-        }
+        EvadeMove(2, y, 2);
         break;
     case 2:
-        targetAngle = VGet(-2 - offset.x, lowerY - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        if (distance < 0.08f)
-        {
-            evadeCount = 3;
-        }
+        EvadeMove(-2, lowerY, 3);
         break;
     case 3:
-        targetAngle = VGet(-2 - offset.x, y - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        if (distance < 0.08f)
-        {
-            evadeCount = 0;
-            evadetype = 4;
-        }
+        EvadeMove(-2, y, 0);
         break;
     default:
-        targetAngle = VGet(2 - offset.x, lowerY - offset.y, 0);
-        distance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
-        targetAngle = VNorm(targetAngle);
-        if (distance < 0.08f)
-        {
-            evadeCount = 1;
-        }
+        EvadeMove(2, lowerY, 1);
         break;
+    }
+}
+void Enemy::EvadeMove(int x,int y,int count)
+{
+    targetAngle = VGet(x - offset.x, y - offset.y, 0);
+    EvadePosDistance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
+    targetAngle = VNorm(targetAngle);
+    if (EvadePosDistance < 0.08f)
+    {
+        evadeCount = count;
+        if (count == 0)
+        {
+            evadetype = 4;
+        }
     }
 }
 bool Enemy::Transition()
@@ -394,6 +346,11 @@ bool Enemy::Transition()
     {
         offset = VGet(playerObject->offset.x + 3, playerObject->offset.y - 2, 0);
         return true;
+    }
+    else if (transitionMoveZaxis >= 30.0f)
+    {
+        Move(VAdd(VGet(playerObject->offset.x + 3, playerObject->offset.y - 2, 0), BasePosition));
+        return false;
     }
     else
     {

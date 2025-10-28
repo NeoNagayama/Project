@@ -29,15 +29,16 @@ public:
     bool DamageBox(bool upper, bool lower, bool right, bool left, bool center,VECTOR hitbox1,VECTOR hitbox2);
     void DrawDamageBox(VECTOR edge1,VECTOR edge2);
     bool checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2,bool current);
+    bool isHit;
 };
 
 class explosion
 {
 private:
     VECTOR position = VGet(0,-20,0);
-    float maxRadius=6;
+    const float maxRadius=6;
     float radius=3;
-    float damping=0.05f;
+    const float damping=0.05f;
 public:
     bool DrawExplosion();
     void SetPosition(VECTOR edge1,VECTOR edge2);

@@ -1,5 +1,5 @@
 #include "DxLib.h"
-#include "fontLoader.h"
+#include "Text.h"
 int fontHandle;
 int BiggerFontHandle;
 int titleFontHandle;

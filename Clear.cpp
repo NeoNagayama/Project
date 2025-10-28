@@ -1,6 +1,6 @@
 #include "Clear.h"
 #include "DxLib.h"
-#include "fontLoader.h"
+#include "Text.h"
 #include "TitleScene.h"
 #include "ui.h"
 #include "main.h"

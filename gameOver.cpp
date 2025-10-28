@@ -3,7 +3,7 @@
 #include "Button.h"
 #include "Input.h"
 #include "ui.h"
-#include "fontLoader.h"
+#include "Text.h"
 #include "TitleScene.h"
 #include "main.h"
 #include "stage1Scene.h"

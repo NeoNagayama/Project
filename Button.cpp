@@ -1,6 +1,6 @@
 #include "Button.h"
 #include "DxLib.h"
-#include "fontLoader.h"
+#include "Text.h"
 
 void Button::mainProcess(bool isSelected, bool shadow ,int yoffset)
 {

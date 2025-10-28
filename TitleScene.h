@@ -6,3 +6,7 @@
 void TitleInitialProcess();
 void TitleMainProcess();
 void Titleinitialize();
+void DrawShadow();
+void DrawModels();
+void TitleButtons();
+void TitleMenu();
