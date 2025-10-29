@@ -18,6 +18,7 @@ int shadowHandle;
 int titleShadowHandle;
 //背景画像のハンドル
 int backGroundHandle;
+//int skySphereHandle;
 //照準内の残弾ゲージのハンドル
 int reticleInsideGaugeHandle;
 //ゲームを終了するための条件用の変数
@@ -37,6 +38,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     reticleHandle = LoadGraph("Reticle.png", false);
     reticleInsideGaugeHandle = LoadGraph("ReticleInsideGauge.png", false);
     backGroundHandle = LoadGraph("backGround.jpg");
+    //skySphereHandle = MV1LoadModel("SkySphereTest.mv1");
+   
     fontLoad();
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));
@@ -67,6 +70,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen() && !Quit) {
         Input_UpdateKeyboard();
+        
+       /* MV1SetPosition(skySphereHandle, GetCameraPosition());
+        MV1DrawModel(skySphereHandle);*/
         //場面の切り替え
         switch (scene) {
             //場面別の毎フレーム呼ばれる処理

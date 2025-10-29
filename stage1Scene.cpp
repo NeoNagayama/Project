@@ -29,8 +29,8 @@ Button Stage1ToTitle;
 Button Buttons[3];
 Player player;
 Enemy enemy;
-mapBase maps[25];
-antiAir AAs[25];
+mapBase maps[50];
+antiAir AAs[50];
 timer objectiveShowTimer;
 timer CountDownTimer;
 timer damageRate;
@@ -38,8 +38,54 @@ UIText objectiveText;
 UIText countDownText;
 UIText playerHealthText;
 UIText enemyHealthText;
-int obstacle[25];
-int obstacleType[25];
+const int obstacleDefault[50] = {
+    0,0,0,0,0,
+    3,4,3,0,0,
+    2,3,4,8,0,
+    0,0,9,0,10,
+    0,1,3,5,10,
+    0,0,0,0,0,
+    3,4,3,0,0,
+    2,3,4,8,0,
+    0,0,9,0,10,
+    0,1,3,5,10
+};
+const int obstacleTypeDefault[50] = {
+    0,0,0,0,0,
+    3,3,3,0,0,
+    1,1,1,1,0,
+    0,0,3,0,3,
+    0,1,1,1,1,
+    0,0,0,0,0,
+    3,3,3,0,0,
+    1,1,1,1,0,
+    0,0,3,0,3,
+    0,1,1,1,1
+};
+int obstacle[50] = {
+    0,0,0,0,0,
+    3,4,3,0,0,
+    2,3,4,8,0,
+    0,0,9,0,10,
+    0,1,3,5,10,
+    0,0,0,0,0,
+    3,4,3,0,0,
+    2,3,4,8,0,
+    0,0,9,0,10,
+    0,1,3,5,10
+};
+int obstacleType[50] = {
+    0,0,0,0,0,
+    3,3,3,0,0,
+    1,1,1,1,0,
+    0,0,3,0,3,
+    0,1,1,1,1,
+    0,0,0,0,0,
+    3,3,3,0,0,
+    1,1,1,1,0,
+    0,0,3,0,3,
+    0,1,1,1,1
+};
 enum Phase
 {
     PHASE_RUN,
@@ -68,14 +114,14 @@ void Stage1InitialProcess()
     player.EnemySet(&enemy);
     enemy.PlayerSet(&player);
     SetBackgroundColor(150, 160, 180, 50);
-    for (int i = 8; i < 25; i++)
+    /*for (int i = 8; i < 25; i++)
     {
         obstacle[i] = get_rand(0,25);
     }
     for (int i = 0; i < 25; i++)
     {
         obstacleType[i] = get_rand(0, 8);
-    }
+    }*/
 }
 void Stage1MainProcess()
 {
@@ -142,16 +188,10 @@ void Stage1Initialize()
     enemy.missileflyingTimer = 0;
     enemy.isLaunched = false;
     enemy.isFiring = false;
-    for (int i = 0; i < 25; i++)
+    for (int i = 0; i < 50; i++)
     {
-        if (i < 8)
-        {
-            obstacle[i] = 0;
-        }
-        else
-        {
-            obstacle[i] = get_rand(0, 25);
-        }
+        obstacle[i] = obstacleDefault[i];
+        obstacleType[i] = obstacleTypeDefault[i];
     }
 }
 void Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left) 
@@ -201,10 +241,10 @@ void ObstacleShadowDraw()
 {
     for (int i = 0; i < 15; i++)
     {
-        int pos = i + ((int)player.BasePosition.z % 2000) / 80;
-        if (pos > 24)
+        int pos = i + ((int)player.BasePosition.z % 4000) / 80;
+        if (pos > 49)
         {
-            pos -= 25;
+            pos -= 50;
         }
         maps[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
         maps[pos].DrawbaseOutline();
@@ -252,10 +292,10 @@ void DrawBase()
 {
     for (int i = 14; i > -1; i--)
     {
-        int pos = i + ((int)player.BasePosition.z % 2000) / 80;
-        if (pos > 24)
+        int pos = i + ((int)player.BasePosition.z % 4000) / 80;
+        if (pos > 49)
         {
-            pos -= 25;
+            pos -= 50;
         }
         maps[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
         maps[pos].DrawbaseOutline();
@@ -266,10 +306,10 @@ void DrawObstacles()
 
     for (int i = 14; i > -1; i--)
     {
-        int pos = i + ((int)player.BasePosition.z % 2000) / 80;
-        if (pos > 24)
+        int pos = i + ((int)player.BasePosition.z % 4000) / 80;
+        if (pos > 49)
         {
-            pos -= 25;
+            pos -= 50;
         }
         maps[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
         AAs[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
@@ -283,9 +323,9 @@ void DrawObstacles()
         }
         if (i == 14)
         {
-            int t = 15 + ((int)player.BasePosition.z % 2000) / 80;
-            obstacle[t > 24 ? t - 25 : t] = get_rand(0, 25);
-            obstacleType[t > 24 ? t - 25 : t] = get_rand(0, 8);
+            int t = 15 + ((int)player.BasePosition.z % 4000) / 80;
+            obstacle[t > 49 ? t - 50 : t] = get_rand(0, 25);
+            obstacleType[t > 49 ? t - 50 : t] = get_rand(0, 8);
         }
 
 

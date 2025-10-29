@@ -13,6 +13,8 @@ private:
     UIText VulcanText;
     UIText FlareText;
     Enemy* enemyObject;
+    const float NEUTRAL_ANGLE_Y = 0.99f;
+    const int TARGET_CAMERA_POSZ = 20;
     int PlayerLightHandle;
     const float moveSpeed= 0.2f;
     float speedLimit = 0.7f;

@@ -253,7 +253,7 @@ void Player::VulcanProjectile()
             }
         }
     }
-    firingTimer += 0.016f;
+    firingTimer += oneFlame;
     for (int i = 0; i < 200; i++)
     {
         if (bullets[i].isActivated)
@@ -404,25 +404,28 @@ void Player::pitch()
 bool Player::Transition()
 {
     autoEvade();
-    BasePosition = VAdd(VGet(0, 0, 2), BasePosition);
-    Move(VAdd(BasePosition, offset));
+    
     VECTOR targetCameraPosition = VAdd(VGet(offset.x , offset.y + 2 , -16), BasePosition);
     VECTOR cameraToTargetVector = VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z);
     float distance = sqrtf((cameraToTargetVector.x * cameraToTargetVector.x) + (cameraToTargetVector.y * cameraToTargetVector.y) + (cameraToTargetVector.z * cameraToTargetVector.z));
-    
+    BasePosition = VAdd(VGet(0, 0, 2), BasePosition);
+    pitch();
     Move(VAdd(BasePosition, offset));
-    if (distance <=1.0f)
+    clsDx();
+    printfDx("%f", distance);
+    if (distance <1.5f)
     {
 
+        
         rotatePlayer();
         CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition);
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, TARGET_CAMERA_POSZ), BasePosition));
         return true;
     }
     else
     {
         CameraPosition = VAdd(VAdd(CameraPosition, VScale(VNorm(VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z)), 0.17f)), VGet(0, 0, 2.0f));
-        SetCameraPositionAndTarget_UpVecY(VGet(offset.x, offset.y + 2, CameraPosition.z), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+        SetCameraPositionAndTarget_UpVecY(VGet(offset.x, offset.y + 2, CameraPosition.z), VAdd(VGet(offset.x, offset.y, TARGET_CAMERA_POSZ), BasePosition));
         return false;
     }
 }
@@ -435,13 +438,13 @@ void Player::autoEvade()
 
         targetAngle = VNorm(VGet(-offset.x, -offset.y, 0));
         
-        offset = VAdd(VScale(targetAngle, 0.7f * moveSpeed), offset);
+        offset = VAdd(VScale(targetAngle, moveSpeed), offset);
         targetAngle.y = -targetAngle.y;
         rotatePlayer();
     }
     else
     {
-        targetAngle = VGet(0, -0.99f, 0);
+        targetAngle = VGet(0, -NEUTRAL_ANGLE_Y, 0);
         rotatePlayer();
     }
 }

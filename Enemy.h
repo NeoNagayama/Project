@@ -20,13 +20,31 @@ private:
     UIText MissileAlert;
     //プレイヤーのポインター
     Player* playerObject;
-    const float maxMoveRange = 10.0f;
-    const float evadeTargetDistance = 0.08f;
-    const float transitionTargetPosz = 30.0f;
-    const float transitionMoveSpeed = 1.2f;
-    const int transitionOffsetX = 3;
-    const int transitionOffsetY = 2;
-
+    const float MAX_MOVE_RANGE = 10.0f;
+    const float EVADE_TARGET_DISTANCE = 0.08f;
+    const float TRANSITION_TARGET_POSZ = 30.0f;
+    const float TRANSITION_MOVE_SPEED = 1.2f;
+    const int TRANSITION_OFFSET_X = 3;
+    const int TRANSITION_OFFSET_Y = 2;
+    const int FLUC_RANGE = 2;
+    const float ROLL_THLESHOLD = 0.05f;
+    const float SPEED = 0.1f;
+    const float MAX_SPEED = 0.6f;
+    const float MOVE_ANGLE_THLESHOLD = 0.2f;
+    const int MISSILE_DAMAGE = 30;
+    const int MISSILE_SPAWN_OFFSET = 25;
+    const float MISSILE_HIT_TIME = 3;
+    const float MISSILE_SHOWUP = 1;
+    const float MISSILE_LIFETIME = 2;
+    const int MAX_PROJECTILE = 10;
+    const float HORMING_SPEED_SCALE = 0.12f;
+    const float HORMING_THLESHOLD = 0.3f;
+    const float BULLET_FORWARD_VELOCITY = 5;
+    const int BULLET_TARGET_Z = 220;
+    const int RETICLE_SIZE = 70;
+    const int RETICLE_POS_Z = 50;
+    const int BULLET_DAMAGE = 5;
+    const int Z_OFFSET = 50;
     //左右移動の速度
     const float moveSpeed = 0.59f;
     //ロールの速度
