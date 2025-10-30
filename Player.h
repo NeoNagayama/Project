@@ -5,16 +5,21 @@
 #include "bullet.h"
 #include "Flare.h"
 #include "Enemy.h"
+#include "Text.h"
 class Enemy;
 class Player: public base
 {
 private:
+    UIText VulcanText;
+    UIText FlareText;
     Enemy* enemyObject;
+    const float NEUTRAL_ANGLE_Y = 0.99f;
+    const int TARGET_CAMERA_POSZ = 20;
     int PlayerLightHandle;
-    float moveSpeed= 0.2f;
+    const float moveSpeed= 0.2f;
     float speedLimit = 0.7f;
-    float moveRange = 11;
-    float rotateSpeed = 0.08f;
+    const float moveRange = 11;
+    const float rotateSpeed = 0.08f;
     float x, y;
     void KeyInput();
     void PlayerMoveXY();
@@ -25,15 +30,21 @@ private:
     float firingTimer = 0;
     float FlareCoolDown = 0;
     float FlareFiringTimer = 0;
-    float firingRate = 0.07f;
-    float FlareFiringRate = 0.1f;
-    float FlareInterval = 5;
+    const float firingRate = 0.07f;
+    const float FlareFiringRate = 0.1f;
+    const float FlareInterval = 5;
     bool Launching = false;
     int FlareAmount = 10;
-    int maxAmmo = 200;
+    const int maxAmmo = 200;
     Bullet bullets[200];
     Flare Flares[10];
     VECTOR CameraPosition;
+    void FlareLaunch();
+    void VulcanProjectile();
+    void InputUp(float speed);
+    void InputDown(float speed);
+    void InputNeutral(float speed);
+    void Limit();
 public:
     int ammo = 200;
     void InitialProcess();

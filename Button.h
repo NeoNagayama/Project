@@ -1,9 +1,11 @@
 #pragma once
 #include "DxLib.h"
 #include <string>
+#include"Text.h"
 class Button
 {
 private:
+    UIText buttonTextDraw;
     std::string buttonText;
     VECTOR ActualPosition;
     VECTOR ActualPosition2;

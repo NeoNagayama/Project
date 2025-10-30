@@ -2,7 +2,7 @@
 #include "DxLib.h"
 #include "Input.h"
 #include "Button.h"
-#include "fontLoader.h"
+#include "Text.h"
 #include "main.h"
 #include "ui.h"
 #include "stage1Scene.h"
@@ -14,6 +14,7 @@ float z = 80;
 float x = -100;
 Button Start;
 Button Exit;
+UIText GameTitle;
 int modelhandle,modelHandle2,modelHandle3;
 void TitleInitialProcess()
 {
@@ -27,13 +28,7 @@ void TitleInitialProcess()
 }
 void TitleMainProcess()
 {
-
-    SetShadowMapDrawArea(titleShadowHandle, VGet(-200.0f, -100.0f, -200.0f), VGet(200.0f, 100.0f, 200.0f));
-    ShadowMap_DrawSetup(titleShadowHandle);
-    MV1DrawModel(modelHandle2);
-    MV1DrawModel(modelHandle3);
-    MV1DrawModel(modelhandle);
-    ShadowMap_DrawEnd();
+    DrawShadow();
     SetUseShadowMap(0, titleShadowHandle);
     SetupCamera_Perspective(0.55f);
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0.2f, -22), VGet(0, 1.2f, -12));
@@ -45,11 +40,29 @@ void TitleMainProcess()
     {
         isStartSelected = true;
     }
+    DrawModels();
+    TitleMenu();
+}
+void Titleinitialize()
+{
+    isStartSelected = true;
+    sceneChanging = false;
+}
+void DrawShadow()
+{
+    SetShadowMapDrawArea(titleShadowHandle, VGet(-200.0f, -100.0f, -200.0f), VGet(200.0f, 100.0f, 200.0f));
+    ShadowMap_DrawSetup(titleShadowHandle);
+    MV1DrawModel(modelHandle2);
+    MV1DrawModel(modelHandle3);
+    MV1DrawModel(modelhandle);
+    ShadowMap_DrawEnd();
+}
+void DrawModels()
+{
     z -= 0.3f;
     x += 0.34f;
-    //x += 0.2f;
     MV1SetPosition(modelHandle2, VGet(x, 4, z));
-    MV1SetPosition(modelHandle3, VGet(x -3, 4, z-2));
+    MV1SetPosition(modelHandle3, VGet(x - 3, 4, z - 2));
     MV1SetRotationXYZ(modelHandle2, VGet(0, 2.1f, 0));
     MV1SetRotationXYZ(modelHandle3, VGet(0, 2.1f, 0));
     MV1DrawModel(modelHandle2);
@@ -58,15 +71,22 @@ void TitleMainProcess()
     DrawCube3D(VGet(-200.0f, -0.01f, -200.0f), VGet(200.0f, -1.1f, 200.0f), GetColor(120, 120, 120), GetColor(0, 0, 0), TRUE);
     if (z < -60)
     {
-        z = get_rand(80,90);
+        z = get_rand(80, 90);
         x = -100;
     }
-    Start.mainProcess(isStartSelected,true,30);
+}
+void TitleButtons()
+{
+    Start.mainProcess(isStartSelected, true, 30);
     Start.SetText("Start");
-    Exit.mainProcess(!isStartSelected,true,30);
+    Exit.mainProcess(!isStartSelected, true, 30);
     Exit.SetText("Exit");
-    DrawTextWithSort(1000, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255,255,255));
-    if (isStartSelected && (Input_GetKeyboardDown(KEY_INPUT_SPACE)||Input_GetKeyboardDown(KEY_INPUT_RETURN)))
+}
+void TitleMenu()
+{
+    TitleButtons();
+    GameTitle.DrawTextWithSort(1000, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 255));
+    if (isStartSelected && (Input_GetKeyboardDown(KEY_INPUT_SPACE) || Input_GetKeyboardDown(KEY_INPUT_RETURN)))
     {
         sceneChanging = true;
     }
@@ -84,9 +104,4 @@ void TitleMainProcess()
             scene = SCENE_STAGE1;
         }
     }
-}
-void Titleinitialize()
-{
-    isStartSelected = true;
-    sceneChanging = false;
 }
