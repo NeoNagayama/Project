@@ -18,6 +18,15 @@ enum DamageBoxType
     RIGHT_LEFT,
     NOT_SELECTED
 };
+enum MoveWallType
+{
+    HIGH,
+    MID,
+    LOW,
+    HIGH_MID,
+    HIGH_LOW,
+    MID_LOW,
+};
 class Player;
 class mapBase
 {
@@ -53,4 +62,15 @@ private:
 public:
     bool DamageZone(bool upper, bool lower, bool right, bool left, VECTOR hitbox1, VECTOR hitbox2);
     void DrawDamageBoxTransparent(VECTOR edge1, VECTOR edge2);
+};
+class wallmove :public mapBase
+{
+private:
+    const float returnThleshold = 50;
+    const float moveSpeed = get_rand(1,5) * 0.1f;
+    const float returnPosition = -50;
+public:
+    void MovePosition();
+    bool DrawMoveWall(bool high, bool mid, bool low, VECTOR hitbox1, VECTOR hitbox2);
+    void DrawHole(VECTOR edge1, VECTOR edge2);
 };

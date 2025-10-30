@@ -152,7 +152,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="stage1Scene.cpp" />
+    <ClCompile Include="Stage.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
@@ -178,7 +178,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Missile.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="stage1Scene.h" />
+    <ClInclude Include="Stage.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="ui.h" />
   </ItemGroup>

@@ -1,6 +1,5 @@
 #pragma once
 #include "DxLib.h"
-#include "stage1Scene.h"
 #include "base.h"
 class Bullet
 {

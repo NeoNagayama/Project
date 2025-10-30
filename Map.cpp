@@ -136,3 +136,47 @@ void explosion::SetPosition(VECTOR edge1, VECTOR edge2)
     position = VGet(get_rand(edge1.x, edge2.x), get_rand(edge1.y, edge2.y), get_rand(edge1.z, edge2.z));
     radius = maxRadius;
 }
+void wallmove::MovePosition()
+{
+    position.x += moveSpeed;
+    if (position.x > returnThleshold)
+    {
+        position.x = returnPosition;
+    }
+}
+bool wallmove::DrawMoveWall(bool high,bool mid, bool low, VECTOR hitbox1, VECTOR hitbox2)
+{
+    isHit = false;
+    if (high)
+    {
+        VECTOR edge1 = VGet(position.x - 15, position.y + 7, position.z - 10);
+        VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 10);
+        DrawDamageBox(edge1, edge2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+        DrawHole(edge1, edge2);
+    }
+    if (mid)
+    {
+        VECTOR edge1 = VGet(position.x - 15, position.y + 4, position.z - 10);
+        VECTOR edge2 = VGet(position.x + 15, position.y - 4, position.z + 10);
+        DrawDamageBox(edge1, edge2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+        DrawHole(edge1, edge2);
+    }
+    if (low)
+    {
+        VECTOR edge1 = VGet(position.x - 15, position.y - 7, position.z - 10);
+        VECTOR edge2 = VGet(position.x + 15, position.y - 15, position.z + 10);
+        DrawDamageBox(edge1, edge2);
+        isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+        DrawHole(edge1, edge2);
+    }
+    return isHit;
+}
+void wallmove::DrawHole(VECTOR edge1, VECTOR edge2)
+{
+    SetUseLighting(false);
+    DrawCube3D(VGet(-15, edge1.y, edge1.z), VGet(-14.7f, edge2.y, edge2.z), GetColor(0, 0, 0), GetColor(0, 0, 0), true);
+    DrawCube3D(VGet(15, edge1.y, edge1.z), VGet(14.7f, edge2.y, edge2.z), GetColor(0, 0, 0), GetColor(0, 0, 0), true);
+    SetUseLighting(true);
+}

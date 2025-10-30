@@ -1,104 +1,10 @@
-#include "stage1Scene.h"
-#include "Input.h"
-#include "ui.h"
-#include "main.h"
-#include "Clear.h"
-#include "GameOver.h"
-#include "TitleScene.h"
-#include "Player.h"
-#include "Map.h"
+
+#include "Stage.h"
 #define CLOSEDMOVERANGE 4
 #define MOVERANGE 10
-bool isStarted = true;
-bool isCleared = false;
-bool isDead = false;
-bool isPause = false;
-bool isKilled = false;
-bool PauseControllable = true;
-bool isRestarting = false;
-bool isQuitting = false;
-bool isObjectiveAppeared = false;
-bool isGetDamage = false;
 
-int gamePhase = 0;
-int choosedButton;
-int countDown = 3;
-Button resume;
-Button restart;
-Button Stage1ToTitle;
-Button Buttons[3];
-Player player;
-Enemy enemy;
-mapBase maps[50];
-antiAir AAs[50];
-timer objectiveShowTimer;
-timer CountDownTimer;
-timer damageRate;
-UIText objectiveText;
-UIText countDownText;
-UIText playerHealthText;
-UIText enemyHealthText;
-const int obstacleDefault[50] = {
-    0,0,0,0,0,
-    3,4,3,0,0,
-    2,3,4,8,0,
-    0,0,9,0,10,
-    0,1,3,5,10,
-    0,0,0,0,0,
-    3,4,3,0,0,
-    2,3,4,8,0,
-    0,0,9,0,10,
-    0,1,3,5,10
-};
-const int obstacleTypeDefault[50] = {
-    0,0,0,0,0,
-    3,3,3,0,0,
-    1,1,1,1,0,
-    0,0,3,0,3,
-    0,1,1,1,1,
-    0,0,0,0,0,
-    3,3,3,0,0,
-    1,1,1,1,0,
-    0,0,3,0,3,
-    0,1,1,1,1
-};
-int obstacle[50] = {
-    0,0,0,0,0,
-    3,4,3,0,0,
-    2,3,4,8,0,
-    0,0,9,0,10,
-    0,1,3,5,10,
-    0,0,0,0,0,
-    3,4,3,0,0,
-    2,3,4,8,0,
-    0,0,9,0,10,
-    0,1,3,5,10
-};
-int obstacleType[50] = {
-    0,0,0,0,0,
-    3,3,3,0,0,
-    1,1,1,1,0,
-    0,0,3,0,3,
-    0,1,1,1,1,
-    0,0,0,0,0,
-    3,3,3,0,0,
-    1,1,1,1,0,
-    0,0,3,0,3,
-    0,1,1,1,1
-};
-enum Phase
-{
-    PHASE_RUN,
-    PHASE_OVERSHOOT,
-    PHASE_CHASE
-};
-enum pause
-{
-    PAUSE_RESUME,
-    PAUSE_RESTART,
-    PAUSE_EXIT
-};
-void Stage1InitialProcess()
+
+void stage::InitialProcess(int obst[50],int type[50])
 {
     resume.SetButtonPosition(VGet(960, 540, 1), 400, 100, 0.9f);
     restart.SetButtonPosition(VGet(960, 740, 1), 400, 100, 0.9f);
@@ -113,23 +19,23 @@ void Stage1InitialProcess()
     enemy.InitialProcess();
     player.EnemySet(&enemy);
     enemy.PlayerSet(&player);
-    SetBackgroundColor(150, 160, 180, 50);
-    /*for (int i = 8; i < 25; i++)
+    SetBackgroundColor(150, 160, 180, 50); 
+    for (int i = 0; i < 50; i++)
     {
-        obstacle[i] = get_rand(0,25);
+        obstacleDefault[i] = obst[i];
+        obstacle[i] = obst[i];
+        obstacleTypeDefault[i] = type[i];
+        obstacleType[i] = type[i];
     }
-    for (int i = 0; i < 25; i++)
-    {
-        obstacleType[i] = get_rand(0, 8);
-    }*/
 }
-void Stage1MainProcess()
+void stage::MainProcess()
 {
     SetShadowMapDrawArea(shadowHandle, VGet(-120.0f, -1.0f, -20.0f + player.BasePosition.z), VGet(120.0f, 240.0f, 220.0f + player.BasePosition.z));
     ShadowMap_DrawSetup(shadowHandle);
     MV1DrawModel(player.ModelHandle);
     MV1DrawModel(enemy.ModelHandle);
     ObstacleShadowDraw();
+    moveWallShadow();
     ShadowMap_DrawEnd();
     DrawGraph3D(0, 500, player.BasePosition.z + 1000, backGroundHandle, false);
     SetUseShadowMap(0, shadowHandle);
@@ -166,7 +72,7 @@ void Stage1MainProcess()
     }
     
 }
-void Stage1Initialize()
+void stage::Initialize()
 {
     isStarted = true;
     isCleared = false;
@@ -194,7 +100,7 @@ void Stage1Initialize()
         obstacleType[i] = obstacleTypeDefault[i];
     }
 }
-void Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left) 
+void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
 {
     if (maps[pos].DamageBox(upper, lower, right, left, false, player.hitbox1, player.hitbox2) && !isStarted)
     {
@@ -215,7 +121,7 @@ void Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left
         enemy.moveRangeY = upper ? CLOSEDMOVERANGE : enemy.moveRangeY;
     }
 }
-void AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
+void stage::AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
 {
     if (AAs[pos].DamageZone(upper, lower, right, left,player.hitbox1, player.hitbox2) && !isGetDamage)
     {
@@ -237,8 +143,27 @@ void AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
         enemy.moveRangeY = upper ? CLOSEDMOVERANGE : enemy.moveRangeY;
     }
 }
-void ObstacleShadowDraw()
+void stage::MoveWallDraw(int i ,int pos, bool high,bool mid,bool low)
 {
+    if (moveWalls[pos].DrawMoveWall(high, mid, low, player.hitbox1, player.hitbox2))
+    {
+        isDead = true;
+    }
+    if (i == 1)
+    {
+        
+        enemy.minimumMoveRangeY = low ? -CLOSEDMOVERANGE : -MOVERANGE;
+        enemy.moveRangeY = high ? CLOSEDMOVERANGE : MOVERANGE;
+    }
+    if (i == 2)
+    {
+        enemy.minimumMoveRangeY = low ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
+        enemy.moveRangeY = high ? CLOSEDMOVERANGE : enemy.moveRangeY;
+    }
+}
+void stage::ObstacleShadowDraw()
+{
+    
     for (int i = 0; i < 15; i++)
     {
         int pos = i + ((int)player.BasePosition.z % 4000) / 80;
@@ -288,7 +213,43 @@ void ObstacleShadowDraw()
         }
     }
 }
-void DrawBase()
+void stage::moveWallShadow()
+{
+    for (int i = 0; i < 15; i++)
+    {
+        int pos = i + ((int)player.BasePosition.z % 4000) / 80;
+        if (pos > 49)
+        {
+            pos -= 50;
+        }
+        moveWalls[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
+        moveWalls[pos].DrawbaseOutline();
+
+
+        switch (obstacle[pos]) {
+        case HIGH:
+            moveWalls[pos].DrawMoveWall(true, false, false, player.hitbox1, player.hitbox2);
+            break;
+        case MID:
+            moveWalls[pos].DrawMoveWall(false, true, false, player.hitbox1, player.hitbox2);
+            break;
+        case LOW:
+            moveWalls[pos].DrawMoveWall(false, false, true, player.hitbox1, player.hitbox2);
+            break;
+        case HIGH_MID:
+            moveWalls[pos].DrawMoveWall(true, true, false, player.hitbox1, player.hitbox2);
+            break;
+        case HIGH_LOW:
+            moveWalls[pos].DrawMoveWall(true, false, true, player.hitbox1, player.hitbox2);
+            break;
+        default:
+            moveWalls[pos].DrawMoveWall(false, true, true, player.hitbox1, player.hitbox2);
+            break;
+        }
+
+    }
+}
+void stage::DrawBase()
 {
     for (int i = 14; i > -1; i--)
     {
@@ -301,7 +262,7 @@ void DrawBase()
         maps[pos].DrawbaseOutline();
     }
 }
-void DrawObstacles()
+void stage::DrawObstacles()
 {
 
     for (int i = 14; i > -1; i--)
@@ -313,6 +274,7 @@ void DrawObstacles()
         }
         maps[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
         AAs[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
+        moveWalls[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
         if (obstacleType[pos] < 2)
         {
             Obstacles(pos, i);
@@ -321,6 +283,7 @@ void DrawObstacles()
         {
             AAGuns(pos,i);
         }
+        MoveWalls(pos, i);
         if (i == 14)
         {
             int t = 15 + ((int)player.BasePosition.z % 4000) / 80;
@@ -331,7 +294,7 @@ void DrawObstacles()
 
     }
 }
-void AAGuns(int pos, int i)
+void stage::AAGuns(int pos, int i)
 {
 
     switch (obstacle[pos]) {
@@ -370,7 +333,7 @@ void AAGuns(int pos, int i)
         break;
     }
 }
-void Obstacles(int pos, int i)
+void stage::Obstacles(int pos, int i)
 {
 
     switch (obstacle[pos]) {
@@ -409,7 +372,32 @@ void Obstacles(int pos, int i)
         break;
     }
 }
-void Briefing()
+void stage::MoveWalls(int pos,int i)
+{
+    switch (obstacle[pos]) {
+    case HIGH:
+        MoveWallDraw(i, pos, true, false, false);
+        break;
+    case MID:
+        MoveWallDraw(i, pos, false, true, false);
+    case LOW:
+        MoveWallDraw(i, pos, false, false, true);
+        break;
+    case HIGH_MID:
+        MoveWallDraw(i, pos, true, true, false);
+        break;
+    case HIGH_LOW:
+        MoveWallDraw(i, pos, true, false, true);
+        break;
+    default:
+        MoveWallDraw(i, pos, false, true, true);
+        break;
+    }
+    moveWalls[pos].MovePosition();
+    clsDx();
+    printfDx("%d", isDead);
+}
+void stage::Briefing()
 {
     player.transitionProcess(false);
     player.SetHitBox(2, 2);
@@ -440,7 +428,7 @@ void Briefing()
     }
     isDead = false;
 }
-void Ingame()
+void stage::Ingame()
 {
     MV1DrawModel(player.ModelHandle);
     MV1DrawModel(enemy.ModelHandle);
@@ -492,7 +480,7 @@ void Ingame()
         }
     }
 }
-void IngameToClear()
+void stage::IngameToClear()
 {
     if (isCleared)
     {
@@ -504,7 +492,7 @@ void IngameToClear()
         }
     }
 }
-void RunPhase()
+void stage::RunPhase()
 {
     objectiveText.DrawTextWithSort(70, 1920, "–Ú•W:UŒ‚‚ð”ð‚¯‚Ä¶‚«Žc‚ê", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
     DrawBox(1780, 100, 1850, 980, GetColor(180, 180, 180), true, 1);
@@ -512,7 +500,7 @@ void RunPhase()
     player.mainProcess(false);
     enemy.mainProcess(false);
 }
-void OverShootPhase()
+void stage::OverShootPhase()
 {
     if (enemy.Transition())
     {
@@ -520,7 +508,7 @@ void OverShootPhase()
         gamePhase = PHASE_CHASE;
     }
 }
-void ChasePhase()
+void stage::ChasePhase()
 {
     if (isObjectiveAppeared)
     {
@@ -551,7 +539,7 @@ void ChasePhase()
     objectiveText.DrawTextWithSort(70, 1920, "–Ú•W:“G‹@‚ðŒ‚’Ä‚µ‚ë", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
     enemy.mainProcess(true);
 }
-void PauseScreen()
+void stage::PauseScreen()
 {
     MV1DrawModel(player.ModelHandle);
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
@@ -563,7 +551,7 @@ void PauseScreen()
         if (fadeout(0.5f))
         {
             progress = 255;
-            Stage1Initialize();
+            Initialize();
         }
     }
     if (isQuitting)
@@ -576,7 +564,7 @@ void PauseScreen()
         }
     }
 }
-void PauseControll()
+void stage::PauseControll()
 {
     for (int i = 0; i < 3; i++)
     {
