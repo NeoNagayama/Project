@@ -9,6 +9,9 @@ extern int titleShadowHandle;
 extern int reticleHandle;
 extern int reticleInsideGaugeHandle;
 extern int backGroundHandle;
+extern int cargoModelOrigin;
+extern int bulletHandle;
+extern int enemyBulletHandle;
 enum SCENES
 {
     SCENE_TITLE,

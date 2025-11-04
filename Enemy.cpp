@@ -3,10 +3,11 @@
 #include <random>
 void Enemy::InitialProcess()
 {
-    ModelHandle = MV1LoadModel("F-14Test.mv1");
+    ModelHandle = MV1LoadModel("EnemyModel.mv1");
     MV1SetPosition(ModelHandle, VGet(0,0, 0));
-    MV1SetScale(ModelHandle, VGet(3.5f, 3.5f, 3.5f));
+    MV1SetScale(ModelHandle, VGet(6, 6, 6));
     Position = VGet(0, 0, 0);
+    missileObject.SetUp();
 }
 void Enemy::mainProcess(bool mode)
 {
@@ -48,7 +49,7 @@ void Enemy::Vulcan()
         if (bullets[i].isActivated == true)
         {
             
-            if (bullets[i].mainProcess(playerObject->hitbox1, playerObject->hitbox2))
+            if (bullets[i].mainProcess(playerObject->hitbox1, playerObject->hitbox2,enemyBulletHandle))
             {
                  bullets[i].isActivated = false;
                  playerObject->Health -= BULLET_DAMAGE;

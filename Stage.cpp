@@ -26,6 +26,7 @@ void stage::InitialProcess(int obst[50],int type[50])
         obstacle[i] = obst[i];
         obstacleTypeDefault[i] = type[i];
         obstacleType[i] = type[i];
+        moveWalls[i].SetUp();
     }
 }
 void stage::MainProcess()
@@ -380,17 +381,18 @@ void stage::MoveWalls(int pos,int i)
         break;
     case MID:
         MoveWallDraw(i, pos, false, true, false);
+        break;
     case LOW:
         MoveWallDraw(i, pos, false, false, true);
         break;
-    case HIGH_MID:
+    /*case HIGH_MID:
         MoveWallDraw(i, pos, true, true, false);
         break;
     case HIGH_LOW:
         MoveWallDraw(i, pos, true, false, true);
-        break;
+        break;*/
     default:
-        MoveWallDraw(i, pos, false, true, true);
+        MoveWallDraw(i, pos, false, false, false);
         break;
     }
     moveWalls[pos].MovePosition();

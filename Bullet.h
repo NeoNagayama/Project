@@ -10,5 +10,5 @@ public:
     VECTOR target;
     VECTOR forward;
     VECTOR StartPosition;
-    bool mainProcess(VECTOR hitbox1,VECTOR hitbox2);
+    bool mainProcess(VECTOR hitbox1,VECTOR hitbox2,int handle);
 };

@@ -69,8 +69,10 @@ private:
     const float returnThleshold = 50;
     const float moveSpeed = get_rand(1,5) * 0.1f;
     const float returnPosition = -50;
+    int cargoHandle;
 public:
     void MovePosition();
     bool DrawMoveWall(bool high, bool mid, bool low, VECTOR hitbox1, VECTOR hitbox2);
     void DrawHole(VECTOR edge1, VECTOR edge2);
+    void SetUp();
 };

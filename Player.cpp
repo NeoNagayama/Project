@@ -4,9 +4,9 @@
 int test;
 void Player::InitialProcess()
 {
-    ModelHandle = MV1LoadModel("F-14Test.mv1");
+    ModelHandle = MV1LoadModel("PlayerModel.mv1");
     MV1SetPosition(ModelHandle, VGet(0, -5, -0));
-    MV1SetScale(ModelHandle, VGet(3, 3, 3));
+    MV1SetScale(ModelHandle, VGet(6, 6, 6));
     Position = VGet(0, -5, -0);
     PlayerLightHandle = CreateDirLightHandle(VGet(0,0.7f,-0.3f));
     SetLightEnableHandle(PlayerLightHandle, true);
@@ -258,7 +258,7 @@ void Player::VulcanProjectile()
     {
         if (bullets[i].isActivated)
         {
-            if (bullets[i].mainProcess(enemyObject->hitbox1, enemyObject->hitbox2))
+            if (bullets[i].mainProcess(enemyObject->hitbox1, enemyObject->hitbox2,bulletHandle))
             {
                 enemyObject->Health -= 3;
             }

@@ -28,11 +28,11 @@ void TitleInitialProcess()
 {
     Start.SetButtonPosition(VGet(1550,545,1),600,100,0.9f);
     Exit.SetButtonPosition(VGet(1550, 745, 1), 600, 100, 0.9f);
-    modelhandle = MV1LoadModel("F-14Test.mv1");
-    MV1SetPosition(modelhandle,VGet(-0.4, 0.04f, -19.2f));
+    modelhandle = MV1LoadModel("PlayerModel.mv1");
+    MV1SetPosition(modelhandle,VGet(-0.4, 0.35f, -19.2f));
     MV1SetRotationXYZ(modelhandle, VGet(0, 2.53f, 0));
-    modelHandle2 = MV1LoadModel("F-14Test.mv1");
-    modelHandle3 = MV1LoadModel("F-14Test.mv1");
+    modelHandle2 = MV1DuplicateModel(modelhandle);
+    modelHandle3 = MV1DuplicateModel(modelhandle);
 }
 void TitleMainProcess()
 {
@@ -67,10 +67,10 @@ void DrawShadow()
 }
 void DrawModels()
 {
-    z -= 0.3f;
-    x += 0.34f;
-    MV1SetPosition(modelHandle2, VGet(x, 4, z));
-    MV1SetPosition(modelHandle3, VGet(x - 3, 4, z - 2));
+    z -= 0.2f;
+    x += 0.24f;
+    MV1SetPosition(modelHandle2, VGet(x, 3, z));
+    MV1SetPosition(modelHandle3, VGet(x - 3, 3, z - 2));
     MV1SetRotationXYZ(modelHandle2, VGet(0, 2.1f, 0));
     MV1SetRotationXYZ(modelHandle3, VGet(0, 2.1f, 0));
     MV1DrawModel(modelHandle2);
