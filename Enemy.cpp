@@ -1,5 +1,4 @@
 #include"Enemy.h"
-#include "stage1Scene.h"
 #include <cmath>
 #include <random>
 void Enemy::InitialProcess()

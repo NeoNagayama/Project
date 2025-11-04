@@ -6,12 +6,20 @@
 #include "Text.h"
 #include "TitleScene.h"
 #include "main.h"
-#include "stage1Scene.h"
 Button Retry;
 Button GameOverToTitle;
 UIText GameOverText;
 bool isRetrySelected = true;
 bool isSceneChangingFromGameOver = false;
+stage* G_stage1Instance;
+stage* G_stage2Instance;
+stage* G_stage3Instance;
+void GameOverGetStagePointers(stage* s1, stage* s2, stage* s3)
+{
+    G_stage1Instance = s1;
+    G_stage2Instance = s2;
+    G_stage3Instance = s3;
+};
 void GameOverInitialProcess()
 {
     Retry.SetButtonPosition(VGet(500, 700, 1), 800, 200, 0.8f);
@@ -50,9 +58,22 @@ void GameOverMainProcess()
     {
         if (fadeout(0.5f))
         {
-            Stage1Initialize();
+            switch (stages)
+            {
+            case STAGE1:
+                G_stage1Instance->Initialize();
+                G_stage1Instance->isStarted = true;
+                break;
+            case STAGE2:
+                G_stage2Instance->Initialize();
+                G_stage2Instance->isStarted = true;
+                break;
+            default:
+                G_stage3Instance->Initialize();
+                G_stage3Instance->isStarted = true;
+                break;
+            }
             scene = SCENE_STAGE1;
-            isStarted = true;
             progress = 255;
         }
     }

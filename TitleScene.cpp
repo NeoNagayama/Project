@@ -5,7 +5,6 @@
 #include "Text.h"
 #include "main.h"
 #include "ui.h"
-#include "stage1Scene.h"
 
 bool isStartSelected = true;
 bool sceneChanging = false;
@@ -16,6 +15,15 @@ Button Start;
 Button Exit;
 UIText GameTitle;
 int modelhandle,modelHandle2,modelHandle3;
+stage* stage1Instance;
+stage* stage2Instance;
+stage* stage3Instance;
+void getStagePointers(stage* s1, stage* s2, stage* s3) {
+    stage1Instance = s1;
+    stage2Instance = s2;
+    stage3Instance = s3;
+}
+
 void TitleInitialProcess()
 {
     Start.SetButtonPosition(VGet(1550,545,1),600,100,0.9f);
@@ -98,9 +106,9 @@ void TitleMenu()
     {
         if (fadeout(0.5f))
         {
-            Stage1Initialize();
+            stage1Instance->Initialize();
             progress = 255;
-            isStarted = true;
+            stage1Instance->isStarted = true;
             scene = SCENE_STAGE1;
         }
     }

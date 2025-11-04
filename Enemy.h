@@ -1,6 +1,5 @@
 #pragma once
 #include "base.h"
-#include "stage1Scene.h"
 #include "Bullet.h"
 #include "Player.h"
 #include "Missile.h"
