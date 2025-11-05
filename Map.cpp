@@ -22,7 +22,8 @@ bool mapBase::DamageBox(bool upper, bool lower, bool right, bool left, bool cent
     {
         VECTOR edge1 = VGet(position.x - 15, position.y -15, position.z - 40);
         VECTOR edge2 = VGet(position.x + 15, position.y -7, position.z + 40);
-        DrawDamageBox(edge1, edge2);
+        MV1SetPosition (BaseModelHandle,VGet(position.x, position.y - 11, position.z));
+        MV1DrawModel(BaseModelHandle);
         isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
     }
     if (right)
@@ -63,6 +64,19 @@ bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR pl
     else
     {
         return current;
+    }
+}
+void mapBase::BaseSetUp()
+{
+    BaseModelHandle = MV1DuplicateModel(lowerObstacleHandle);
+    MV1SetScale(BaseModelHandle, VGet(0.01f, 0.01f, 0.01f));
+    for (int i = 0; i < MV1GetMaterialNum(BaseModelHandle); i++)
+    {
+        MV1SetMaterialDifColor(BaseModelHandle, i, GetColorF(1.0f, 0.7f, 0.7f, 1.0f));
+        MV1SetMaterialAmbColor(BaseModelHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+        MV1SetMaterialSpcColor(BaseModelHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(BaseModelHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
+        MV1SetMaterialSpcPower(BaseModelHandle, i, 6);
     }
 }
 
@@ -190,4 +204,12 @@ void wallmove::SetUp()
 {
     cargoHandle = MV1DuplicateModel(cargoModelOrigin);
     MV1SetRotationXYZ(cargoHandle, VGet(0, PI/2, 0));
+    for (int i = 0; i < MV1GetMaterialNum(cargoHandle); i++)
+    {
+        MV1SetMaterialDifColor(cargoHandle, i, GetColorF(1.0f, 0.7f, 0.7f, 1.0f));
+        MV1SetMaterialAmbColor(cargoHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+        MV1SetMaterialSpcColor(cargoHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(cargoHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
+        MV1SetMaterialSpcPower(cargoHandle, i, 6);
+    }
 }

@@ -15,7 +15,6 @@ private:
     Enemy* enemyObject;
     const float NEUTRAL_ANGLE_Y = 0.99f;
     const int TARGET_CAMERA_POSZ = 20;
-    int PlayerLightHandle;
     const float moveSpeed= 0.4f;
     float speedLimit = 0.7f;
     const float moveRange = 11;

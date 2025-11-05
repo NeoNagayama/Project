@@ -7,11 +7,15 @@ void Player::InitialProcess()
     ModelHandle = MV1LoadModel("PlayerModel.mv1");
     MV1SetPosition(ModelHandle, VGet(0, -5, -0));
     MV1SetScale(ModelHandle, VGet(6, 6, 6));
-    Position = VGet(0, -5, -0);
-    PlayerLightHandle = CreateDirLightHandle(VGet(0,0.7f,-0.3f));
-    SetLightEnableHandle(PlayerLightHandle, true);
-    SetLightDifColorHandle(PlayerLightHandle, GetColorF(0.8f, 0.8f, 0.8f, 0.4f));
-    SetLightSpcColorHandle(PlayerLightHandle, GetColorF(0.4f, 0.4f, 0.4f, 0.4f));
+    Position = VGet(0, -5, -0); 
+    for (int i = 0; i < MV1GetMaterialNum(ModelHandle); i++)
+    {
+        MV1SetMaterialDifColor(ModelHandle, i, GetColorF(0.7f, 0.7f, 0.7f, 1.0f));
+        MV1SetMaterialAmbColor(ModelHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+        MV1SetMaterialSpcColor(ModelHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(ModelHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
+        MV1SetMaterialSpcPower(ModelHandle, i, 6);
+    }
 }
 void Player::mainProcess(bool mode)
 {

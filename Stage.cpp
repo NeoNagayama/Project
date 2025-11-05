@@ -27,6 +27,7 @@ void stage::InitialProcess(int obst[50],int type[50])
         obstacleTypeDefault[i] = type[i];
         obstacleType[i] = type[i];
         moveWalls[i].SetUp();
+        maps[i].BaseSetUp();
     }
 }
 void stage::MainProcess()
@@ -85,7 +86,7 @@ void stage::Initialize()
     player.ammo = 200;
     choosedButton = 0;
     player.Health = 100;
-    enemy.Health = 100;
+    enemy.Health = 1;
     player.offset = VGet(0, -5, 0);
     player.BasePosition.z = 0;
     gamePhase = 0;

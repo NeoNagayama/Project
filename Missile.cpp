@@ -5,8 +5,9 @@ void Missile::mainProcess(VECTOR targetPosition ,float remainingTime)
 	Angle = VScale(VNorm(VGet(targetPosition.x-Position.x, targetPosition.y - Position.y, targetPosition.z - Position.z)), 2.3f);
 	Position = VAdd(Position, Angle);
     MV1SetPosition(MissileHandle, Position);
-    MV1SetRotationXYZ(MissileHandle, Angle);
+    MV1SetRotationXYZ(MissileHandle, VNorm(VGet(targetPosition.x - Position.x, targetPosition.y - Position.y, targetPosition.z - Position.z)));
     MV1DrawModel(MissileHandle);
+    DrawBillboard3D(VAdd(VScale(MV1GetRotationXYZ(MissileHandle), -2.6f), Position), 0.5f, 0.49f, 4, 0, missileBurnerHandle, true);
 }
 void Missile::SetStartPosition(VECTOR StartPosition)
 {
@@ -21,4 +22,16 @@ void Missile::guideLosted()
 void Missile::SetUp()
 {
     MissileHandle= MV1LoadModel("MissileModel.mv1");
+    for (int i = 0; i < MV1GetMaterialNum(MissileHandle); i++)
+    {
+        MV1SetMaterialDifColor(MissileHandle, i, GetColorF(0.7f, 0.7f, 0.7f, 1.0f));
+        MV1SetMaterialAmbColor(MissileHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+        MV1SetMaterialSpcColor(MissileHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(MissileHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
+        MV1SetMaterialSpcPower(MissileHandle, i, 6);
+    }
+}
+void Missile::GetRearPosition()
+{
+    MV1GetRotationXYZ(MissileHandle);
 }

@@ -11,4 +11,5 @@ public:
 	void SetStartPosition(VECTOR StartPosition);
 	void guideLosted();
     void SetUp();
+    void GetRearPosition();
 };

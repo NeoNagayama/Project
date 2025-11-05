@@ -8,6 +8,14 @@ void Enemy::InitialProcess()
     MV1SetScale(ModelHandle, VGet(6, 6, 6));
     Position = VGet(0, 0, 0);
     missileObject.SetUp();
+    for (int i = 0; i < MV1GetMaterialNum(ModelHandle); i++)
+    {
+        MV1SetMaterialDifColor(ModelHandle, i, GetColorF(0.7f, 0.7f, 0.7f, 1.0f));
+        MV1SetMaterialAmbColor(ModelHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+        MV1SetMaterialSpcColor(ModelHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(ModelHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
+        MV1SetMaterialSpcPower(ModelHandle, i, 6);
+    }
 }
 void Enemy::mainProcess(bool mode)
 {
