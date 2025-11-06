@@ -8,25 +8,43 @@ void Enemy::InitialProcess()
     MV1SetScale(ModelHandle, VGet(6, 6, 6));
     Position = VGet(0, 0, 0);
     missileObject.SetUp();
+    for (int i = 0; i < MV1GetMaterialNum(ModelHandle); i++)
+    {
+        MV1SetMaterialDifColor(ModelHandle, i, GetColorF(0.7f, 0.7f, 0.7f, 1.0f));
+        MV1SetMaterialAmbColor(ModelHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+        MV1SetMaterialSpcColor(ModelHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(ModelHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
+        MV1SetMaterialSpcPower(ModelHandle, i, 6);
+    }
 }
 void Enemy::mainProcess(bool mode)
 {
-    if (mode)
+    if (Health > 0)
     {
-        BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, Z_OFFSET));
-        run();
-        EnemyMoveXY();
-        roll();
+        if (mode)
+        {
+            BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, Z_OFFSET));
+            run();
+            EnemyMoveXY();
+            roll();
+        }
+        else
+        {
+            BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, -Z_OFFSET));
+            Vulcan();
+            missile();
+            missileObject.Passive();
+        }
     }
-    else
+    if (!isDead && Health <= 0)
     {
-        BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, -Z_OFFSET));
-        Vulcan();
-        missile();
+        exp.SetPosition(Position);
+        isDead = true;
     }
         Move(VAdd(offset,BasePosition));
     Position = MV1GetPosition(ModelHandle);
     SetHitBox(4, 4);
+    exp.DrawExprosion();
 }
 void Enemy::Vulcan()
 {
@@ -155,6 +173,7 @@ void Enemy::MissileLaunch()
         missilecooldowntimer = 0;
         playerObject->Health -= MISSILE_DAMAGE;
         missileCooldown = get_rand(5, 7);
+        exp.SetPosition(playerObject->Position);
     }
 }
 

@@ -9,6 +9,7 @@ Button BackToTitle;
 UIText ClearText;
 bool isNextSelected = true;
 bool isSceneChanging = false;
+bool controllable = false;
  stage* clear_stage1Instance;
  stage* clear_stage2Instance;
  stage* clear_stage3Instance;
@@ -25,8 +26,14 @@ void ClearInitialProcess()
 }
 void ClearMainProcess()
 {
-    if (fadein(0.5f))
+    if (fadein(0.5f) && !controllable)
     {
+        controllable = true;
+        progress = 0;
+    }
+    if (controllable)
+    {
+
         if (Input_GetKeyboardDown(KEY_INPUT_D) && isNextSelected == true && !isSceneChanging)
         {
             isNextSelected = false;
@@ -45,7 +52,7 @@ void ClearMainProcess()
         {
             isSceneChanging = true;
         }
-    }
+
         if (isSceneChanging && !isNextSelected)
         {
             if (fadeout(0.5f))
@@ -73,6 +80,7 @@ void ClearMainProcess()
                 progress = 255;
             }
         }
+    }
     
 }
 void ClearInitialize()

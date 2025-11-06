@@ -6,16 +6,18 @@
 #include "Flare.h"
 #include "Enemy.h"
 #include "Text.h"
+#include "VisualEffects.h"
 class Enemy;
+class explosionEffect;
 class Player: public base
 {
 private:
     UIText VulcanText;
     UIText FlareText;
+    explosionEffect exp;
     Enemy* enemyObject;
     const float NEUTRAL_ANGLE_Y = 0.99f;
     const int TARGET_CAMERA_POSZ = 20;
-    int PlayerLightHandle;
     const float moveSpeed= 0.4f;
     float speedLimit = 0.7f;
     const float moveRange = 11;
@@ -47,6 +49,7 @@ private:
     void Limit();
 public:
     int ammo = 200;
+    bool isDead = false;
     void InitialProcess();
     void Flare();
     void Vulcan();

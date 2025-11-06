@@ -7,11 +7,15 @@ void Player::InitialProcess()
     ModelHandle = MV1LoadModel("PlayerModel.mv1");
     MV1SetPosition(ModelHandle, VGet(0, -5, -0));
     MV1SetScale(ModelHandle, VGet(6, 6, 6));
-    Position = VGet(0, -5, -0);
-    PlayerLightHandle = CreateDirLightHandle(VGet(0,0.7f,-0.3f));
-    SetLightEnableHandle(PlayerLightHandle, true);
-    SetLightDifColorHandle(PlayerLightHandle, GetColorF(0.8f, 0.8f, 0.8f, 0.4f));
-    SetLightSpcColorHandle(PlayerLightHandle, GetColorF(0.4f, 0.4f, 0.4f, 0.4f));
+    Position = VGet(0, -5, -0); 
+    for (int i = 0; i < MV1GetMaterialNum(ModelHandle); i++)
+    {
+        MV1SetMaterialDifColor(ModelHandle, i, GetColorF(0.7f, 0.7f, 0.7f, 1.0f));
+        MV1SetMaterialAmbColor(ModelHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+        MV1SetMaterialSpcColor(ModelHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(ModelHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
+        MV1SetMaterialSpcPower(ModelHandle, i, 6);
+    }
 }
 void Player::mainProcess(bool mode)
 {
@@ -19,23 +23,32 @@ void Player::mainProcess(bool mode)
 
     
     BasePosition = VAdd(VGet(0, 0, 2),BasePosition);
-    KeyInput();
-    PlayerMoveXY();
-    Move(VAdd(BasePosition, offset));
-    rotatePlayer();
-    pitch();
-    if (mode)
+    if (Health > 0)
     {
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
-        Vulcan();
+        KeyInput();
+        PlayerMoveXY();
+        Move(VAdd(BasePosition, offset));
+        rotatePlayer();
+        pitch();
+        if (mode)
+        {
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+            Vulcan();
+        }
+        else
+        {
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -30), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+            CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
+            Flare();
+
+        }
     }
-    else
+    if (!isDead && Health <= 0)
     {
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
-        CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
-        Flare();
+        exp.SetPosition(Position);
+        isDead = true;
     }
-    
+    exp.DrawExprosion();
 }
 void Player::transitionProcess(bool mode)
 {
@@ -267,6 +280,10 @@ void Player::VulcanProjectile()
 }
 void Player::Flare()
 {
+    for (int i = 0; i < 10; i++)
+    {
+        Flares[i].Passive();
+    }
     if (CheckHitKey(KEY_INPUT_SPACE) && FlareCoolDown > FlareInterval && !Launching)
     {
         FlareCoolDown = 0;
@@ -306,7 +323,7 @@ void Player::FlareLaunch()
             if (!Flares[i].isActivated)
             {
                 Flares[i].isActivated = true;
-                Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 4.7f), 0.3f);
+                Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 5.7f), 0.3f);
                 Flares[i].position = Position;
                 break;
             }

@@ -25,6 +25,11 @@ int reticleInsideGaugeHandle;
 int cargoModelOrigin;
 int bulletHandle;
 int enemyBulletHandle;
+int carrierHandle;
+int lowerObstacleHandle;
+int missileBurnerHandle;
+int smokeHandle;
+int explosionHandle;
 //ゲームを終了するための条件用の変数
 bool Quit = false;
 int stage1Obstacle[50] = {
@@ -102,6 +107,8 @@ int stage3ObstacleType[50] = {
 stage stage1;
 stage stage2;
 stage stage3;
+
+int PlayerLightHandle;
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -113,6 +120,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetLightEnable(true);
     SetUseZBuffer3D(TRUE);
     SetWriteZBuffer3D(TRUE);
+    carrierHandle = MV1LoadModel("AircraftCarrier.mv1");
     reticleHandle = LoadGraph("Reticle.png", false);
     reticleInsideGaugeHandle = LoadGraph("ReticleInsideGauge.png", false);
     backGroundHandle = LoadGraph("backGround.jpg");
@@ -120,6 +128,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     enemyBulletHandle = LoadGraph("enemyBullet.png");
     //skySphereHandle = MV1LoadModel("SkySphereTest.mv1");
     cargoModelOrigin = MV1LoadModel("cargo.mv1");
+    lowerObstacleHandle = MV1LoadModel("LowerObstacle.mv1");
+    missileBurnerHandle = LoadGraph("missileBurner.png");
+    smokeHandle = LoadGraph("smoke1.png");
+    explosionHandle = LoadGraph("explosion.png");
     fontLoad();
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));
@@ -145,12 +157,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     ClearGetStagePointers(&stage1, &stage2, &stage3);
     MATERIALPARAM Material;
 
-    Material.Diffuse = GetColorF(0.2f, 0.2f, 0.2f, 0.9f);
+    Material.Diffuse = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
     Material.Ambient = GetColorF(0.2f, 0.2f, 0.24f, 0.1f);
     Material.Specular = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
-    Material.Emissive = GetColorF(0.0f, 0.0f, 0.0f, 0.0f);
-    Material.Power = 3.0f;
+    Material.Emissive = GetColorF(0.1f, 0.1f, 0.1f, 0.0f);
+    Material.Power = 0.1f;
     SetMaterialParam(Material);
+    PlayerLightHandle = CreateDirLightHandle(VGet(0, 0.7f, -0.3f));
+    SetLightEnableHandle(PlayerLightHandle, true);
+    SetLightDifColorHandle(PlayerLightHandle, GetColorF(0.8f, 0.8f, 0.8f, 0.4f));
+    SetLightSpcColorHandle(PlayerLightHandle, GetColorF(0.4f, 0.4f, 0.4f, 0.4f));
 
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen() && !Quit) {
         Input_UpdateKeyboard();
@@ -182,7 +198,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             break;
         default:
             //背景の描画
-            DrawGraph3D(0, 650,  1800, backGroundHandle, false);
+            DrawGraph3D(0, 600,  1800, backGroundHandle, false);
             TitleMainProcess();
             break;
         }

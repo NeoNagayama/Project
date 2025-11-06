@@ -154,7 +154,9 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="Trail.cpp" />
     <ClCompile Include="ui.cpp" />
+    <ClCompile Include="VisualEffects.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="F22\F22 export 2024_9_7.x" />
@@ -180,7 +182,9 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="Trail.h" />
     <ClInclude Include="ui.h" />
+    <ClInclude Include="VisualEffects.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="backGround.jpg" />

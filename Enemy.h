@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Missile.h"
 #include "Text.h"
+#include "VisualEffects.h"
 //回避軌道のenum
 enum evadeType
 {
@@ -12,6 +13,7 @@ enum evadeType
     TYPE_VERTICAL_FLUCTUATING
 
 };
+class explosionEffect;
 class Player;
 class Enemy:public base
 {
@@ -19,6 +21,7 @@ private:
     UIText MissileAlert;
     //プレイヤーのポインター
     Player* playerObject;
+    explosionEffect exp;
     const float MAX_MOVE_RANGE = 10.0f;
     const float EVADE_TARGET_DISTANCE = 0.45f;
     const float TRANSITION_TARGET_POSZ = 30.0f;
@@ -94,6 +97,7 @@ public:
     float firingCooldown = 0.0f;
     //機銃が発射されてからどれくらいたったか測る変数
     float firingTimer = 0.0f;
+    bool isDead = false;
     //敵が移動できる範囲
     float moveRangeX = 10.0f;
     float minimumMoveRangeX = -10.0f;
