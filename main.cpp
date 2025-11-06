@@ -193,9 +193,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         case SCENE_GAMEOVER:
             GameOverMainProcess();
             break;
-        case SCENE_CLEAR:
-            ClearMainProcess();
-            break;
         default:
             //”wŒi‚Ì•`‰æ
             DrawGraph3D(0, 600,  1800, backGroundHandle, false);
