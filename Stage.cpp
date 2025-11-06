@@ -51,7 +51,7 @@ void stage::MainProcess()
     {
         MV1DrawModel(player.ModelHandle);
     }
-    if (player.Health > 0)
+    if (enemy.Health > 0)
     {
 
         MV1DrawModel(enemy.ModelHandle);
@@ -70,9 +70,14 @@ void stage::MainProcess()
     }
     else
     {
-        if (!isPause)
+        if (!isPause &&!isCleared)
         {
             Ingame();
+        }
+        else if (isCleared)
+        {
+            player.clearProcess();
+            ClearMainProcess();
         }
         else
         {
@@ -460,7 +465,7 @@ void stage::Ingame()
     }
     playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
     enemyHealthText.DrawTextWithSort(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT, 500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
-    if (player.BasePosition.z > 4000.0f && gamePhase == PHASE_RUN)
+    if (player.BasePosition.z > 400.0f && gamePhase == PHASE_RUN)
     {
         gamePhase = PHASE_OVERSHOOT;
     }
@@ -487,12 +492,14 @@ void stage::Ingame()
     }
     if (isKilled)
     {
-        if (fadeout(3))
+        isCleared = true;
+        ClearInitialize();
+        /*if (fadeout(3))
         {
             ClearInitialize();
             progress = 0;
             scene = SCENE_CLEAR;
-        }
+        }*/
     }
 }
 void stage::IngameToClear()

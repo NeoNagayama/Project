@@ -67,6 +67,17 @@ void Player::transitionProcess(bool mode)
     
     CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
 }
+void Player::clearProcess()
+{
+    autoEvade();
+    rotateOnlyRoll();
+    targetAnglePitch = VGet(0, 0, 1);
+    pitch();
+    BasePosition = VAdd(VGet(0, 0, 2), BasePosition);
+    Move(VAdd(BasePosition, offset));
+    targetAngle = VGet(0, -0.99f, 0);
+    SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x -9, offset.y, -5), BasePosition), VAdd(VGet(offset.x, offset.y + 1, 5), BasePosition));
+}
 void Player::KeyInput()
 {
     float speed = 0.1f;
@@ -376,6 +387,26 @@ void Player::rotatePlayer()
 
     
 }
+void Player::rotateOnlyRoll()
+{
+    float x, y;
+    x = cos(atan2(upper().y - 0, upper().x - 0));
+    y = sin(atan2(upper().y - 0, upper().x - 0));
+    float difInAngle = ((targetAngle.x * y) - (targetAngle.y * x));
+    if (difInAngle > 0.05f)
+    {
+        Rotate(VGet(0, 0, -rotateSpeed * smooth(difInAngle, 0, 2)));
+    }
+    else if (difInAngle < -0.05f)
+    {
+        Rotate(VGet(0, 0, rotateSpeed * smooth(difInAngle, 0, 2)));
+
+    }
+}
+void Player::autoLevel()
+{
+
+}
 void Player::pitch()
 {
     float z, y;
@@ -421,19 +452,14 @@ void Player::pitch()
 bool Player::Transition()
 {
     autoEvade();
-    
     VECTOR targetCameraPosition = VAdd(VGet(offset.x , offset.y + 2 , -16), BasePosition);
     VECTOR cameraToTargetVector = VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z);
     float distance = sqrtf((cameraToTargetVector.x * cameraToTargetVector.x) + (cameraToTargetVector.y * cameraToTargetVector.y) + (cameraToTargetVector.z * cameraToTargetVector.z));
     BasePosition = VAdd(VGet(0, 0, 2), BasePosition);
     pitch();
     Move(VAdd(BasePosition, offset));
-    clsDx();
-    printfDx("%f", distance);
     if (distance <1.5f)
     {
-
-        
         rotatePlayer();
         CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition);
         SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, TARGET_CAMERA_POSZ), BasePosition));
@@ -448,13 +474,10 @@ bool Player::Transition()
 }
 void Player::autoEvade()
 {
-    
     float distance = sqrtf((-offset.x * -offset.x) + (-offset.y * -offset.y));
     if (distance >= 1)
     {
-
         targetAngle = VNorm(VGet(-offset.x, -offset.y, 0));
-        
         offset = VAdd(VScale(targetAngle, moveSpeed), offset);
         targetAngle.y = -targetAngle.y;
         rotatePlayer();

@@ -48,9 +48,9 @@ class explosion
 {
 private:
     VECTOR position = VGet(0,-20,0);
-    const float maxRadius=6;
+    static constexpr float maxRadius=6;
     float radius=3;
-    const float damping=0.05f;
+    static constexpr float damping=0.05f;
 public:
     bool DrawExplosion();
     void SetPosition(VECTOR edge1,VECTOR edge2);
@@ -69,9 +69,9 @@ public:
 class wallmove :public mapBase
 {
 private:
-    const float returnThleshold = 50;
+    static constexpr float returnThleshold = 50;
     const float moveSpeed = get_rand(1,5) * 0.1f;
-    const float returnPosition = -50;
+    static constexpr float returnPosition = -50;
     int cargoHandle;
 public:
     void MovePosition();

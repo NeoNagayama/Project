@@ -21,16 +21,12 @@ bool controllable = false;
  };
 void ClearInitialProcess()
 {
-    Next.SetButtonPosition(VGet(500, 700, 1), 800, 200, 0.8f);
-    BackToTitle.SetButtonPosition(VGet(1410, 700, 1), 800, 200, 0.8f);
+    Next.SetButtonPosition(VGet(500, 500, 1), 800, 200, 0.8f);
+    BackToTitle.SetButtonPosition(VGet(500, 800, 1), 800, 200, 0.8f);
 }
 void ClearMainProcess()
 {
-    if (fadein(0.5f) && !controllable)
-    {
-        controllable = true;
-        progress = 0;
-    }
+    
     if (controllable)
     {
 
@@ -47,7 +43,7 @@ void ClearMainProcess()
         Next.SetText("Next Stage");
         BackToTitle.mainProcess(!isNextSelected, true, 60);
         BackToTitle.SetText("Title");
-        ClearText.DrawTextWithSort(0, 1920, "STAGE%d CLEAR", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 170), GetColor(50, 50, 50), stages + 1);
+        ClearText.DrawTextWithSort(200, 1920, "STAGE%d CLEAR", titleFontHandle, SORT_LEFT, 200, true, GetColor(255, 255, 170), GetColor(50, 50, 50), stages + 1);
         if (!isNextSelected && Input_GetKeyboardDown(KEY_INPUT_SPACE))
         {
             isSceneChanging = true;
@@ -62,7 +58,7 @@ void ClearMainProcess()
                 progress = 255;
             }
         }
-        else if (isNextSelected)
+        else if (isNextSelected && isSceneChanging)
         {
             if (fadeout(0.5f))
             {
@@ -79,6 +75,14 @@ void ClearMainProcess()
                 scene = SCENE_STAGE1;
                 progress = 255;
             }
+        }
+    }
+    else
+    {
+        if (fadein(0.5f))
+        {
+            controllable = true;
+            progress = 0;
         }
     }
     
