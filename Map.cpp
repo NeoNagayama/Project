@@ -127,9 +127,9 @@ void antiAir::DrawDamageBoxTransparent(VECTOR edge1, VECTOR edge2)
     SetWriteZBuffer3D( TRUE);
     for (int i = 0; i < count; i++)
     {
-        if (expls[i].DrawExplosion())
+        if (expls[i].DrawSingleExplosion())
         {
-            expls[i].SetPosition(edge1,edge2);
+            expls[i].SetPosition(VGet(get_rand(edge1.x, edge2.x), get_rand(edge1.y, edge2.y), get_rand(edge1.z, edge2.z)));
         }
     }
 
@@ -147,7 +147,6 @@ bool explosion::DrawExplosion()
 }
 void explosion::SetPosition(VECTOR edge1, VECTOR edge2)
 {
-    position = VGet(get_rand(edge1.x, edge2.x), get_rand(edge1.y, edge2.y), get_rand(edge1.z, edge2.z));
     radius = maxRadius;
 }
 void wallmove::MovePosition()

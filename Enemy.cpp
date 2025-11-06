@@ -19,22 +19,32 @@ void Enemy::InitialProcess()
 }
 void Enemy::mainProcess(bool mode)
 {
-    if (mode)
+    if (Health > 0)
     {
-        BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, Z_OFFSET));
-        run();
-        EnemyMoveXY();
-        roll();
+        if (mode)
+        {
+            BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, Z_OFFSET));
+            run();
+            EnemyMoveXY();
+            roll();
+        }
+        else
+        {
+            BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, -Z_OFFSET));
+            Vulcan();
+            missile();
+            missileObject.Passive();
+        }
     }
-    else
+    if (!isDead && Health <= 0)
     {
-        BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, -Z_OFFSET));
-        Vulcan();
-        missile();
+        exp.SetPosition(Position);
+        isDead = true;
     }
         Move(VAdd(offset,BasePosition));
     Position = MV1GetPosition(ModelHandle);
     SetHitBox(4, 4);
+    exp.DrawExprosion();
 }
 void Enemy::Vulcan()
 {
@@ -163,6 +173,7 @@ void Enemy::MissileLaunch()
         missilecooldowntimer = 0;
         playerObject->Health -= MISSILE_DAMAGE;
         missileCooldown = get_rand(5, 7);
+        exp.SetPosition(playerObject->Position);
     }
 }
 

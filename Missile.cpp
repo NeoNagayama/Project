@@ -8,6 +8,12 @@ void Missile::mainProcess(VECTOR targetPosition ,float remainingTime)
     MV1SetRotationXYZ(MissileHandle, VNorm(VGet(targetPosition.x - Position.x, targetPosition.y - Position.y, targetPosition.z - Position.z)));
     MV1DrawModel(MissileHandle);
     DrawBillboard3D(VAdd(VScale(MV1GetRotationXYZ(MissileHandle), -2.6f), Position), 0.5f, 0.49f, 4, 0, missileBurnerHandle, true);
+    smokes[smokeNum].SetPosition(Position);
+    smokeNum++;
+    if (smokeNum >= 180)
+    {
+        smokeNum = 0;
+    }
 }
 void Missile::SetStartPosition(VECTOR StartPosition)
 {
@@ -18,6 +24,12 @@ void Missile::guideLosted()
 	Position = VAdd(Position, Angle);
     MV1SetPosition(MissileHandle, Position);
     MV1DrawModel(MissileHandle);
+    smokes[smokeNum].SetPosition(Position);
+    smokeNum++;
+    if (smokeNum >= 180)
+    {
+        smokeNum = 0;
+    }
 }
 void Missile::SetUp()
 {
@@ -31,7 +43,10 @@ void Missile::SetUp()
         MV1SetMaterialSpcPower(MissileHandle, i, 6);
     }
 }
-void Missile::GetRearPosition()
+void Missile::Passive()
 {
-    MV1GetRotationXYZ(MissileHandle);
+    for (int i = 0; i < 180; i++)
+    {
+        smokes[i].DrawSmoke();
+    }
 }

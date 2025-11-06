@@ -28,6 +28,8 @@ int enemyBulletHandle;
 int carrierHandle;
 int lowerObstacleHandle;
 int missileBurnerHandle;
+int smokeHandle;
+int explosionHandle;
 //ゲームを終了するための条件用の変数
 bool Quit = false;
 int stage1Obstacle[50] = {
@@ -128,6 +130,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     cargoModelOrigin = MV1LoadModel("cargo.mv1");
     lowerObstacleHandle = MV1LoadModel("LowerObstacle.mv1");
     missileBurnerHandle = LoadGraph("missileBurner.png");
+    smokeHandle = LoadGraph("smoke1.png");
+    explosionHandle = LoadGraph("explosion.png");
     fontLoad();
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));

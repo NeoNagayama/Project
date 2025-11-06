@@ -32,9 +32,12 @@ void stage::InitialProcess(int obst[50],int type[50])
 }
 void stage::MainProcess()
 {
-    SetShadowMapDrawArea(shadowHandle, VGet(-120.0f, -1.0f, -20.0f + player.BasePosition.z), VGet(120.0f, 240.0f, 220.0f + player.BasePosition.z));
+    SetShadowMapDrawArea(shadowHandle, VGet(-120.0f, -1.0f, -20.0f + player.Position.z), VGet(120.0f, 240.0f, 220.0f + player.Position.z));
     ShadowMap_DrawSetup(shadowHandle);
-    MV1DrawModel(player.ModelHandle);
+    if (player.Health > 0)
+    {
+        MV1DrawModel(player.ModelHandle);
+    }
     MV1DrawModel(enemy.ModelHandle);
     ObstacleShadowDraw();
     moveWallShadow();
@@ -44,6 +47,15 @@ void stage::MainProcess()
     SetupCamera_Perspective(1);
     DrawBase();
     DrawObstacles();
+    if (player.Health > 0)
+    {
+        MV1DrawModel(player.ModelHandle);
+    }
+    if (player.Health > 0)
+    {
+
+        MV1DrawModel(enemy.ModelHandle);
+    }
     if (isGetDamage)
     {
         if (damageRate.MeasureTimer(0.5f))
@@ -96,6 +108,7 @@ void stage::Initialize()
     enemy.missileflyingTimer = 0;
     enemy.isLaunched = false;
     enemy.isFiring = false;
+    player.isDead = false;
     for (int i = 0; i < 50; i++)
     {
         obstacle[i] = obstacleDefault[i];
@@ -107,6 +120,7 @@ void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bo
     if (maps[pos].DamageBox(upper, lower, right, left, false, player.hitbox1, player.hitbox2) && !isStarted)
     {
         isDead = true;
+        player.Health = 0;
     }
     if (i == 1)
     {
@@ -150,6 +164,7 @@ void stage::MoveWallDraw(int i ,int pos, bool high,bool mid,bool low)
     if (moveWalls[pos].DrawMoveWall(high, mid, low, player.hitbox1, player.hitbox2))
     {
         isDead = true;
+        player.Health = 0;
     }
     if (i == 1)
     {
@@ -168,12 +183,12 @@ void stage::ObstacleShadowDraw()
     
     for (int i = 0; i < 15; i++)
     {
-        int pos = i + ((int)player.BasePosition.z % 4000) / 80;
+        int pos = i + ((int)player.Position.z % 4000) / 80;
         if (pos > 49)
         {
             pos -= 50;
         }
-        maps[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
+        maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
         maps[pos].DrawbaseOutline();
 
         if (obstacleType[pos] < 2)
@@ -219,12 +234,12 @@ void stage::moveWallShadow()
 {
     for (int i = 0; i < 15; i++)
     {
-        int pos = i + ((int)player.BasePosition.z % 4000) / 80;
+        int pos = i + ((int)player.Position.z % 4000) / 80;
         if (pos > 49)
         {
             pos -= 50;
         }
-        moveWalls[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
+        moveWalls[pos].position.z = 80 * (i + (int)player.Position.z / 80);
         moveWalls[pos].DrawbaseOutline();
 
 
@@ -255,12 +270,12 @@ void stage::DrawBase()
 {
     for (int i = 14; i > -1; i--)
     {
-        int pos = i + ((int)player.BasePosition.z % 4000) / 80;
+        int pos = i + ((int)player.Position.z % 4000) / 80;
         if (pos > 49)
         {
             pos -= 50;
         }
-        maps[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
+        maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
         maps[pos].DrawbaseOutline();
     }
 }
@@ -269,14 +284,14 @@ void stage::DrawObstacles()
 
     for (int i = 14; i > -1; i--)
     {
-        int pos = i + ((int)player.BasePosition.z % 4000) / 80;
+        int pos = i + ((int)player.Position.z % 4000) / 80;
         if (pos > 49)
         {
             pos -= 50;
         }
-        maps[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
-        AAs[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
-        moveWalls[pos].position.z = 80 * (i + (int)player.BasePosition.z / 80);
+        maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
+        AAs[pos].position.z = 80 * (i + (int)player.Position.z / 80);
+        moveWalls[pos].position.z = 80 * (i + (int)player.Position.z / 80);
         if (obstacleType[pos] < 2)
         {
             Obstacles(pos, i);
@@ -288,7 +303,7 @@ void stage::DrawObstacles()
         MoveWalls(pos, i);
         if (i == 14)
         {
-            int t = 15 + ((int)player.BasePosition.z % 4000) / 80;
+            int t = 15 + ((int)player.Position.z % 4000) / 80;
             obstacle[t > 49 ? t - 50 : t] = get_rand(0, 25);
             obstacleType[t > 49 ? t - 50 : t] = get_rand(0, 8);
         }
@@ -404,7 +419,6 @@ void stage::Briefing()
 {
     player.transitionProcess(false);
     player.SetHitBox(2, 2);
-    MV1DrawModel(player.ModelHandle);
     if (fadein(0.5f) && !isObjectiveAppeared)
     {
         progress = 0;
@@ -433,9 +447,7 @@ void stage::Briefing()
 }
 void stage::Ingame()
 {
-    MV1DrawModel(player.ModelHandle);
-    MV1DrawModel(enemy.ModelHandle);
-    IngameToClear();
+    //IngameToClear();
     if (player.ammo < 1 || player.Health <= 0)
     {
         player.Health = 0;
@@ -466,7 +478,7 @@ void stage::Ingame()
     }
     if (isDead)
     {
-        if (fadeout(1))
+        if (fadeout(3))
         {
             GameOverInitialize();
             progress = 0;
@@ -475,7 +487,7 @@ void stage::Ingame()
     }
     if (isKilled)
     {
-        if (fadeout(1))
+        if (fadeout(3))
         {
             ClearInitialize();
             progress = 0;
@@ -490,7 +502,7 @@ void stage::IngameToClear()
         if (fadeout(1))
         {
             ClearInitialize();
-            progress = 0;
+            progress = 255;
             scene = SCENE_CLEAR;
         }
     }
@@ -544,7 +556,6 @@ void stage::ChasePhase()
 }
 void stage::PauseScreen()
 {
-    MV1DrawModel(player.ModelHandle);
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
     DrawBox(0, 0, 1920, 1080, GetColor(0, 0, 0), 1);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);

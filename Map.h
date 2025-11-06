@@ -27,6 +27,7 @@ enum MoveWallType
     HIGH_LOW,
     MID_LOW,
 };
+class explosionEffect;
 class Player;
 class mapBase
 {
@@ -60,7 +61,7 @@ class antiAir :public mapBase
 private:
     float count = 0;
     timer firingTimer;
-    explosion expls[3];
+    explosionEffect expls[3];
 public:
     bool DamageZone(bool upper, bool lower, bool right, bool left, VECTOR hitbox1, VECTOR hitbox2);
     void DrawDamageBoxTransparent(VECTOR edge1, VECTOR edge2);

@@ -6,12 +6,15 @@
 #include "Flare.h"
 #include "Enemy.h"
 #include "Text.h"
+#include "VisualEffects.h"
 class Enemy;
+class explosionEffect;
 class Player: public base
 {
 private:
     UIText VulcanText;
     UIText FlareText;
+    explosionEffect exp;
     Enemy* enemyObject;
     const float NEUTRAL_ANGLE_Y = 0.99f;
     const int TARGET_CAMERA_POSZ = 20;
@@ -46,6 +49,7 @@ private:
     void Limit();
 public:
     int ammo = 200;
+    bool isDead = false;
     void InitialProcess();
     void Flare();
     void Vulcan();

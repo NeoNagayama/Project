@@ -23,23 +23,32 @@ void Player::mainProcess(bool mode)
 
     
     BasePosition = VAdd(VGet(0, 0, 2),BasePosition);
-    KeyInput();
-    PlayerMoveXY();
-    Move(VAdd(BasePosition, offset));
-    rotatePlayer();
-    pitch();
-    if (mode)
+    if (Health > 0)
     {
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
-        Vulcan();
+        KeyInput();
+        PlayerMoveXY();
+        Move(VAdd(BasePosition, offset));
+        rotatePlayer();
+        pitch();
+        if (mode)
+        {
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+            Vulcan();
+        }
+        else
+        {
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -30), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+            CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
+            Flare();
+
+        }
     }
-    else
+    if (!isDead && Health <= 0)
     {
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
-        CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
-        Flare();
+        exp.SetPosition(Position);
+        isDead = true;
     }
-    
+    exp.DrawExprosion();
 }
 void Player::transitionProcess(bool mode)
 {
@@ -271,6 +280,10 @@ void Player::VulcanProjectile()
 }
 void Player::Flare()
 {
+    for (int i = 0; i < 10; i++)
+    {
+        Flares[i].Passive();
+    }
     if (CheckHitKey(KEY_INPUT_SPACE) && FlareCoolDown > FlareInterval && !Launching)
     {
         FlareCoolDown = 0;
@@ -310,7 +323,7 @@ void Player::FlareLaunch()
             if (!Flares[i].isActivated)
             {
                 Flares[i].isActivated = true;
-                Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 4.7f), 0.3f);
+                Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 5.7f), 0.3f);
                 Flares[i].position = Position;
                 break;
             }
