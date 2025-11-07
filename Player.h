@@ -47,7 +47,6 @@ private:
     void InputDown(float speed);
     void InputNeutral(float speed);
     void rotateOnlyRoll();
-    void autoLevel();
     void Limit();
 public:
     int ammo = 200;

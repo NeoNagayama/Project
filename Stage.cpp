@@ -47,7 +47,7 @@ void stage::MainProcess()
     SetupCamera_Perspective(1);
     DrawBase();
     DrawObstacles();
-    if (player.Health > 0)
+    if (player.Health > 0 && !isCleared)
     {
         MV1DrawModel(player.ModelHandle);
     }
@@ -76,8 +76,9 @@ void stage::MainProcess()
         }
         else if (isCleared)
         {
+            enemy.mainProcess(true);
             player.clearProcess();
-            ClearMainProcess();
+            IngameToClear();
         }
         else
         {
@@ -258,12 +259,12 @@ void stage::moveWallShadow()
         case LOW:
             moveWalls[pos].DrawMoveWall(false, false, true, player.hitbox1, player.hitbox2);
             break;
-        case HIGH_MID:
+        /*case HIGH_MID:
             moveWalls[pos].DrawMoveWall(true, true, false, player.hitbox1, player.hitbox2);
             break;
         case HIGH_LOW:
             moveWalls[pos].DrawMoveWall(true, false, true, player.hitbox1, player.hitbox2);
-            break;
+            break;*/
         default:
             moveWalls[pos].DrawMoveWall(false, true, true, player.hitbox1, player.hitbox2);
             break;
@@ -504,13 +505,41 @@ void stage::Ingame()
 }
 void stage::IngameToClear()
 {
-    if (isCleared)
+    if (enemy.deadPosition.z < player.Position.z + 2)
     {
-        if (fadeout(1))
+        if (timeScale < 1)
         {
-            ClearInitialize();
-            progress = 255;
-            scene = SCENE_CLEAR;
+            timeScale += 0.05f;
+        }
+        else
+        {
+            timeScale = 1;
+        }
+        MV1DrawModel(player.ModelHandle);
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(player.offset.x -smooth(0,9,4), player.offset.y + 2, -5), player.BasePosition),
+            VAdd(VGet(player.offset.x, player.offset.y + 1, 4), player.BasePosition));
+        ClearMainProcess();
+    }
+    else
+    {
+        MV1DrawModel(player.ModelHandle);
+        if (enemy.deadPosition.y < player.Position.y)
+        {
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(player.offset.x, player.offset.y - 2, -5), player.BasePosition),
+                enemy.deadPosition);
+        }
+        else
+        {
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(player.offset.x, player.offset.y + 2, -5), player.BasePosition),
+                enemy.deadPosition);
+        }
+        if (timeScale > 0.2f)
+        {
+            timeScale -= 0.05f;
+        }
+        else
+        {
+            timeScale = 0.2f;
         }
     }
 }

@@ -39,6 +39,7 @@ void Enemy::mainProcess(bool mode)
     if (!isDead && Health <= 0)
     {
         exp.SetPosition(Position);
+        deadPosition = Position;
         isDead = true;
     }
         Move(VAdd(offset,BasePosition));

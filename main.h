@@ -17,6 +17,7 @@ extern int lowerObstacleHandle;
 extern int missileBurnerHandle;
 extern int smokeHandle;
 extern int explosionHandle;
+extern float timeScale;
 enum SCENES
 {
     SCENE_TITLE,
