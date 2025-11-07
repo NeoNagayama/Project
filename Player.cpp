@@ -22,7 +22,7 @@ void Player::mainProcess(bool mode)
     SetHitBox(2, 2);
 
     
-    BasePosition = VAdd(VGet(0, 0, 2),BasePosition);
+    BasePosition = VAdd(VGet(0, 0, 2*timeScale),BasePosition);
     if (Health > 0)
     {
         KeyInput();
@@ -52,10 +52,12 @@ void Player::mainProcess(bool mode)
 }
 void Player::transitionProcess(bool mode)
 {
-    BasePosition = VAdd(VGet(0, 0, 2), BasePosition);
+    BasePosition = VAdd(VGet(0, 0, 2* timeScale), BasePosition);
     Move(VAdd(BasePosition, offset));
     targetAngle = VGet(0, -0.99f, 0);
     rotatePlayer();
+    targetAnglePitch = VGet(0, 0, 1);
+    pitch();
     if (mode)
     {
         SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
@@ -73,10 +75,9 @@ void Player::clearProcess()
     rotateOnlyRoll();
     targetAnglePitch = VGet(0, 0, 1);
     pitch();
-    BasePosition = VAdd(VGet(0, 0, 2), BasePosition);
+    BasePosition = VAdd(VGet(0, 0, 2 * timeScale), BasePosition);
     Move(VAdd(BasePosition, offset));
     targetAngle = VGet(0, -0.99f, 0);
-    SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x -9, offset.y, -5), BasePosition), VAdd(VGet(offset.x, offset.y + 1, 5), BasePosition));
 }
 void Player::KeyInput()
 {
@@ -403,10 +404,7 @@ void Player::rotateOnlyRoll()
 
     }
 }
-void Player::autoLevel()
-{
 
-}
 void Player::pitch()
 {
     float z, y;
@@ -478,7 +476,7 @@ void Player::autoEvade()
     if (distance >= 1)
     {
         targetAngle = VNorm(VGet(-offset.x, -offset.y, 0));
-        offset = VAdd(VScale(targetAngle, moveSpeed), offset);
+        offset = VAdd(VScale(targetAngle, moveSpeed * timeScale), offset);
         targetAngle.y = -targetAngle.y;
         rotatePlayer();
     }

@@ -83,6 +83,7 @@ private:
     //位置フレームあたりに上下左右に移動する速度
     float xSpeed = 0.0f, ySpeed = 0.0f;
 public:
+    VECTOR deadPosition;
     //機銃を射撃中かどうか
     bool isFiring = false;
     //ミサイルが発射されたかどうか

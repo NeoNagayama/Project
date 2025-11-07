@@ -151,7 +151,7 @@ void explosion::SetPosition(VECTOR edge1, VECTOR edge2)
 }
 void wallmove::MovePosition()
 {
-    position.x += moveSpeed;
+    position.x += moveSpeed * timeScale;
     if (position.x > returnThleshold)
     {
         position.x = returnPosition;

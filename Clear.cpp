@@ -30,11 +30,11 @@ void ClearMainProcess()
     if (controllable)
     {
 
-        if (Input_GetKeyboardDown(KEY_INPUT_D) && isNextSelected == true && !isSceneChanging)
+        if (Input_GetKeyboardDown(KEY_INPUT_S) && isNextSelected == true && !isSceneChanging)
         {
             isNextSelected = false;
         }
-        if (Input_GetKeyboardDown(KEY_INPUT_A) && isNextSelected == false && !isSceneChanging)
+        if (Input_GetKeyboardDown(KEY_INPUT_W) && isNextSelected == false && !isSceneChanging)
         {
             isNextSelected = true;
         }
@@ -44,38 +44,12 @@ void ClearMainProcess()
         BackToTitle.mainProcess(!isNextSelected, true, 60);
         BackToTitle.SetText("Title");
         ClearText.DrawTextWithSort(200, 1920, "STAGE%d CLEAR", titleFontHandle, SORT_LEFT, 200, true, GetColor(255, 255, 170), GetColor(50, 50, 50), stages + 1);
-        if (!isNextSelected && Input_GetKeyboardDown(KEY_INPUT_SPACE))
+        if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
         {
             isSceneChanging = true;
         }
 
-        if (isSceneChanging && !isNextSelected)
-        {
-            if (fadeout(0.5f))
-            {
-                Titleinitialize();
-                scene = SCENE_TITLE;
-                progress = 255;
-            }
-        }
-        else if (isNextSelected && isSceneChanging)
-        {
-            if (fadeout(0.5f))
-            {
-                stages += 1;
-                switch (stages)
-                {
-                case STAGE2:
-                    clear_stage2Instance->Initialize();
-                    break;
-                default:
-                    clear_stage3Instance->Initialize();
-                    break;
-                }
-                scene = SCENE_STAGE1;
-                progress = 255;
-            }
-        }
+        
     }
     else
     {
@@ -85,10 +59,37 @@ void ClearMainProcess()
             progress = 0;
         }
     }
-    
+    if (isSceneChanging && !isNextSelected)
+    {
+        if (fadeout(0.5f))
+        {
+            Titleinitialize();
+            scene = SCENE_TITLE;
+            progress = 255;
+        }
+    }
+    else if (isNextSelected && isSceneChanging)
+    {
+        if (fadeout(0.5f))
+        {
+            stages += 1;
+            switch (stages)
+            {
+            case STAGE2:
+                clear_stage2Instance->Initialize();
+                break;
+            default:
+                clear_stage3Instance->Initialize();
+                break;
+            }
+            scene = SCENE_STAGE1;
+            progress = 255;
+        }
+    }
 }
 void ClearInitialize()
 {
     isSceneChanging = false;
     isNextSelected = true;
+    controllable = false;
 }

@@ -30,6 +30,7 @@ int lowerObstacleHandle;
 int missileBurnerHandle;
 int smokeHandle;
 int explosionHandle;
+float timeScale = 1;
 //ƒQ[ƒ€‚ğI—¹‚·‚é‚½‚ß‚ÌğŒ—p‚Ì•Ï”
 bool Quit = false;
 int stage1Obstacle[50] = {

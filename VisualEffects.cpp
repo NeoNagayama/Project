@@ -12,8 +12,8 @@ void explosionEffect::DrawExprosion()
 }
 bool explosionEffect::DrawSingleExplosion()
 {
-    progress += oneFlame;
-    size += 20 * oneFlame;
+    progress += oneFlame * timeScale;
+    size += (20 * oneFlame) * timeScale;
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * (1 - progress / (LIFETIME-1.5f)));
     DrawBillboard3D(BasePosition, 0.5f, 0.5f, size, 0, explosionHandle, true);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
