@@ -2,11 +2,14 @@
 void mapBase::DrawbaseOutline()
 {
     VECTOR edgePosition1 = VGet(position.x - 15, position.y - 15, position.z - 40);
-    VECTOR edgePosition2 = VGet(position.x + 15, position.y + 15, position.z + 40);
-    DrawCube3D(edgePosition1, VGet(edgePosition1.x - 1, edgePosition2.y, edgePosition2.z), GetColor(100, 100, 100), GetColor(0, 0, 0), TRUE);
-    DrawCube3D(edgePosition1, VGet(edgePosition2.x, edgePosition1.y-1, edgePosition2.z), GetColor(100, 100, 100), GetColor(0, 0, 0), TRUE);
-    DrawCube3D(edgePosition2, VGet(edgePosition2.x + 1, edgePosition1.y, edgePosition1.z), GetColor(100, 100, 100), GetColor(0, 0, 0), TRUE);
-
+    VECTOR edgePosition2 = VGet(position.x + 15, position.y + 15, position.z + 40);/*
+    DrawCube3D(edgePosition1, VGet(edgePosition1.x - 1, edgePosition2.y, edgePosition2.z), GetColor(100, 100, 100), GetColor(0, 0, 0), TRUE);*/
+    DrawCube3D(edgePosition1, VGet(edgePosition2.x, edgePosition1.y-1, edgePosition2.z), GetColor(100, 100, 100), GetColor(0, 0, 0), TRUE);/*
+    DrawCube3D(edgePosition2, VGet(edgePosition2.x + 1, edgePosition1.y, edgePosition1.z), GetColor(100, 100, 100), GetColor(0, 0, 0), TRUE);*/
+    MV1SetPosition(BaseWallHandle,VGet(position.x - 20,position.y,position.z));
+    MV1SetPosition(BaseWallHandleRight, VGet(position.x + 20, position.y, position.z));
+    MV1DrawModel(BaseWallHandle);
+    MV1DrawModel(BaseWallHandleRight);
 }
 bool mapBase::DamageBox(bool upper, bool lower, bool right, bool left, bool center, VECTOR hitbox1, VECTOR hitbox2)
 {
@@ -22,8 +25,8 @@ bool mapBase::DamageBox(bool upper, bool lower, bool right, bool left, bool cent
     {
         VECTOR edge1 = VGet(position.x - 15, position.y -15, position.z - 40);
         VECTOR edge2 = VGet(position.x + 15, position.y -7, position.z + 40);
-        MV1SetPosition (BaseModelHandle,VGet(position.x, position.y - 11, position.z));
-        MV1DrawModel(BaseModelHandle);
+        MV1SetPosition (lowerHandle,VGet(position.x, position.y - 11, position.z));
+        MV1DrawModel(lowerHandle);
         isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
     }
     if (right)
@@ -52,6 +55,7 @@ bool mapBase::DamageBox(bool upper, bool lower, bool right, bool left, bool cent
 void mapBase::DrawDamageBox(VECTOR edge1, VECTOR edge2)
 {
     DrawCube3D(edge1, edge2, GetColor(120, 120, 120), GetColor(60, 60, 60), TRUE);
+
 }
 bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2,bool current)
 {
@@ -68,15 +72,34 @@ bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR pl
 }
 void mapBase::BaseSetUp()
 {
-    BaseModelHandle = MV1DuplicateModel(lowerObstacleHandle);
-    MV1SetScale(BaseModelHandle, VGet(0.01f, 0.01f, 0.01f));
-    for (int i = 0; i < MV1GetMaterialNum(BaseModelHandle); i++)
+
+    lowerHandle = MV1DuplicateModel(lowerObstacleHandle);
+    BaseWallHandle = MV1DuplicateModel(wallHandle);
+    BaseWallHandleRight = MV1DuplicateModel(wallHandle);
+    MV1SetScale(lowerHandle, VGet(0.01f, 0.01f, 0.01f));
+    for (int i = 0; i < MV1GetMaterialNum(lowerHandle); i++)
     {
-        MV1SetMaterialDifColor(BaseModelHandle, i, GetColorF(1.0f, 0.7f, 0.7f, 1.0f));
-        MV1SetMaterialAmbColor(BaseModelHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
-        MV1SetMaterialSpcColor(BaseModelHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
-        MV1SetMaterialEmiColor(BaseModelHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
-        MV1SetMaterialSpcPower(BaseModelHandle, i, 6);
+        MV1SetMaterialDifColor(lowerHandle, i, GetColorF(1.0f, 0.7f, 0.7f, 1.0f));
+        MV1SetMaterialAmbColor(lowerHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+        MV1SetMaterialSpcColor(lowerHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(lowerHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
+        MV1SetMaterialSpcPower(lowerHandle, i, 6);
+    }
+    for (int i = 0; i < MV1GetMaterialNum(BaseWallHandleRight); i++)
+    {
+        MV1SetMaterialDifColor(BaseWallHandleRight, i, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
+        MV1SetMaterialAmbColor(BaseWallHandleRight, i, GetColorF(0.4f, 0.4f, 0.4f, 1.0f));
+        MV1SetMaterialSpcColor(BaseWallHandleRight, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(BaseWallHandleRight, i, GetColorF(0.8f, 0.8f, 0.8f, 0.4f));
+        MV1SetMaterialSpcPower(BaseWallHandleRight, i, 2);
+    }
+    for (int i = 0; i < MV1GetMaterialNum(BaseWallHandle); i++)
+    {
+        MV1SetMaterialDifColor(BaseWallHandle, i, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
+        MV1SetMaterialAmbColor(BaseWallHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1.0f));
+        MV1SetMaterialSpcColor(BaseWallHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(BaseWallHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.4f));
+        MV1SetMaterialSpcPower(BaseWallHandle, i, 2);
     }
 }
 

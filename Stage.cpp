@@ -120,6 +120,7 @@ void stage::Initialize()
         obstacle[i] = obstacleDefault[i];
         obstacleType[i] = obstacleTypeDefault[i];
     }
+    clearCameraOffsetx = 0;
 }
 void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
 {
@@ -266,7 +267,7 @@ void stage::moveWallShadow()
             moveWalls[pos].DrawMoveWall(true, false, true, player.hitbox1, player.hitbox2);
             break;*/
         default:
-            moveWalls[pos].DrawMoveWall(false, true, true, player.hitbox1, player.hitbox2);
+            moveWalls[pos].DrawMoveWall(false, false, false, player.hitbox1, player.hitbox2);
             break;
         }
 
@@ -418,8 +419,6 @@ void stage::MoveWalls(int pos,int i)
         break;
     }
     moveWalls[pos].MovePosition();
-    clsDx();
-    printfDx("%d", isDead);
 }
 void stage::Briefing()
 {
@@ -516,8 +515,20 @@ void stage::IngameToClear()
             timeScale = 1;
         }
         MV1DrawModel(player.ModelHandle);
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(player.offset.x -smooth(0,9,4), player.offset.y + 2, -5), player.BasePosition),
-            VAdd(VGet(player.offset.x, player.offset.y + 1, 4), player.BasePosition));
+        if (clearCameraOffsetx > -9)
+        {
+            clearCameraOffsetx = clearCameraOffsetx - smooth(clearCameraOffsetx, -9, 120);
+        }
+        else
+        {
+            clearCameraOffsetx = -9;
+        }
+        //CameraTargetMove();
+        cameraDirection = VAdd(VGet(0, 1, 8), player.BasePosition);
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(clearCameraOffsetx, player.offset.y + 2, -4), player.BasePosition),
+            cameraDirection);
+        clsDx();
+        printfDx("%f %f %f", cameraDirection.x, cameraDirection.y, cameraDirection.z);
         ClearMainProcess();
     }
     else
@@ -541,7 +552,26 @@ void stage::IngameToClear()
         {
             timeScale = 0.2f;
         }
+        cameraDirection = enemy.deadPosition;
     }
+}
+void stage::CameraTargetMove()
+{
+    VECTOR dir = VectorDirectionNormalize(cameraDirection, cameraTarget);
+    float  dis = VectorLength(cameraDirection, cameraTarget);
+    if (remainingTime > 0 && dis > 0.3f)
+    {
+        cameraTarget = VAdd(VGet(player.offset.x, player.offset.y + 1, 8), player.BasePosition);
+        cameraDirection = VAdd(cameraDirection, VScale(dir, (dis / remainingTime)));
+    }
+    else
+    {
+        remainingTime = 0;
+        cameraDirection = VAdd(VGet(0, 1, 8), player.BasePosition);
+    }
+
+    remainingTime = 2 - clearCameraTimer.GetElapsed();
+    
 }
 void stage::RunPhase()
 {

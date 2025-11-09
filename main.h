@@ -17,6 +17,7 @@ extern int lowerObstacleHandle;
 extern int missileBurnerHandle;
 extern int smokeHandle;
 extern int explosionHandle;
+extern int wallHandle;
 extern float timeScale;
 enum SCENES
 {
@@ -33,6 +34,7 @@ enum STAGES
 };
 extern float smooth(float min, float max, float n);
 extern float VectorLength(VECTOR from, VECTOR to);
+extern VECTOR VectorDirectionNormalize(VECTOR v1, VECTOR v2);
 extern int get_rand(int min, int max);
 extern bool Quit;
 class timer
@@ -48,6 +50,10 @@ public:
             return true;
         }
         return false;
+    }
+    float GetElapsed()
+    {
+        return Elapsed += oneFlame;
     }
     void RestartTimer()
     {

@@ -79,8 +79,6 @@ void TitleMainProcess()
     {
         test.y -= 1 * oneFlame;
     }
-    clsDx();
-    printfDx("%f,%f,%f", test.x, test.y, test.z);
     SetupCamera_Perspective(0.55f);
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0.2f, -22), VGet(0, 1.2f, -12));
     if ((Input_GetKeyboardDown(KEY_INPUT_S) || Input_GetKeyboardDown(KEY_INPUT_DOWN))  && isStartSelected == true && !sceneChanging)
