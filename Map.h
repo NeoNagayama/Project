@@ -33,7 +33,9 @@ class mapBase
 {
 private:
     VECTOR edgePosition1, edgePosition2;
-    int BaseModelHandle;
+    int lowerHandle;
+    int BaseWallHandle;
+    int BaseWallHandleRight;
 public:
     VECTOR position = VGet(0,0,0);
     void DrawbaseOutline();

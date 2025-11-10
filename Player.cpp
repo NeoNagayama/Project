@@ -253,8 +253,7 @@ void Player::Vulcan()
     VECTOR ReticleCenter = ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[10], bulletPositionY[10], BasePosition.z), VGet(0, 0, 50)));
     DrawExtendGraph((int)ReticleCenter.x- 70, (int)ReticleCenter.y + 70, (int)ReticleCenter.x + 70, (int)ReticleCenter.y - 70, reticleHandle, true);
 
-    clsDx();
-    printfDx("%d", (ammo / maxAmmo) * 100);
+
     DrawCircleGauge((int)ReticleCenter.x, (int)ReticleCenter.y, (double)((float)ammo / (float)maxAmmo) * 100, reticleInsideGaugeHandle, 0,0.1);
     VulcanProjectile();
    

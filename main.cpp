@@ -30,6 +30,7 @@ int lowerObstacleHandle;
 int missileBurnerHandle;
 int smokeHandle;
 int explosionHandle;
+int wallHandle;
 float timeScale = 1;
 //ゲームを終了するための条件用の変数
 bool Quit = false;
@@ -133,6 +134,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     missileBurnerHandle = LoadGraph("missileBurner.png");
     smokeHandle = LoadGraph("smoke1.png");
     explosionHandle = LoadGraph("explosion.png");
+    wallHandle = MV1LoadModel("wall.mv1");
     fontLoad();
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));
@@ -226,5 +228,9 @@ int  get_rand(int min, int max)
     static std::mt19937 mt(0);
     std::uniform_int_distribution<int> get_rand_uni_int(min, max);
     return get_rand_uni_int(mt);
+}
+VECTOR VectorDirectionNormalize(VECTOR to, VECTOR from)
+{
+    return VNorm(VGet(from.x - to.x, from.y - to.y, from.z - to.z));
 }
 

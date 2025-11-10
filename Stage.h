@@ -95,7 +95,7 @@ private:
     bool isQuitting = false;
     bool isObjectiveAppeared = false;
     bool isGetDamage = false;
-
+    float clearCameraOffsetx;
     int gamePhase = 0;
     int choosedButton;
     int countDown = 3;
@@ -115,6 +115,10 @@ private:
     UIText countDownText;
     UIText playerHealthText;
     UIText enemyHealthText;
+    VECTOR cameraTarget;
+    VECTOR cameraDirection;
+    float remainingTime = 2;
+    timer clearCameraTimer;
     void Obstacle_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void AAGun_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void ObstacleShadowDraw();
@@ -131,6 +135,7 @@ private:
     void OverShootPhase();
     void ChasePhase();
     void PauseScreen();
+    void CameraTargetMove();
     void PauseControll();
     void MoveWallDraw(int i, int pos, bool high, bool mid, bool low);
 public:
