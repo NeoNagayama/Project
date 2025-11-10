@@ -104,7 +104,7 @@ void stage::Initialize()
     player.ammo = 200;
     choosedButton = 0;
     player.Health = 100;
-    enemy.Health = 1;
+    enemy.Health = 100;
     player.offset = VGet(0, -5, 0);
     player.BasePosition.z = 0;
     gamePhase = 0;
@@ -129,14 +129,14 @@ void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bo
         isDead = true;
         player.Health = 0;
     }
-    if (i == 1)
+    if (i == 1 || i == 0)
     {
         enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
         enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
         enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
         enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
     }
-    if (i == 2)
+    if (i == 2 || i == 3)
     {
         enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeX;
         enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
@@ -151,14 +151,14 @@ void stage::AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool 
         player.Health -= 5;
         isGetDamage = true;
     }
-    if (i == 1)
+    if (i == 1 || i == 0)
     {
         enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
         enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
         enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
         enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
     }
-    if (i == 2)
+    if (i == 2 || i==3)
     {
         enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeX;
         enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
@@ -173,13 +173,13 @@ void stage::MoveWallDraw(int i ,int pos, bool high,bool mid,bool low)
         isDead = true;
         player.Health = 0;
     }
-    if (i == 1)
+    if (i == 1 || i == 0)
     {
         
         enemy.minimumMoveRangeY = low ? -CLOSEDMOVERANGE : -MOVERANGE;
         enemy.moveRangeY = high ? CLOSEDMOVERANGE : MOVERANGE;
     }
-    if (i == 2)
+    if (i == 2 || i == 3)
     {
         enemy.minimumMoveRangeY = low ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
         enemy.moveRangeY = high ? CLOSEDMOVERANGE : enemy.moveRangeY;
@@ -465,7 +465,7 @@ void stage::Ingame()
     }
     playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
     enemyHealthText.DrawTextWithSort(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT, 500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
-    if (player.BasePosition.z > 400.0f && gamePhase == PHASE_RUN)
+    if (player.BasePosition.z > 4000.0f && gamePhase == PHASE_RUN)
     {
         gamePhase = PHASE_OVERSHOOT;
     }

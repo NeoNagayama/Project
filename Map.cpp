@@ -221,6 +221,7 @@ void wallmove::DrawHole(VECTOR edge1, VECTOR edge2)
     DrawCube3D(VGet(-15, edge1.y, edge1.z), VGet(-14.7f, edge2.y, edge2.z), GetColor(0, 0, 0), GetColor(0, 0, 0), true);
     DrawCube3D(VGet(15, edge1.y, edge1.z), VGet(14.7f, edge2.y, edge2.z), GetColor(0, 0, 0), GetColor(0, 0, 0), true);
     SetUseLighting(true);
+    DrawExtendGraph3D(0, edge1.y, edge1.z, 0.05, 0.05, guideHandle, true);
 }
 void wallmove::SetUp()
 {
