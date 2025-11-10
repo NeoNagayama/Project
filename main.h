@@ -18,6 +18,7 @@ extern int missileBurnerHandle;
 extern int smokeHandle;
 extern int explosionHandle;
 extern int wallHandle;
+extern int guideHandle;
 extern float timeScale;
 enum SCENES
 {
@@ -60,3 +61,6 @@ public:
         Elapsed = 0;
     }
 };
+void LoadAssets();
+void setupShadowMap();
+void Init();

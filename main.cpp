@@ -31,6 +31,7 @@ int missileBurnerHandle;
 int smokeHandle;
 int explosionHandle;
 int wallHandle;
+int guideHandle;
 float timeScale = 1;
 //ゲームを終了するための条件用の変数
 bool Quit = false;
@@ -122,42 +123,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetLightEnable(true);
     SetUseZBuffer3D(TRUE);
     SetWriteZBuffer3D(TRUE);
-    carrierHandle = MV1LoadModel("AircraftCarrier.mv1");
-    reticleHandle = LoadGraph("Reticle.png", false);
-    reticleInsideGaugeHandle = LoadGraph("ReticleInsideGauge.png", false);
-    backGroundHandle = LoadGraph("backGround.jpg");
-    bulletHandle = LoadGraph("bullet.png");
-    enemyBulletHandle = LoadGraph("enemyBullet.png");
-    //skySphereHandle = MV1LoadModel("SkySphereTest.mv1");
-    cargoModelOrigin = MV1LoadModel("cargo.mv1");
-    lowerObstacleHandle = MV1LoadModel("LowerObstacle.mv1");
-    missileBurnerHandle = LoadGraph("missileBurner.png");
-    smokeHandle = LoadGraph("smoke1.png");
-    explosionHandle = LoadGraph("explosion.png");
-    wallHandle = MV1LoadModel("wall.mv1");
-    fontLoad();
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));
-    //タイトル画面で最初に一度だけ呼ばれる処理 
-    TitleInitialProcess();
-    //ステージ1で最初に一度だけ呼ばれる処理
-    stage1.InitialProcess(stage1Obstacle,stage1ObstacleType);
-    stage2.InitialProcess(stage2Obstacle, stage2ObstacleType);
-    stage3.InitialProcess(stage3Obstacle, stage3ObstacleType);
-    //クリア画面で最初に一度だけ呼ばれる処理
-    ClearInitialProcess();
-    //ゲームオーバー画面で最初に一度だけ呼ばれる処理
-    GameOverInitialProcess();
-    //インゲームのシャドウマップを作成
-    shadowHandle = MakeShadowMap(4096, 4096);
-    //タイトル画面のシャドウマップを作成
-    titleShadowHandle = MakeShadowMap(4096, 4096);
-    //インゲームとタイトルのシャドウマップ用のライトの方向を設定
-    SetShadowMapLightDirection(shadowHandle, VGet(0, -0.7f, 0.3f));
-    SetShadowMapLightDirection(titleShadowHandle, VGet(0.1f, -0.7f, 0.5f));
-    getStagePointers(&stage1, &stage2, &stage3);
-    GameOverGetStagePointers(&stage1, &stage2, &stage3);
-    ClearGetStagePointers(&stage1, &stage2, &stage3);
+    LoadAssets();
+    setupShadowMap();
+    Init();
     MATERIALPARAM Material;
 
     Material.Diffuse = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
@@ -232,5 +202,49 @@ int  get_rand(int min, int max)
 VECTOR VectorDirectionNormalize(VECTOR to, VECTOR from)
 {
     return VNorm(VGet(from.x - to.x, from.y - to.y, from.z - to.z));
+}
+void LoadAssets()
+{
+    carrierHandle = MV1LoadModel("AircraftCarrier.mv1");
+    reticleHandle = LoadGraph("Reticle.png", false);
+    reticleInsideGaugeHandle = LoadGraph("ReticleInsideGauge.png", false);
+    backGroundHandle = LoadGraph("backGround.jpg");
+    bulletHandle = LoadGraph("bullet.png");
+    enemyBulletHandle = LoadGraph("enemyBullet.png");
+    //skySphereHandle = MV1LoadModel("SkySphereTest.mv1");
+    cargoModelOrigin = MV1LoadModel("cargo.mv1");
+    lowerObstacleHandle = MV1LoadModel("LowerObstacle.mv1");
+    missileBurnerHandle = LoadGraph("missileBurner.png");
+    smokeHandle = LoadGraph("smoke1.png");
+    explosionHandle = LoadGraph("explosion.png");
+    wallHandle = MV1LoadModel("wall.mv1");
+    guideHandle = LoadGraph("guideBeacon.png");
+    fontLoad();
+}
+void setupShadowMap()
+{
+    //インゲームのシャドウマップを作成
+    shadowHandle = MakeShadowMap(4096, 4096);
+    //タイトル画面のシャドウマップを作成
+    titleShadowHandle = MakeShadowMap(4096, 4096);
+    //インゲームとタイトルのシャドウマップ用のライトの方向を設定
+    SetShadowMapLightDirection(shadowHandle, VGet(0, -0.7f, 0.3f));
+    SetShadowMapLightDirection(titleShadowHandle, VGet(0.1f, -0.7f, 0.5f));
+}
+void Init()
+{
+    //タイトル画面で最初に一度だけ呼ばれる処理 
+    TitleInitialProcess();
+    //ステージ1で最初に一度だけ呼ばれる処理
+    stage1.InitialProcess(stage1Obstacle, stage1ObstacleType);
+    stage2.InitialProcess(stage2Obstacle, stage2ObstacleType);
+    stage3.InitialProcess(stage3Obstacle, stage3ObstacleType);
+    //クリア画面で最初に一度だけ呼ばれる処理
+    ClearInitialProcess();
+    //ゲームオーバー画面で最初に一度だけ呼ばれる処理
+    GameOverInitialProcess();
+    getStagePointers(&stage1, &stage2, &stage3);
+    GameOverGetStagePointers(&stage1, &stage2, &stage3);
+    ClearGetStagePointers(&stage1, &stage2, &stage3);
 }
 
