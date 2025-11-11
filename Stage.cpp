@@ -42,7 +42,7 @@ void stage::MainProcess()
     ObstacleShadowDraw();
     moveWallShadow();
     ShadowMap_DrawEnd();
-    DrawGraph3D(0, 500, player.BasePosition.z + 1000, backGroundHandle, false);
+    DrawGraph3D(0, 500, player.Position.z + 1000, backGroundHandle, false);
     SetUseShadowMap(0, shadowHandle);
     SetupCamera_Perspective(1);
     DrawBase();
@@ -70,7 +70,7 @@ void stage::MainProcess()
     }
     else
     {
-        if (!isPause &&!isCleared)
+        if (!isPause &&!isCleared && !isGameOver)
         {
             Ingame();
         }
@@ -79,6 +79,14 @@ void stage::MainProcess()
             enemy.mainProcess(true);
             player.clearProcess();
             IngameToClear();
+        }
+        else if (isGameOver)
+        {
+            MV1DrawModel(enemy.ModelHandle);
+            player.mainProcess(true);
+            enemy.Position.z += 2;
+            enemy.Move(enemy.Position);
+            IngameToGameover();
         }
         else
         {
@@ -96,6 +104,7 @@ void stage::Initialize()
 {
     isStarted = true;
     isCleared = false;
+    isGameOver = false;
     isDead = false;
     isPause = false;
     isRestarting = false;
@@ -121,6 +130,7 @@ void stage::Initialize()
         obstacleType[i] = obstacleTypeDefault[i];
     }
     clearCameraOffsetx = 0;
+    gameOverTimer.RestartTimer();
 }
 void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
 {
@@ -418,7 +428,10 @@ void stage::MoveWalls(int pos,int i)
         MoveWallDraw(i, pos, false, false, false);
         break;
     }
-    moveWalls[pos].MovePosition();
+    if (!isPause)
+    {
+        moveWalls[pos].MovePosition();
+    }
 }
 void stage::Briefing()
 {
@@ -483,12 +496,8 @@ void stage::Ingame()
     }
     if (isDead)
     {
-        if (fadeout(3))
-        {
-            GameOverInitialize();
-            progress = 0;
-            scene = SCENE_GAMEOVER;
-        }
+        isGameOver = true;
+        GameOverInitialize();
     }
     if (isKilled)
     {
@@ -553,6 +562,14 @@ void stage::IngameToClear()
             timeScale = 0.2f;
         }
         cameraDirection = enemy.deadPosition;
+    }
+}
+void stage::IngameToGameover()
+{
+    if (gameOverTimer.MeasureTimer(1.0f))
+    {
+
+        GameOverMainProcess();
     }
 }
 void stage::CameraTargetMove()

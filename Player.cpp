@@ -19,12 +19,13 @@ void Player::InitialProcess()
 }
 void Player::mainProcess(bool mode)
 {
-    SetHitBox(2, 2);
-
     
-    BasePosition = VAdd(VGet(0, 0, 2*timeScale),BasePosition);
     if (Health > 0)
     {
+        SetHitBox(2, 2);
+
+
+        BasePosition = VAdd(VGet(0, 0, 2 * timeScale), BasePosition);
         KeyInput();
         PlayerMoveXY();
         Move(VAdd(BasePosition, offset));
@@ -37,7 +38,7 @@ void Player::mainProcess(bool mode)
         }
         else
         {
-            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -30), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
             CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
             Flare();
 

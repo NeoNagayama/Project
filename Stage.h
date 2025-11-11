@@ -88,6 +88,7 @@ private:
     
     bool isCleared = false;
     bool isDead = false;
+    bool isGameOver = false;
     bool isPause = false;
     bool isKilled = false;
     bool PauseControllable = true;
@@ -119,6 +120,7 @@ private:
     VECTOR cameraDirection;
     float remainingTime = 2;
     timer clearCameraTimer;
+    timer gameOverTimer;
     void Obstacle_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void AAGun_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void ObstacleShadowDraw();
@@ -131,6 +133,7 @@ private:
     void Briefing();
     void Ingame();
     void IngameToClear();
+    void IngameToGameover();
     void RunPhase();
     void OverShootPhase();
     void ChasePhase();
