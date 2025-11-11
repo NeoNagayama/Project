@@ -145,6 +145,7 @@
     <ClCompile Include="Clear.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Flare.cpp" />
+    <ClCompile Include="Instruction.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="gameOver.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Clear.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Flare.h" />
+    <ClInclude Include="Instruction.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="gameOver.h" />
     <ClInclude Include="Input.h" />

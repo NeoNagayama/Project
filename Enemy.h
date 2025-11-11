@@ -80,6 +80,8 @@ private:
     void MissileLaunch();
     void FireVulcan(float hormingForcex, float hormingForcey, float distance);
     float EvadePosDistance = 0;
+    timer strobo;
+    bool isHide;
     //位置フレームあたりに上下左右に移動する速度
     float xSpeed = 0.0f, ySpeed = 0.0f;
 public:

@@ -155,8 +155,16 @@ void Enemy::missile()
 }
 void Enemy::MissileLaunch()
 {
-    MissileAlert.DrawTextWithSort(0, 1920, "!MISSILE ALERT!", BiggerFontHandle, SORT_CENTER, 750, false, GetColor(255, 0, 0));
-    MissileAlert.DrawTextWithSort(0, 1920, "PRESS SPACE", fontHandle, SORT_CENTER, 790, false, GetColor(255, 255, 0));
+    if (strobo.MeasureTimer(0.3f))
+    {
+        strobo.RestartTimer();
+        isHide = !isHide;
+    }
+    if (!isHide)
+    {
+        DrawExtendGraph(670, 630, 1250, 740, alertGraph, true);
+    }
+    DrawExtendGraph(670, 765, 1250, 900, spaceGraph, true);
     missileflyingTimer += oneFlame;
     if (missileflyingTimer > MISSILE_SHOWUP)
     {

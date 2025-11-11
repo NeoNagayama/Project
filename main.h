@@ -20,12 +20,18 @@ extern int explosionHandle;
 extern int wallHandle;
 extern int guideHandle;
 extern float timeScale;
+extern int instGraph;
+extern int spaceGraph;
+extern int alertGraph;
+extern int gaugeHandle;
+extern int barHandle;
+extern int E_gauge;
+extern int E_bar;
 enum SCENES
 {
     SCENE_TITLE,
-    SCENE_STAGE1,
-    SCENE_GAMEOVER,
-    SCENE_CLEAR
+    SCENE_INGAME,
+    SCENE_INSTRUCTION
 };
 enum STAGES
 {

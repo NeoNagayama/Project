@@ -18,7 +18,8 @@ bool mapBase::DamageBox(bool upper, bool lower, bool right, bool left, bool cent
     {
         VECTOR edge1 = VGet(position.x - 15, position.y + 7, position.z - 40);
         VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 40);
-        DrawDamageBox(edge1, edge2);
+        MV1SetPosition(upperHandle, VGet(position.x, position.y + 11, position.z));
+        MV1DrawModel(upperHandle);
         isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
     }
     if (lower)
@@ -33,14 +34,16 @@ bool mapBase::DamageBox(bool upper, bool lower, bool right, bool left, bool cent
     {
         VECTOR edge1 = VGet(position.x + 7, position.y - 15, position.z - 40);
         VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 40);
-        DrawDamageBox(edge1, edge2);
+        MV1SetPosition(rightwallHandle, VGet(position.x + 11, position.y, position.z));
+        MV1DrawModel(rightwallHandle);
         isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
     }
     if (left)
     {
         VECTOR edge1 = VGet(position.x - 15, position.y - 15, position.z - 40);
         VECTOR edge2 = VGet(position.x - 7, position.y + 15, position.z + 40);
-        DrawDamageBox(edge1, edge2);
+        MV1SetPosition(leftwallHandle, VGet(position.x-11, position.y, position.z));
+        MV1DrawModel(leftwallHandle);
         isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
     }
     if (center)
@@ -74,9 +77,17 @@ void mapBase::BaseSetUp()
 {
 
     lowerHandle = MV1DuplicateModel(lowerObstacleHandle);
+    upperHandle = MV1DuplicateModel(lowerObstacleHandle);
     BaseWallHandle = MV1DuplicateModel(wallHandle);
     BaseWallHandleRight = MV1DuplicateModel(wallHandle);
+    rightwallHandle = MV1DuplicateModel(lowerObstacleHandle);
+    MV1SetRotationXYZ(rightwallHandle, VGet(0, 0, PI/2));
+    leftwallHandle = MV1DuplicateModel(lowerObstacleHandle);
+    MV1SetRotationXYZ(leftwallHandle, VGet(0, 0, PI/2));
+    MV1SetScale(rightwallHandle, VGet(0.01f, 0.01f, 0.012f));
+    MV1SetScale(leftwallHandle, VGet(0.01f, 0.01f, 0.012f));
     MV1SetScale(lowerHandle, VGet(0.01f, 0.01f, 0.01f));
+    MV1SetScale(upperHandle, VGet(0.01f, 0.01f, 0.01f));
     for (int i = 0; i < MV1GetMaterialNum(lowerHandle); i++)
     {
         MV1SetMaterialDifColor(lowerHandle, i, GetColorF(1.0f, 0.7f, 0.7f, 1.0f));
@@ -85,24 +96,30 @@ void mapBase::BaseSetUp()
         MV1SetMaterialEmiColor(lowerHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
         MV1SetMaterialSpcPower(lowerHandle, i, 6);
     }
-    for (int i = 0; i < MV1GetMaterialNum(BaseWallHandleRight); i++)
+    for (int i = 0; i < MV1GetMaterialNum(upperHandle); i++)
     {
-        MV1SetMaterialDifColor(BaseWallHandleRight, i, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
-        MV1SetMaterialAmbColor(BaseWallHandleRight, i, GetColorF(0.4f, 0.4f, 0.4f, 1.0f));
-        MV1SetMaterialSpcColor(BaseWallHandleRight, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
-        MV1SetMaterialEmiColor(BaseWallHandleRight, i, GetColorF(0.8f, 0.8f, 0.8f, 0.4f));
-        MV1SetMaterialSpcPower(BaseWallHandleRight, i, 2);
+        MV1SetMaterialDifColor(upperHandle, i, GetColorF(1.0f, 0.7f, 0.7f, 1.0f));
+        MV1SetMaterialAmbColor(upperHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+        MV1SetMaterialSpcColor(upperHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(upperHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
+        MV1SetMaterialSpcPower(upperHandle, i, 6);
     }
-    for (int i = 0; i < MV1GetMaterialNum(BaseWallHandle); i++)
+    materialSetUp(BaseWallHandle);
+    materialSetUp(BaseWallHandleRight);
+    materialSetUp(rightwallHandle);
+    materialSetUp(leftwallHandle);
+}
+void mapBase::materialSetUp(int handle)
+{
+    for (int i = 0; i < MV1GetMaterialNum(handle); i++)
     {
-        MV1SetMaterialDifColor(BaseWallHandle, i, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
-        MV1SetMaterialAmbColor(BaseWallHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1.0f));
-        MV1SetMaterialSpcColor(BaseWallHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
-        MV1SetMaterialEmiColor(BaseWallHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.4f));
-        MV1SetMaterialSpcPower(BaseWallHandle, i, 2);
+        MV1SetMaterialDifColor(handle, i, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
+        MV1SetMaterialAmbColor(handle, i, GetColorF(0.4f, 0.4f, 0.4f, 1.0f));
+        MV1SetMaterialSpcColor(handle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
+        MV1SetMaterialEmiColor(handle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.4f));
+        MV1SetMaterialSpcPower(handle, i, 2);
     }
 }
-
 bool antiAir::DamageZone(bool upper, bool lower, bool right, bool left, VECTOR hitbox1, VECTOR hitbox2)
 {
     isHit = false;
