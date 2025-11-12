@@ -1,7 +1,7 @@
 #pragma once
 #include "DxLib.h"
 #define PI 3.14159265359f
-#define oneFlame 0.0166f
+#define oneFlame 0.016f
 extern int scene;
 extern int stages;
 extern int shadowHandle;
@@ -58,10 +58,15 @@ public:
         }
         return false;
     }
-    float GetElapsed()
+    float GetElapsed(bool mode = false)
     {
+        if (mode)
+        {
+            return Elapsed;
+        }
         return Elapsed += oneFlame;
     }
+    
     void RestartTimer()
     {
         Elapsed = 0;

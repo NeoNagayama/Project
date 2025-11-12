@@ -124,7 +124,7 @@ int PlayerLightHandle;
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    SetGraphMode(1920, 1080, 32) ,ChangeWindowMode(FALSE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);
+    SetGraphMode(1920, 1080, 32) ,ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);
     //SetFullScreenResolutionMode(DX_FSRESOLUTIONMODE_MAXIMUM);
     //奥行0.1～1000までをカメラの描画範囲とする
     SetCameraNearFar(0.1f, 5000.0f);

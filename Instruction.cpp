@@ -5,10 +5,14 @@ void instruction::main()
     SetBackgroundColor(0, 10, 0, 255);
     DrawGraph(0, 0, instGraph, true);
     fadein(0.5f);
-    if (showTimer.MeasureTimer(5))
+    if (showTimer.MeasureTimer(0.5f))
     {
-        progress = 255;
-        scene = SCENE_INGAME;
-        showTimer.RestartTimer();
+        if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
+        {
+            progress = 255;
+            scene = SCENE_INGAME;
+            showTimer.RestartTimer();
+        }
+        text.DrawTextWithSort(0, 1920, "PRESS SPACE TO START", BiggerFontHandle, SORT_CENTER, 900, FALSE, GetColor(220, 255, 220));
     }
 }

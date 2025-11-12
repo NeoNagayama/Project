@@ -124,6 +124,7 @@ void stage::Initialize()
     enemy.missileflyingTimer = 0;
     enemy.isLaunched = false;
     enemy.isFiring = false;
+    enemy.cobraSpeed = 0;
     player.isDead = false;
     for (int i = 0; i < 50; i++)
     {
@@ -132,6 +133,7 @@ void stage::Initialize()
     }
     clearCameraOffsetx = 0;
     gameOverTimer.RestartTimer();
+    missionTimer.RestartTimer();
 }
 void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
 {
@@ -140,14 +142,7 @@ void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bo
         isDead = true;
         player.Health = 0;
     }
-    if (i == 1 || i == 0)
-    {
-        enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
-        enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
-        enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
-        enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
-    }
-    if (i == 2 || i == 3)
+    if (i == 0 || i == 2 || i == 1)
     {
         enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeX;
         enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
@@ -162,14 +157,8 @@ void stage::AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool 
         player.Health -= 5;
         isGetDamage = true;
     }
-    if (i == 1 || i == 0)
-    {
-        enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
-        enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
-        enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
-        enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
-    }
-    if (i == 2 || i==3)
+    
+    if (i==0||i == 2 || i==1)
     {
         enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeX;
         enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
@@ -184,13 +173,8 @@ void stage::MoveWallDraw(int i ,int pos, bool high,bool mid,bool low)
         isDead = true;
         player.Health = 0;
     }
-    if (i == 1 || i == 0)
-    {
-        
-        enemy.minimumMoveRangeY = low ? -CLOSEDMOVERANGE : -MOVERANGE;
-        enemy.moveRangeY = high ? CLOSEDMOVERANGE : MOVERANGE;
-    }
-    if (i == 2 || i == 3)
+    
+    if (i == 0 || i == 1 || i== 2)
     {
         enemy.minimumMoveRangeY = low ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
         enemy.moveRangeY = high ? CLOSEDMOVERANGE : enemy.moveRangeY;
@@ -299,7 +283,10 @@ void stage::DrawBase()
 }
 void stage::DrawObstacles()
 {
-
+    enemy.minimumMoveRangeX = -MOVERANGE;
+    enemy.minimumMoveRangeY = -MOVERANGE;
+        enemy.moveRangeX = MOVERANGE;
+        enemy.moveRangeY = MOVERANGE;
     for (int i = 14; i > -1; i--)
     {
         int pos = i + ((int)player.Position.z % 4000) / 80;
@@ -637,11 +624,20 @@ void stage::ChasePhase()
     else
     {
         DrawExtendGraph(300, 0,1620,206, E_gauge, true);
-        DrawRectExtendGraph(300 + (1920 - (1920 * ((float)enemy.Health / 100))),0, 1620,206,71,0, 1920 * ((float)enemy.Health / 100), 300, E_bar, true);
+        DrawRectExtendGraph(350 + (1220 - (1220 * ((float)enemy.Health / 100))),0, 1570,206,60,0, 1766 * ((float)enemy.Health / 100), 300, E_bar, true);
         player.mainProcess(true);
     }
     objectiveText.DrawTextWithSort(70, 1920, "–Ú•W:“G‹@‚ðŒ‚’Ä‚µ‚ë", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
-    enemy.mainProcess(true);
+    
+    if (missionTimer.MeasureTimer(timeLimit))
+    {
+        enemy.Cobra();
+    }
+    else
+    {
+        enemy.mainProcess(true);
+        missionTime.DrawTextWithSort(0, 1920, "Remaining time : %d/180 sec", fontHandle, SORT_CENTER, 230, false, GetColor(0, 255, 0), GetColor(0, 255, 0),timeLimit-(int)missionTimer.GetElapsed(true));
+    }
 }
 void stage::PauseScreen()
 {

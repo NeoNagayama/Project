@@ -116,11 +116,14 @@ private:
     UIText countDownText;
     UIText playerHealthText;
     UIText enemyHealthText;
+    UIText missionTime;
     VECTOR cameraTarget;
     VECTOR cameraDirection;
     float remainingTime = 2;
     timer clearCameraTimer;
     timer gameOverTimer;
+    timer missionTimer;
+    int timeLimit = 5;
     void Obstacle_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void AAGun_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void ObstacleShadowDraw();

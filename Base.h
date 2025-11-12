@@ -26,4 +26,5 @@ public:
     void SetHitBox(float width, float height);
     void TestHitBox();
     void DrawhitBoxToUI();
+    void calcBox();
 };

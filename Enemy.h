@@ -82,9 +82,13 @@ private:
     float EvadePosDistance = 0;
     timer strobo;
     bool isHide;
+    bool isTimeLimit;
     //位置フレームあたりに上下左右に移動する速度
     float xSpeed = 0.0f, ySpeed = 0.0f;
+    float pitchAngle;
+    float targetPitch = PI / 2;
 public:
+    float cobraSpeed = 0;
     VECTOR deadPosition;
     //機銃を射撃中かどうか
     bool isFiring = false;
@@ -131,4 +135,5 @@ public:
     bool Transition();
     //遷移中のプレイヤーの座標からのz座標のずれ
     float transitionMoveZaxis = -50.0f;
+    void Cobra();
 };
