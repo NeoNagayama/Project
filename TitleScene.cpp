@@ -16,6 +16,9 @@ Button Start;
 Button Exit;
 UIText GameTitle;
 int modelhandle[4];
+smoke smokes1[180];
+smoke smokes2[180];
+int smokenum;
 stage* stage1Instance;
 stage* stage2Instance;
 stage* stage3Instance;
@@ -55,30 +58,6 @@ void TitleMainProcess()
     
     DrawShadow();
     SetUseShadowMap(0, titleShadowHandle);
-    if (CheckHitKey(KEY_INPUT_I))
-    {
-        test.z += 1 * oneFlame;
-    }
-    if (CheckHitKey(KEY_INPUT_K))
-    {
-        test.z -= 1 * oneFlame;
-    }
-    if (CheckHitKey(KEY_INPUT_L))
-    {
-        test.x += 1 * oneFlame;
-    }
-    if (CheckHitKey(KEY_INPUT_J))
-    {
-        test.x -= 1 * oneFlame;
-    }
-    if (CheckHitKey(KEY_INPUT_O))
-    {
-        test.y += 1 * oneFlame;
-    }
-    if (CheckHitKey(KEY_INPUT_U))
-    {
-        test.y -= 1 * oneFlame;
-    }
     SetupCamera_Perspective(0.55f);
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0.2f, -22), VGet(0, 1.2f, -12));
     if ((Input_GetKeyboardDown(KEY_INPUT_S) || Input_GetKeyboardDown(KEY_INPUT_DOWN))  && isStartSelected == true && !sceneChanging)
@@ -90,10 +69,16 @@ void TitleMainProcess()
         isStartSelected = true;
     }
     DrawModels();
+    for (int i = 0; i < 180; i++)
+    {
+        smokes1[i].DrawSmoke();
+        smokes2[i].DrawSmoke();
+    }
     TitleMenu();
 }
 void Titleinitialize()
 {
+    progress = 0;
     isStartSelected = true;
     sceneChanging = false;
 }
@@ -115,6 +100,13 @@ void DrawModels()
     //MV1SetPosition(carrierHandle,test);
     MV1SetPosition(modelhandle[1], VGet(x, 3, z));
     MV1SetPosition(modelhandle[2], VGet(x - 3, 3, z - 2));
+    smokes1[smokenum].SetPosition(VGet(x - 0.24f, 3, z+0.2f));
+    smokes2[smokenum].SetPosition(VGet(x - 3 - 0.24f, 3, z - 2 + 0.2f));
+    smokenum++;
+    if (smokenum >= 180)
+    {
+        smokenum = 0;
+    }
     MV1SetRotationXYZ(modelhandle[1], VGet(0, 2.1f, 0));
     MV1SetRotationXYZ(modelhandle[2], VGet(0, 2.1f, 0));
     MV1DrawModel(modelhandle[1]);
@@ -154,7 +146,7 @@ void TitleMenu()
             stage1Instance->Initialize();
             progress = 255;
             stage1Instance->isStarted = true;
-            scene = SCENE_STAGE1;
+            scene = SCENE_INSTRUCTION;
         }
     }
 }

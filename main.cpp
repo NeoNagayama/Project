@@ -7,6 +7,7 @@
 #include "Text.h"
 #include "main.h"
 #include "Player.h"
+#include "Instruction.h"
 #include <random>
 //現在の場面
 int scene = 0;
@@ -32,6 +33,13 @@ int smokeHandle;
 int explosionHandle;
 int wallHandle;
 int guideHandle;
+int instGraph;
+int spaceGraph;
+int alertGraph;
+int gaugeHandle;
+int barHandle;
+int E_gauge;
+int E_bar;
 float timeScale = 1;
 //ゲームを終了するための条件用の変数
 bool Quit = false;
@@ -110,12 +118,13 @@ int stage3ObstacleType[50] = {
 stage stage1;
 stage stage2;
 stage stage3;
+instruction inst;
 
 int PlayerLightHandle;
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    SetGraphMode(1920, 1080, 32) ,ChangeWindowMode(FALSE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);
+    SetGraphMode(1920, 1080, 32) ,ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);
     //SetFullScreenResolutionMode(DX_FSRESOLUTIONMODE_MAXIMUM);
     //奥行0.1～1000までをカメラの描画範囲とする
     SetCameraNearFar(0.1f, 5000.0f);
@@ -149,7 +158,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         //場面の切り替え
         switch (scene) {
             //場面別の毎フレーム呼ばれる処理
-        case SCENE_STAGE1:
+        case SCENE_INGAME:
             switch (stages)
             {
             case STAGE1:
@@ -163,8 +172,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 break;
             }
             break;
-        case SCENE_GAMEOVER:
-            GameOverMainProcess();
+        case SCENE_INSTRUCTION:
+            inst.main();
             break;
         default:
             //背景の描画
@@ -219,6 +228,13 @@ void LoadAssets()
     explosionHandle = LoadGraph("explosion.png");
     wallHandle = MV1LoadModel("wall.mv1");
     guideHandle = LoadGraph("guideBeacon.png");
+    instGraph = LoadGraph("Instruction.png");
+    spaceGraph = LoadGraph("Space.png");
+    alertGraph = LoadGraph("MissileAlert.png");
+    gaugeHandle = LoadGraph("ProgressGauge.png");
+    barHandle = LoadGraph("ProgressBar.png");
+    E_bar = LoadGraph("EnemyBar.png");
+    E_gauge = LoadGraph("EnemyGauge.png");
     fontLoad();
 }
 void setupShadowMap()

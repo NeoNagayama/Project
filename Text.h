@@ -6,6 +6,7 @@ extern int BiggerFontHandle;
 extern int titleFontHandle;
 extern int japaneseFontHandle;
 extern int biggerJpFontHandle;
+extern int CountDownFontHandle;
 enum sortType
 {
     SORT_LEFT,

@@ -35,7 +35,7 @@ void GameOverMainProcess()
     {
         isRetrySelected = true;
     }
-    SetBackgroundColor(150, 160, 180, 50);
+
     Retry.mainProcess(isRetrySelected, true, 60);
     Retry.SetText("Retry");
     GameOverToTitle.mainProcess(!isRetrySelected, true, 60);
@@ -73,7 +73,7 @@ void GameOverMainProcess()
                 G_stage3Instance->isStarted = true;
                 break;
             }
-            scene = SCENE_STAGE1;
+            scene = SCENE_INGAME;
             progress = 255;
         }
     }

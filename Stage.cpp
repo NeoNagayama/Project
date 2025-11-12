@@ -19,7 +19,6 @@ void stage::InitialProcess(int obst[50],int type[50])
     enemy.InitialProcess();
     player.EnemySet(&enemy);
     enemy.PlayerSet(&player);
-    SetBackgroundColor(150, 160, 180, 50); 
     for (int i = 0; i < 50; i++)
     {
         obstacleDefault[i] = obst[i];
@@ -38,7 +37,10 @@ void stage::MainProcess()
     {
         MV1DrawModel(player.ModelHandle);
     }
-    MV1DrawModel(enemy.ModelHandle);
+    if (enemy.Health > 0 && !isStarted)
+    {
+        MV1DrawModel(enemy.ModelHandle);
+    }
     ObstacleShadowDraw();
     moveWallShadow();
     ShadowMap_DrawEnd();
@@ -51,9 +53,8 @@ void stage::MainProcess()
     {
         MV1DrawModel(player.ModelHandle);
     }
-    if (enemy.Health > 0)
+    if (enemy.Health > 0 && !isStarted)
     {
-
         MV1DrawModel(enemy.ModelHandle);
     }
     if (isGetDamage)
@@ -70,7 +71,7 @@ void stage::MainProcess()
     }
     else
     {
-        if (!isPause &&!isCleared && !isGameOver)
+        if (!isPause &&!isCleared && !isGameOver )
         {
             Ingame();
         }
@@ -123,6 +124,7 @@ void stage::Initialize()
     enemy.missileflyingTimer = 0;
     enemy.isLaunched = false;
     enemy.isFiring = false;
+    enemy.cobraSpeed = 0;
     player.isDead = false;
     for (int i = 0; i < 50; i++)
     {
@@ -131,6 +133,7 @@ void stage::Initialize()
     }
     clearCameraOffsetx = 0;
     gameOverTimer.RestartTimer();
+    missionTimer.RestartTimer();
 }
 void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
 {
@@ -139,14 +142,7 @@ void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bo
         isDead = true;
         player.Health = 0;
     }
-    if (i == 1 || i == 0)
-    {
-        enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
-        enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
-        enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
-        enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
-    }
-    if (i == 2 || i == 3)
+    if (i == 0 || i == 2 || i == 1)
     {
         enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeX;
         enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
@@ -161,14 +157,8 @@ void stage::AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool 
         player.Health -= 5;
         isGetDamage = true;
     }
-    if (i == 1 || i == 0)
-    {
-        enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : -MOVERANGE;
-        enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : -MOVERANGE;
-        enemy.moveRangeX = right ? CLOSEDMOVERANGE : MOVERANGE;
-        enemy.moveRangeY = upper ? CLOSEDMOVERANGE : MOVERANGE;
-    }
-    if (i == 2 || i==3)
+    
+    if (i==0||i == 2 || i==1)
     {
         enemy.minimumMoveRangeX = left ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeX;
         enemy.minimumMoveRangeY = lower ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
@@ -183,13 +173,8 @@ void stage::MoveWallDraw(int i ,int pos, bool high,bool mid,bool low)
         isDead = true;
         player.Health = 0;
     }
-    if (i == 1 || i == 0)
-    {
-        
-        enemy.minimumMoveRangeY = low ? -CLOSEDMOVERANGE : -MOVERANGE;
-        enemy.moveRangeY = high ? CLOSEDMOVERANGE : MOVERANGE;
-    }
-    if (i == 2 || i == 3)
+    
+    if (i == 0 || i == 1 || i== 2)
     {
         enemy.minimumMoveRangeY = low ? -CLOSEDMOVERANGE : enemy.minimumMoveRangeY;
         enemy.moveRangeY = high ? CLOSEDMOVERANGE : enemy.moveRangeY;
@@ -298,7 +283,10 @@ void stage::DrawBase()
 }
 void stage::DrawObstacles()
 {
-
+    enemy.minimumMoveRangeX = -MOVERANGE;
+    enemy.minimumMoveRangeY = -MOVERANGE;
+        enemy.moveRangeX = MOVERANGE;
+        enemy.moveRangeY = MOVERANGE;
     for (int i = 14; i > -1; i--)
     {
         int pos = i + ((int)player.Position.z % 4000) / 80;
@@ -445,7 +433,7 @@ void stage::Briefing()
     if (isObjectiveAppeared && objectiveText.fadeInText(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0, 0.2f))
     {
         objectiveText.DrawTextWithSort(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50));
-        countDownText.DrawTextWithSort(0, 1920, "スタートまで%d", biggerJpFontHandle, SORT_CENTER, 380, true, GetColor(255, 255, 255), GetColor(50, 50, 50), countDown);
+        countDownText.DrawTextWithSort(0, 1920, "%d", CountDownFontHandle, SORT_CENTER, 450, true, GetColor(255, 255, 30), GetColor(50, 50, 50), countDown);
         if (CountDownTimer.MeasureTimer(1))
         {
             CountDownTimer.RestartTimer();
@@ -478,7 +466,7 @@ void stage::Ingame()
     }
     playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
     enemyHealthText.DrawTextWithSort(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT, 500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
-    if (player.BasePosition.z > 4000.0f && gamePhase == PHASE_RUN)
+    if (player.BasePosition.z > 400.0f && gamePhase == PHASE_RUN)
     {
         gamePhase = PHASE_OVERSHOOT;
     }
@@ -593,8 +581,11 @@ void stage::CameraTargetMove()
 void stage::RunPhase()
 {
     objectiveText.DrawTextWithSort(70, 1920, "目標:攻撃を避けて生き残れ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
+    DrawGraph(1400, 0, gaugeHandle, true);
+    DrawRectGraph(1400, 43+(994-(994*(player.BasePosition.z / 4000))), 0, 43 + (994 - (994 * (player.BasePosition.z / 4000))), 300, 1080, barHandle, true);
+    /*
     DrawBox(1780, 100, 1850, 980, GetColor(180, 180, 180), true, 1);
-    DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z / 4000)), 1830, 980, GetColor(0, 255, 0), true);
+    DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z / 4000)), 1830, 980, GetColor(0, 255, 0), true);*/
     player.mainProcess(false);
     enemy.mainProcess(false);
 }
@@ -614,7 +605,7 @@ void stage::ChasePhase()
         if (objectiveText.fadeInText(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0, 0.2f))
         {
             objectiveText.DrawTextWithSort(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0);
-            countDownText.DrawTextWithSort(0, 1920, "スタートまで%d", biggerJpFontHandle, SORT_CENTER, 380, true, GetColor(255, 255, 255), GetColor(50, 50, 50), countDown);
+            countDownText.DrawTextWithSort(0, 1920, "%d", CountDownFontHandle, SORT_CENTER, 450, true, GetColor(255, 255, 30), GetColor(50, 50, 50), countDown);
             if (CountDownTimer.MeasureTimer(1))
             {
                 CountDownTimer.RestartTimer();
@@ -632,10 +623,21 @@ void stage::ChasePhase()
     }
     else
     {
+        DrawExtendGraph(300, 0,1620,206, E_gauge, true);
+        DrawRectExtendGraph(350 + (1220 - (1220 * ((float)enemy.Health / 100))),0, 1570,206,60,0, 1766 * ((float)enemy.Health / 100), 300, E_bar, true);
         player.mainProcess(true);
     }
     objectiveText.DrawTextWithSort(70, 1920, "目標:敵機を撃墜しろ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
-    enemy.mainProcess(true);
+    
+    if (missionTimer.MeasureTimer(timeLimit))
+    {
+        enemy.Cobra();
+    }
+    else
+    {
+        enemy.mainProcess(true);
+        missionTime.DrawTextWithSort(0, 1920, "Remaining time : %d/180 sec", fontHandle, SORT_CENTER, 230, false, GetColor(0, 255, 0), GetColor(0, 255, 0),timeLimit-(int)missionTimer.GetElapsed(true));
+    }
 }
 void stage::PauseScreen()
 {

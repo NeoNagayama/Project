@@ -34,8 +34,12 @@ class mapBase
 private:
     VECTOR edgePosition1, edgePosition2;
     int lowerHandle;
+    int upperHandle;
     int BaseWallHandle;
     int BaseWallHandleRight;
+    int rightwallHandle;
+    int leftwallHandle;
+    void materialSetUp(int handle);
 public:
     VECTOR position = VGet(0,0,0);
     void DrawbaseOutline();

@@ -155,8 +155,16 @@ void Enemy::missile()
 }
 void Enemy::MissileLaunch()
 {
-    MissileAlert.DrawTextWithSort(0, 1920, "!MISSILE ALERT!", BiggerFontHandle, SORT_CENTER, 750, false, GetColor(255, 0, 0));
-    MissileAlert.DrawTextWithSort(0, 1920, "PRESS SPACE", fontHandle, SORT_CENTER, 790, false, GetColor(255, 255, 0));
+    if (strobo.MeasureTimer(0.3f))
+    {
+        strobo.RestartTimer();
+        isHide = !isHide;
+    }
+    if (!isHide)
+    {
+        DrawExtendGraph(670, 630, 1250, 740, alertGraph, true);
+    }
+    DrawExtendGraph(670, 765, 1250, 900, spaceGraph, true);
     missileflyingTimer += oneFlame;
     if (missileflyingTimer > MISSILE_SHOWUP)
     {
@@ -172,7 +180,14 @@ void Enemy::MissileLaunch()
         isLaunched = false;
         missileflyingTimer = 0;
         missilecooldowntimer = 0;
-        playerObject->Health -= MISSILE_DAMAGE;
+        if (isTimeLimit)
+        {
+            playerObject->Health = 0;
+        }
+        else
+        {
+            playerObject->Health -= MISSILE_DAMAGE;
+        }
         missileCooldown = get_rand(5, 7);
         exp.SetPosition(playerObject->Position);
     }
@@ -378,5 +393,31 @@ bool Enemy::Transition()
         transitionMoveZaxis += TRANSITION_MOVE_SPEED;
         Move(VAdd(VGet(playerObject->offset.x + TRANSITION_OFFSET_X, playerObject->offset.y - TRANSITION_OFFSET_Y, 0), BasePosition));
         return false;
+    }
+}
+void  Enemy::Cobra()
+{
+    isTimeLimit = true;
+    MV1DrawModel(ModelHandle);/*
+    EvadeMove(0, 0, 6);
+    EnemyMoveXY();*/
+    roll();
+    
+    if (BasePosition.z < playerObject->Position.z - TRANSITION_TARGET_POSZ)
+    {
+        MissileLaunch();
+        MV1SetRotationXYZ(ModelHandle, VGet(0, 0, 0));
+        BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, -Z_OFFSET));
+        Move(VGet(offset.x, offset.y, BasePosition.z));
+    }
+    else
+    {
+        Rotate(VGet(-(targetPitch * (oneFlame*2)), 0, 0));
+        if (cobraSpeed < 1)
+        {
+            cobraSpeed += 1 * oneFlame;
+        }
+        BasePosition.z += cobraSpeed * timeScale;
+        Move(VGet(offset.x, offset.y, BasePosition.z));
     }
 }

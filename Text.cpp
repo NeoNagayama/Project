@@ -5,6 +5,7 @@ int BiggerFontHandle;
 int titleFontHandle;
 int japaneseFontHandle;
 int biggerJpFontHandle;
+int CountDownFontHandle;
 float TextAlpha = 0;
 float ShadowAlpha = 0;
 void fontLoad()
@@ -14,6 +15,7 @@ void fontLoad()
     titleFontHandle = LoadFontDataToHandle("fonts/Quantify.dft");
     japaneseFontHandle = LoadFontDataToHandle("fonts/NotoSans.dft");
     biggerJpFontHandle = CreateFontToHandle("fonts/NotoSansJP-VariableFont_wght.ttf",70,5,DX_FONTTYPE_ANTIALIASING);
+    CountDownFontHandle = CreateFontToHandle("fonts/NotoSansJP-VariableFont_wght.ttf", 120, 5, DX_FONTTYPE_ANTIALIASING);
 }
 void UIText::DrawTextWithSort(int xleft, int xright, std::string text, int FontHandle, int sort ,int y,bool shadow,unsigned int FontColor, unsigned int shadowcolor ,int value)
 {

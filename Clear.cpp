@@ -38,7 +38,6 @@ void ClearMainProcess()
         {
             isNextSelected = true;
         }
-        SetBackgroundColor(150, 160, 180, 50);
         Next.mainProcess(isNextSelected, true, 60);
         Next.SetText("Next Stage");
         BackToTitle.mainProcess(!isNextSelected, true, 60);
@@ -82,7 +81,7 @@ void ClearMainProcess()
                 clear_stage3Instance->Initialize();
                 break;
             }
-            scene = SCENE_STAGE1;
+            scene = SCENE_INGAME;
             progress = 255;
         }
     }

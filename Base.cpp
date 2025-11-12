@@ -41,7 +41,20 @@ void base::SetHitBox(float width, float height)
 {
     hitbox1 = VGet(Position.x - width / 2, Position.y+0.5f - height / 2, Position.z - width);
     hitbox2 = VGet(Position.x + width / 2, Position.y+0.5f + height / 2, Position.z + width);
+    //calcBox();
     DrawhitBoxToUI();
+}
+void base::calcBox()
+{
+    Rotation = MV1GetRotationXYZ(ModelHandle);
+    hitbox1.x = 3 * cos(Rotation.z);
+    hitbox1.y = 1 * sin(Rotation.x);
+    hitbox1.z = 2 * sin(Rotation.z);
+    hitbox2.x = -3 * cos(Rotation.z);
+    hitbox2.y = -1 * sin(Rotation.x);
+    hitbox2.z = -2 * sin(Rotation.z);
+    hitbox1 = VAdd(hitbox1, Position);
+    hitbox2 = VAdd(hitbox2, Position);
 }
 void base::TestHitBox()
 {
