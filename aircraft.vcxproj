@@ -146,6 +146,8 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Flare.cpp" />
     <ClCompile Include="Instruction.cpp" />
+    <ClCompile Include="StageBuild.cpp" />
+    <ClCompile Include="Stage_Endless.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="gameOver.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -175,6 +177,8 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Flare.h" />
     <ClInclude Include="Instruction.h" />
+    <ClInclude Include="StageBuild.h" />
+    <ClInclude Include="Stage_Endless.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="gameOver.h" />
     <ClInclude Include="Input.h" />

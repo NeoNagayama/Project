@@ -12,7 +12,7 @@
 
 class stage
 {
-private:
+protected:
     int obstacleDefault[50] = {
     0,0,0,0,0,
     3,4,3,0,0,

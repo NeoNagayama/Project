@@ -245,7 +245,7 @@ void stage::moveWallShadow()
         moveWalls[pos].DrawbaseOutline();
 
 
-        switch (obstacle[pos]) {
+        switch (moveWallType[pos]) {
         case HIGH:
             moveWalls[pos].DrawMoveWall(true, false, false, player.hitbox1, player.hitbox2);
             break;
@@ -396,7 +396,7 @@ void stage::Obstacles(int pos, int i)
 }
 void stage::MoveWalls(int pos,int i)
 {
-    switch (obstacle[pos]) {
+    switch (moveWallType[pos]) {
     case HIGH:
         MoveWallDraw(i, pos, true, false, false);
         break;
@@ -466,7 +466,7 @@ void stage::Ingame()
     }
     playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
     enemyHealthText.DrawTextWithSort(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT, 500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
-    if (player.BasePosition.z > 400.0f && gamePhase == PHASE_RUN)
+    if (player.BasePosition.z > 4000.0f && gamePhase == PHASE_RUN)
     {
         gamePhase = PHASE_OVERSHOOT;
     }

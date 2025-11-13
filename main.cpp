@@ -8,6 +8,7 @@
 #include "main.h"
 #include "Player.h"
 #include "Instruction.h"
+#include "StageBuild.h"
 #include <random>
 //Œ»İ‚Ìê–Ê
 int scene = 0;
@@ -119,6 +120,7 @@ stage stage1;
 stage stage2;
 stage stage3;
 instruction inst;
+builder bil;
 
 int PlayerLightHandle;
 // ƒvƒƒOƒ‰ƒ€‚Í WinMain ‚©‚çn‚Ü‚è‚Ü‚·
@@ -174,6 +176,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             break;
         case SCENE_INSTRUCTION:
             inst.main();
+            break;
+        case SCENE_STAGEBUILD:
+            bil.main();
             break;
         default:
             //”wŒi‚Ì•`‰æ
@@ -262,5 +267,6 @@ void Init()
     getStagePointers(&stage1, &stage2, &stage3);
     GameOverGetStagePointers(&stage1, &stage2, &stage3);
     ClearGetStagePointers(&stage1, &stage2, &stage3);
+    bil.Init();
 }
 

@@ -39,7 +39,7 @@ private:
     const float MISSILE_SHOWUP = 1.5f;
     const float MISSILE_LIFETIME = 2;
     const int MAX_PROJECTILE = 10;
-    const float HORMING_SPEED_SCALE = 0.12f;
+    const float HORMING_SPEED_SCALE = 0.24f;
     const float HORMING_THLESHOLD = 0.3f;
     const float BULLET_FORWARD_VELOCITY = 5;
     const int BULLET_TARGET_Z = 220;
