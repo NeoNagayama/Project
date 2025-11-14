@@ -123,7 +123,7 @@ protected:
     timer clearCameraTimer;
     timer gameOverTimer;
     timer missionTimer;
-    int timeLimit = 5;
+    int timeLimit =120;
     void Obstacle_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void AAGun_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void ObstacleShadowDraw();
@@ -146,7 +146,7 @@ protected:
     void MoveWallDraw(int i, int pos, bool high, bool mid, bool low);
 public:
     bool isStarted = true;
-    void InitialProcess(int stage[50], int type[50]);
+    void InitialProcess(int stage[50], int type[50],int movewalls[50]);
     void MainProcess();
     void Initialize();
 };

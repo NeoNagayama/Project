@@ -2,8 +2,6 @@
 void builder::main()
 {
     SetBackgroundColor(80, 80, 80, 255);
-    clsDx();
-    printfDx("%d", pos * 80);
     if (Input_GetKeyboardDown(KEY_INPUT_W))
     {
         if (pos < 49)
@@ -66,6 +64,10 @@ void builder::main()
     {
         cam.z -= camSpeed;
     }
+    if (CheckHitKey(KEY_INPUT_O))
+    {
+        save();
+    }
     for (int i = 0; i <= pos; i++)
     {
         maps[i].position.z = 80*i;
@@ -95,6 +97,25 @@ void builder::Init()
 }
 void builder::save()
 {
-    FILE* fp;
-    fp = fopen("stage3.dat", "wb");
+    FILE* fileobtype;
+    FILE* fileobs;
+    FILE* filewall;
+    errno_t err = fopen_s(&fileobtype, "maps/defaultMaps/stage2type.dat", "wb");
+    err = fopen_s(&fileobs, "maps/defaultMaps/stage2obs.dat", "wb");
+    err = fopen_s(&filewall, "maps/defaultMaps/stage2wall.dat", "wb");
+    int obtype[50];
+    int obs[50];
+    int wal[50];
+    for (int i = 0; i < 50; i++)
+    {
+        obtype[i] = obstacleType[i];
+        obs[i] = obstacle[i];
+        wal[i] = moveWallType[i];
+    }
+    fwrite(obtype, sizeof(int), 50, fileobtype);
+    fwrite(obs, sizeof(int), 50, fileobs);
+    fwrite(wal, sizeof(int), 50, filewall);
+    fclose(fileobtype);
+    fclose(fileobs);
+    fclose(filewall);
 }

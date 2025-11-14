@@ -4,7 +4,7 @@
 #define MOVERANGE 10
 
 
-void stage::InitialProcess(int obst[50],int type[50])
+void stage::InitialProcess(int obst[50],int type[50],int movewalls[50])
 {
     resume.SetButtonPosition(VGet(960, 540, 1), 400, 100, 0.9f);
     restart.SetButtonPosition(VGet(960, 740, 1), 400, 100, 0.9f);
@@ -25,6 +25,7 @@ void stage::InitialProcess(int obst[50],int type[50])
         obstacle[i] = obst[i];
         obstacleTypeDefault[i] = type[i];
         obstacleType[i] = type[i];
+        moveWallType[i] = movewalls[i];
         moveWalls[i].SetUp();
         maps[i].BaseSetUp();
     }
@@ -293,6 +294,11 @@ void stage::DrawObstacles()
         if (pos > 49)
         {
             pos -= 50;
+            int t = 15 + ((int)player.Position.z % 4000) / 80;
+            obstacle[t-50] = get_rand(0, 25);
+            obstacleType[t-50] = get_rand(0, 8);
+            clsDx();
+            printfDx("wow");
         }
         maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
         AAs[pos].position.z = 80 * (i + (int)player.Position.z / 80);
@@ -306,14 +312,6 @@ void stage::DrawObstacles()
             AAGuns(pos,i);
         }
         MoveWalls(pos, i);
-        if (i == 14)
-        {
-            int t = 15 + ((int)player.Position.z % 4000) / 80;
-            obstacle[t > 49 ? t - 50 : t] = get_rand(0, 25);
-            obstacleType[t > 49 ? t - 50 : t] = get_rand(0, 8);
-        }
-
-
     }
 }
 void stage::AAGuns(int pos, int i)
@@ -524,8 +522,6 @@ void stage::IngameToClear()
         cameraDirection = VAdd(VGet(0, 1, 8), player.BasePosition);
         SetCameraPositionAndTarget_UpVecY(VAdd(VGet(clearCameraOffsetx, player.offset.y + 2, -4), player.BasePosition),
             cameraDirection);
-        clsDx();
-        printfDx("%f %f %f", cameraDirection.x, cameraDirection.y, cameraDirection.z);
         ClearMainProcess();
     }
     else
@@ -636,7 +632,7 @@ void stage::ChasePhase()
     else
     {
         enemy.mainProcess(true);
-        missionTime.DrawTextWithSort(0, 1920, "Remaining time : %d/180 sec", fontHandle, SORT_CENTER, 230, false, GetColor(0, 255, 0), GetColor(0, 255, 0),timeLimit-(int)missionTimer.GetElapsed(true));
+        missionTime.DrawTextWithSort(0, 1920, "Remaining time : %d/120 sec", fontHandle, SORT_CENTER, 230, false, GetColor(0, 255, 0), GetColor(0, 255, 0),timeLimit-(int)missionTimer.GetElapsed(true));
     }
 }
 void stage::PauseScreen()

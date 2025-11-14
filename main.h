@@ -76,3 +76,6 @@ public:
 void LoadAssets();
 void setupShadowMap();
 void Init();
+void LoadStage1();
+void LoadStage2();
+void LoadStage3();
