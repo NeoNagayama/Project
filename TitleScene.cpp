@@ -75,6 +75,10 @@ void TitleMainProcess()
         smokes2[i].DrawSmoke();
     }
     TitleMenu();
+    if (Input_GetKeyboardDown(KEY_INPUT_P))
+    {
+        scene = SCENE_STAGEBUILD;
+    }
 }
 void Titleinitialize()
 {

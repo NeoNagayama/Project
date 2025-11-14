@@ -31,7 +31,8 @@ enum SCENES
 {
     SCENE_TITLE,
     SCENE_INGAME,
-    SCENE_INSTRUCTION
+    SCENE_INSTRUCTION,
+    SCENE_STAGEBUILD
 };
 enum STAGES
 {
@@ -75,3 +76,6 @@ public:
 void LoadAssets();
 void setupShadowMap();
 void Init();
+void LoadStage1();
+void LoadStage2();
+void LoadStage3();

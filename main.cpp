@@ -8,6 +8,7 @@
 #include "main.h"
 #include "Player.h"
 #include "Instruction.h"
+#include "StageBuild.h"
 #include <random>
 //現在の場面
 int scene = 0;
@@ -115,10 +116,36 @@ int stage3ObstacleType[50] = {
     1,3,3,1,1,
     1,1,0,0,0
 };
+int stage3movewall[50];
+int stage1movewall[50] = {
+        3,1,5,3,2,
+        1,4,5,2,1,
+        1,3,5,2,3,
+        1,5,1,2,4,
+        1,5,3,2,4,
+        1,2,3,4,5,
+        0,1,2,3,4,
+        5,0,1,2,3,
+        4,5,0,1,2,
+        3,4,5,0,1
+};
+int stage2movewall[50] = {
+        3,1,5,3,2,
+        1,4,5,2,1,
+        1,3,5,2,3,
+        1,5,1,2,4,
+        1,5,3,2,4,
+        1,2,3,4,5,
+        0,1,2,3,4,
+        5,0,1,2,3,
+        4,5,0,1,2,
+        3,4,5,0,1
+};
 stage stage1;
 stage stage2;
 stage stage3;
 instruction inst;
+builder bil;
 
 int PlayerLightHandle;
 // プログラムは WinMain から始まります
@@ -174,6 +201,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             break;
         case SCENE_INSTRUCTION:
             inst.main();
+            break;
+        case SCENE_STAGEBUILD:
+            bil.main();
             break;
         default:
             //背景の描画
@@ -252,9 +282,12 @@ void Init()
     //タイトル画面で最初に一度だけ呼ばれる処理 
     TitleInitialProcess();
     //ステージ1で最初に一度だけ呼ばれる処理
-    stage1.InitialProcess(stage1Obstacle, stage1ObstacleType);
-    stage2.InitialProcess(stage2Obstacle, stage2ObstacleType);
-    stage3.InitialProcess(stage3Obstacle, stage3ObstacleType);
+    LoadStage1();
+    LoadStage3();
+    stage1.InitialProcess(stage1Obstacle, stage1ObstacleType,stage1movewall);
+    stage2.InitialProcess(stage2Obstacle, stage2ObstacleType, stage2movewall);
+    stage3.InitialProcess(stage3Obstacle, stage3ObstacleType, stage3movewall);
+    bil.InitialProcess(stage2Obstacle, stage2ObstacleType, stage2movewall);
     //クリア画面で最初に一度だけ呼ばれる処理
     ClearInitialProcess();
     //ゲームオーバー画面で最初に一度だけ呼ばれる処理
@@ -262,5 +295,88 @@ void Init()
     getStagePointers(&stage1, &stage2, &stage3);
     GameOverGetStagePointers(&stage1, &stage2, &stage3);
     ClearGetStagePointers(&stage1, &stage2, &stage3);
+    bil.Init();
+}
+void LoadStage3()
+{
+    FILE* file;
+    FILE* file1;
+    FILE* file2;
+    errno_t err;
+    errno_t err1;
+    errno_t err2;
+    err = fopen_s(&file, "maps/defaultMaps/stage3type.dat", "rb");
+    err1 = fopen_s(&file1, "maps/defaultMaps/stage3obs.dat", "rb");
+    err2 = fopen_s(&file2, "maps/defaultMaps/stage3wall.dat", "rb");
+    if (err == 0 || err1 == 0 || err2 == 0)
+    {
+        for (int i = 0; i < 50; i++)
+        {
+            stage3Obstacle[i] = 0;
+            stage3ObstacleType[i] = 0;
+            stage3movewall[i] = 0;
+        }
+        fread(stage3ObstacleType, sizeof(int), 50, file);
+        fread(stage3Obstacle, sizeof(int), 50, file1);
+        fread(stage3movewall, sizeof(int), 50, file2);
+        fclose(file);
+        fclose(file1);
+        fclose(file2);
+    }
+}
+
+void LoadStage2()
+{
+    FILE* file;
+    FILE* file1;
+    FILE* file2;
+    errno_t err;
+    errno_t err1;
+    errno_t err2;
+    err = fopen_s(&file, "maps/defaultMaps/stage2type.dat", "rb");
+    err1 = fopen_s(&file1, "maps/defaultMaps/stage2obs.dat", "rb");
+    err2 = fopen_s(&file2, "maps/defaultMaps/stage2wall.dat", "rb");
+    if (err == 0 || err1 == 0 || err2 == 0)
+    {
+        for (int i = 0; i < 50; i++)
+        {
+            stage2Obstacle[i] = 0;
+            stage2ObstacleType[i] = 0;
+            stage2movewall[i] = 0;
+        }
+        fread(stage2ObstacleType, sizeof(int), 50, file);
+        fread(stage2Obstacle, sizeof(int), 50, file1);
+        fread(stage2movewall, sizeof(int), 50, file2);
+        fclose(file);
+        fclose(file1);
+        fclose(file2);
+    }
+}
+void LoadStage1()
+{
+    FILE* file;
+    FILE* file1;
+    FILE* file2;
+    errno_t err;
+    errno_t err1;
+    errno_t err2;
+    err = fopen_s(&file, "maps/defaultMaps/stage1type.dat", "rb");
+    err1 = fopen_s(&file1, "maps/defaultMaps/stage1obs.dat", "rb");
+    err2 = fopen_s(&file2, "maps/defaultMaps/stage1wall.dat", "rb");
+    if (err == 0 || err1 == 0 || err2 == 0)
+    {
+        for (int i = 0; i < 50; i++)
+        {
+            stage1Obstacle[i] = 0;
+            stage1ObstacleType[i] = 0;
+            stage1movewall[i] = 0;
+        }
+        fread(stage1ObstacleType, sizeof(int), 50, file);
+        fread(stage1Obstacle, sizeof(int), 50, file1);
+        fread(stage1movewall, sizeof(int), 50, file2);
+        fclose(file);
+        fclose(file1);
+        fclose(file2);
+    }
 }
 
