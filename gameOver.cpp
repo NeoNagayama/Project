@@ -6,6 +6,7 @@
 #include "Text.h"
 #include "TitleScene.h"
 #include "main.h"
+#include "Stage_Endless.h"
 Button Retry;
 Button GameOverToTitle;
 UIText GameOverText;
@@ -14,11 +15,13 @@ bool isSceneChangingFromGameOver = false;
 stage* G_stage1Instance;
 stage* G_stage2Instance;
 stage* G_stage3Instance;
-void GameOverGetStagePointers(stage* s1, stage* s2, stage* s3)
+stageEndless* E_Stage;
+void GameOverGetStagePointers(stage* s1, stage* s2, stage* s3 ,stageEndless* s4)
 {
     G_stage1Instance = s1;
     G_stage2Instance = s2;
     G_stage3Instance = s3;
+    E_Stage = s4;
 };
 void GameOverInitialProcess()
 {
@@ -82,4 +85,43 @@ void GameOverInitialize()
 {
     isRetrySelected = true;
     isSceneChangingFromGameOver = false;
+}
+void EndlessGameOver(float round)
+{
+    if (Input_GetKeyboardDown(KEY_INPUT_D) && isRetrySelected == true && !isSceneChangingFromGameOver)
+    {
+        isRetrySelected = false;
+    }
+    if (Input_GetKeyboardDown(KEY_INPUT_A) && isRetrySelected == false && !isSceneChangingFromGameOver)
+    {
+        isRetrySelected = true;
+    }
+
+    Retry.mainProcess(isRetrySelected, true, 60);
+    Retry.SetText("Retry");
+    GameOverToTitle.mainProcess(!isRetrySelected, true, 60);
+    GameOverToTitle.SetText("Title");
+    GameOverText.DrawTextWithSort(0, 1920, "You Survived %.f Round", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 0),GetColor(50,50,50),round);
+    if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
+    {
+        isSceneChangingFromGameOver = true;
+    }
+    if (isSceneChangingFromGameOver && !isRetrySelected)
+    {
+        if (fadeout(0.5f))
+        {
+            Titleinitialize();
+            scene = SCENE_TITLE;
+            progress = 255;
+        }
+    }
+    else if (isSceneChangingFromGameOver && isRetrySelected)
+    {
+        if (fadeout(0.5f))
+        {
+            E_Stage->Init();
+            scene = SCENE_INGAME;
+            progress = 255;
+        }
+    }
 }

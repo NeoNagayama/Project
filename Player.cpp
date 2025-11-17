@@ -25,7 +25,7 @@ void Player::mainProcess(bool mode)
         SetHitBox(2, 2);
 
 
-        BasePosition = VAdd(VGet(0, 0, 2 * timeScale), BasePosition);
+        BasePosition = VAdd(VGet(0, 0, forwardSpeed *timeScale), BasePosition);
         KeyInput();
         PlayerMoveXY();
         Move(VAdd(BasePosition, offset));
@@ -53,7 +53,7 @@ void Player::mainProcess(bool mode)
 }
 void Player::transitionProcess(bool mode)
 {
-    BasePosition = VAdd(VGet(0, 0, 2* timeScale), BasePosition);
+    BasePosition = VAdd(VGet(0, 0, forwardSpeed * timeScale), BasePosition);
     Move(VAdd(BasePosition, offset));
     targetAngle = VGet(0, -0.99f, 0);
     rotatePlayer();
@@ -76,7 +76,7 @@ void Player::clearProcess()
     rotateOnlyRoll();
     targetAnglePitch = VGet(0, 0, 1);
     pitch();
-    BasePosition = VAdd(VGet(0, 0, 2 * timeScale), BasePosition);
+    BasePosition = VAdd(VGet(0, 0, forwardSpeed * timeScale), BasePosition);
     Move(VAdd(BasePosition, offset));
     targetAngle = VGet(0, -0.99f, 0);
 }
@@ -236,7 +236,7 @@ void Player::PlayerMoveXY()
 }
 void Player::Vulcan()
 {
-    VulcanText.DrawTextWithSort(120, 1920, "VULCAN: %d", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50), ammo);
+    VulcanText.DrawTextWithSort(120, 1920, "VULCAN: %.f", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50), ammo);
     Position = MV1GetPosition(ModelHandle);
     for (int i = 49; i >= 0; i--)
     {
@@ -272,7 +272,7 @@ void Player::VulcanProjectile()
 
                 bullets[i].isActivated = true;
                 bullets[i].target = VAdd(Position, VGet(0, 0, 90));
-                bullets[i].forward = VGet(0, 0, 6);
+                bullets[i].forward = VGet(0, 0, forwardSpeed + 4);
                 bullets[i].StartPosition = VAdd(Position, VGet(forward().x, -forward().y, forward().z));
                 break;
             }
@@ -309,7 +309,7 @@ void Player::Flare()
     }
     else
     {
-        FlareText.DrawTextWithSort(120, 1920, "FLARE: %d", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50),  5-FlareCoolDown);
+        FlareText.DrawTextWithSort(120, 1920, "FLARE: %.f", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50),  5-FlareCoolDown);
     }
     if (Launching)
     {
@@ -453,7 +453,7 @@ bool Player::Transition()
     VECTOR targetCameraPosition = VAdd(VGet(offset.x , offset.y + 2 , -16), BasePosition);
     VECTOR cameraToTargetVector = VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z);
     float distance = sqrtf((cameraToTargetVector.x * cameraToTargetVector.x) + (cameraToTargetVector.y * cameraToTargetVector.y) + (cameraToTargetVector.z * cameraToTargetVector.z));
-    BasePosition = VAdd(VGet(0, 0, 2), BasePosition);
+    BasePosition = VAdd(VGet(0, 0, forwardSpeed), BasePosition);
     pitch();
     Move(VAdd(BasePosition, offset));
     if (distance <1.5f)

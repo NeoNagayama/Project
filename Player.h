@@ -49,7 +49,8 @@ private:
     void rotateOnlyRoll();
     void Limit();
 public:
-    int ammo = 200;
+    float ammo = 200;
+    float forwardSpeed = 2;
     bool isDead = false;
     void InitialProcess();
     void Flare();

@@ -124,6 +124,7 @@ protected:
     timer gameOverTimer;
     timer missionTimer;
     int timeLimit =120;
+    int stageLength = 4000;
     void Obstacle_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void AAGun_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void ObstacleShadowDraw();

@@ -94,7 +94,7 @@ void Enemy::FireVulcan(float hormingForcex,float hormingForcey,float distance)
                 bullets[i].isActivated = true;
                 bullets[i].StartPosition = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z);
                 bullets[i].target = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + BULLET_TARGET_Z);
-                bullets[i].forward = VGet(0, 0, BULLET_FORWARD_VELOCITY);
+                bullets[i].forward = VGet(0, 0, forwardSpeed + BULLET_FORWARD_VELOCITY);
                 firingTimer = 0;
                 LoadedAmmoCount += 1;
                 break;
@@ -169,7 +169,7 @@ void Enemy::MissileLaunch()
     if (missileflyingTimer > MISSILE_SHOWUP)
     {
 
-        missileObject.mainProcess(playerObject->Position, MISSILE_HIT_TIME - missileflyingTimer);
+        missileObject.mainProcess(playerObject->Position, MISSILE_HIT_TIME - missileflyingTimer,forwardSpeed);
     }
     else
     {
