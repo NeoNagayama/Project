@@ -1,18 +1,19 @@
 #include "TitleScene.h"
-#include "DxLib.h"
 #include "Input.h"
-#include "Button.h"
 #include "Text.h"
 #include "main.h"
 #include "ui.h"
+#include "Stage_Endless.h"
 
 bool isStartSelected = true;
 bool sceneChanging = false;
+int selected = 0;
 float yaxis = 0;
 float z = 80;
 float x = -100;
 VECTOR test = VGet(0,0,0);
 Button Start;
+Button Extra;
 Button Exit;
 UIText GameTitle;
 int modelhandle[4];
@@ -22,16 +23,19 @@ int smokenum;
 stage* stage1Instance;
 stage* stage2Instance;
 stage* stage3Instance;
-void getStagePointers(stage* s1, stage* s2, stage* s3) {
+stageEndless* Stage4;
+void getStagePointers(stage* s1, stage* s2, stage* s3,stageEndless* s4) {
     stage1Instance = s1;
     stage2Instance = s2;
     stage3Instance = s3;
+    Stage4 = s4;
 }
 
 void TitleInitialProcess()
 {
-    Start.SetButtonPosition(VGet(1550,545,1),600,100,0.9f);
-    Exit.SetButtonPosition(VGet(1550, 745, 1), 600, 100, 0.9f);
+    Start.SetButtonPosition(VGet(1550,445,1),600,100,0.9f);
+    Extra.SetButtonPosition(VGet(1550, 645, 1), 600, 100, 0.9f);
+    Exit.SetButtonPosition(VGet(1550, 845, 1), 600, 100, 0.9f);
     modelhandle[0] = MV1LoadModel("PlayerModel.mv1");
     MV1SetPosition(modelhandle[0], VGet(-0.4, 0.2f, -19.2f));
     MV1SetRotationXYZ(modelhandle[0], VGet(0, 2.53f, 0));
@@ -60,13 +64,19 @@ void TitleMainProcess()
     SetUseShadowMap(0, titleShadowHandle);
     SetupCamera_Perspective(0.55f);
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0.2f, -22), VGet(0, 1.2f, -12));
-    if ((Input_GetKeyboardDown(KEY_INPUT_S) || Input_GetKeyboardDown(KEY_INPUT_DOWN))  && isStartSelected == true && !sceneChanging)
+    if (CheckSoundMem(titleBgm) == 0)
     {
-        isStartSelected = false;
+        PlaySoundMem(titleBgm, DX_PLAYTYPE_LOOP);
     }
-    if ((Input_GetKeyboardDown(KEY_INPUT_W) || Input_GetKeyboardDown(KEY_INPUT_UP)) && isStartSelected == false && !sceneChanging)
+    if ((Input_GetKeyboardDown(KEY_INPUT_S) || Input_GetKeyboardDown(KEY_INPUT_DOWN))  && !sceneChanging && selected <2)
     {
-        isStartSelected = true;
+        selected++;
+        PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
+    }
+    if ((Input_GetKeyboardDown(KEY_INPUT_W) || Input_GetKeyboardDown(KEY_INPUT_UP))  && !sceneChanging && selected >0)
+    {
+        selected--;
+        PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
     }
     DrawModels();
     for (int i = 0; i < 180; i++)
@@ -78,6 +88,7 @@ void TitleMainProcess()
     if (Input_GetKeyboardDown(KEY_INPUT_P))
     {
         scene = SCENE_STAGEBUILD;
+        StopSoundMem(titleBgm);
     }
 }
 void Titleinitialize()
@@ -126,31 +137,56 @@ void DrawModels()
 }
 void TitleButtons()
 {
-    Start.mainProcess(isStartSelected, true, 30);
+    Start.mainProcess(selected == 0, true, 30);
     Start.SetText("Start");
-    Exit.mainProcess(!isStartSelected, true, 30);
+    Extra.mainProcess(selected == 1, true, 30);
+    Extra.SetText("Endless");
+    Exit.mainProcess(selected == 2, true, 30);
     Exit.SetText("Exit");
 }
 void TitleMenu()
 {
     TitleButtons();
     GameTitle.DrawTextWithSort(1000, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 255));
-    if (isStartSelected && (Input_GetKeyboardDown(KEY_INPUT_SPACE) || Input_GetKeyboardDown(KEY_INPUT_RETURN)))
+    if ((Input_GetKeyboardDown(KEY_INPUT_SPACE) || Input_GetKeyboardDown(KEY_INPUT_RETURN)))
     {
         sceneChanging = true;
+        PlaySoundMem(interectSound, DX_PLAYTYPE_BACK, true);
+        StopSoundMem(titleBgm);
+        
     }
-    else if (!isStartSelected && (Input_GetKeyboardDown(KEY_INPUT_SPACE) || Input_GetKeyboardDown(KEY_INPUT_RETURN)))
+    switch (selected)
     {
-        Quit = true;
-    }
-    if (sceneChanging)
-    {
-        if (fadeout(0.5f))
+    case 0:
+        if (sceneChanging)
         {
-            stage1Instance->Initialize();
-            progress = 255;
-            stage1Instance->isStarted = true;
-            scene = SCENE_INSTRUCTION;
+            if (fadeout(0.5f))
+            {
+                stage1Instance->Initialize();
+                progress = 255;
+                stage1Instance->isStarted = true;
+                scene = SCENE_INSTRUCTION;
+            }
         }
+        break;
+    case 1:
+        if (sceneChanging)
+        {
+            if (fadeout(0.5f))
+            {
+                Stage4->Init();
+                progress = 255;
+                Stage4->isStarted = true;
+                scene = SCENE_EXTRA;
+            }
+        }
+        break;
+    default:
+        if (sceneChanging)
+        {
+            Quit = true;
+        }
+        break;
     }
+    
 }

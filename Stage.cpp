@@ -50,6 +50,7 @@ void stage::MainProcess()
     SetupCamera_Perspective(1);
     DrawBase();
     DrawObstacles();
+    
     if (player.Health > 0 && !isCleared)
     {
         MV1DrawModel(player.ModelHandle);
@@ -69,18 +70,30 @@ void stage::MainProcess()
     if (isStarted)
     {
         Briefing();
+        if (0 == CheckSoundMem(engineSound))
+        {
+            PlaySoundMem(engineSound, DX_PLAYTYPE_LOOP);
+        }
     }
     else
     {
         if (!isPause &&!isCleared && !isGameOver )
         {
             Ingame();
+            if (0 == CheckSoundMem(engineSound))
+            {
+                PlaySoundMem(engineSound, DX_PLAYTYPE_LOOP);
+            }
         }
         else if (isCleared)
         {
             enemy.mainProcess(true);
             player.clearProcess();
             IngameToClear();
+            if (0 == CheckSoundMem(engineSound))
+            {
+                PlaySoundMem(engineSound, DX_PLAYTYPE_LOOP);
+            }
         }
         else if (isGameOver)
         {
@@ -89,10 +102,18 @@ void stage::MainProcess()
             enemy.Position.z += 2;
             enemy.Move(enemy.Position);
             IngameToGameover();
+            if (1 == CheckSoundMem(engineSound))
+            {
+                StopSoundMem(engineSound);
+            }
         }
         else
         {
             PauseScreen();
+            if (1 == CheckSoundMem(engineSound))
+            {
+                StopSoundMem(engineSound);
+            }
         }
         if (Input_GetKeyboardDown(KEY_INPUT_ESCAPE))
         {
@@ -157,6 +178,7 @@ void stage::AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool 
     {
         player.Health -= 5;
         isGetDamage = true;
+        PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);
     }
     
     if (i==0||i == 2 || i==1)
@@ -576,8 +598,8 @@ void stage::CameraTargetMove()
 void stage::RunPhase()
 {
     objectiveText.DrawTextWithSort(70, 1920, "–Ú•W:UŒ‚‚ð”ð‚¯‚Ä¶‚«Žc‚ê", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
-    DrawGraph(1400, 0, gaugeHandle, true);
-    DrawRectGraph(1400, 43+(994-(994*(player.BasePosition.z / stageLength))), 0, 43 + (994 - (994 * (player.BasePosition.z / stageLength))), 300, 1080, barHandle, true);
+    DrawGraph(1650, 0, gaugeHandle, true);
+    DrawRectGraph(1650, 43+(994-(994*(player.BasePosition.z / (stageLength-GoalRange)))), 0, 43 + (994 - (994 * (player.BasePosition.z / (stageLength - GoalRange)))), 300, 1080, barHandle, true);
     /*
     DrawBox(1780, 100, 1850, 980, GetColor(180, 180, 180), true, 1);
     DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z / 4000)), 1830, 980, GetColor(0, 255, 0), true);*/
@@ -642,6 +664,7 @@ void stage::PauseScreen()
     PauseControll();
     if (isRestarting)
     {
+        StopSoundMem(ingameBgm);
         if (fadeout(0.5f))
         {
             progress = 255;
@@ -650,6 +673,7 @@ void stage::PauseScreen()
     }
     if (isQuitting)
     {
+        StopSoundMem(ingameBgm);
         if (fadeout(0.5f))
         {
             progress = 255;
@@ -670,6 +694,7 @@ void stage::PauseControll()
         {
             isPause = false;
             choosedButton = 0;
+            PlaySoundMem(interectSound, DX_PLAYTYPE_BACK, true);
         }
         break;
     case PAUSE_RESTART:
@@ -677,6 +702,7 @@ void stage::PauseControll()
         {
             PauseControllable = false;
             isRestarting = true;
+            PlaySoundMem(interectSound, DX_PLAYTYPE_BACK, true);
         }
         break;
     default:
@@ -684,6 +710,7 @@ void stage::PauseControll()
         {
             isQuitting = true;
             PauseControllable = false;
+            PlaySoundMem(interectSound, DX_PLAYTYPE_BACK, true);
         }
         break;
     }
@@ -692,10 +719,12 @@ void stage::PauseControll()
         if (Input_GetKeyboardDown(KEY_INPUT_W) && choosedButton > 0)
         {
             choosedButton--;
+            PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
         }
         if (Input_GetKeyboardDown(KEY_INPUT_S) && choosedButton < 2)
         {
             choosedButton++;
+            PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
         }
     }
 }

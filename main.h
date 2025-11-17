@@ -27,12 +27,27 @@ extern int gaugeHandle;
 extern int barHandle;
 extern int E_gauge;
 extern int E_bar;
+extern int highScore;
+extern int interectSound;
+extern int selectSound;
+extern int missileAlertSound;
+extern int pitbullSound;
+extern int flareSound;
+extern int playerShotSound;
+extern int enemyShotSound;
+extern int frybySound;
+extern int engineSound;
+extern int hitSound;
+extern int explosionSound;
+extern int ingameBgm;
+extern int titleBgm;
 enum SCENES
 {
     SCENE_TITLE,
     SCENE_INGAME,
     SCENE_INSTRUCTION,
-    SCENE_STAGEBUILD
+    SCENE_STAGEBUILD,
+    SCENE_EXTRA
 };
 enum STAGES
 {
@@ -79,3 +94,5 @@ void Init();
 void LoadStage1();
 void LoadStage2();
 void LoadStage3();
+void LoadScore();
+void setVolume();

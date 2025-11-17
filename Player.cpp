@@ -47,6 +47,7 @@ void Player::mainProcess(bool mode)
     if (!isDead && Health <= 0)
     {
         exp.SetPosition(Position);
+        PlaySoundMem(explosionSound, DX_PLAYTYPE_BACK);
         isDead = true;
     }
     exp.DrawExprosion();
@@ -270,6 +271,7 @@ void Player::VulcanProjectile()
             if (!bullets[i].isActivated)
             {
 
+                PlaySoundMem(playerShotSound, DX_PLAYTYPE_BACK);
                 bullets[i].isActivated = true;
                 bullets[i].target = VAdd(Position, VGet(0, 0, 90));
                 bullets[i].forward = VGet(0, 0, forwardSpeed + 4);
@@ -286,6 +288,7 @@ void Player::VulcanProjectile()
             if (bullets[i].mainProcess(enemyObject->hitbox1, enemyObject->hitbox2,bulletHandle))
             {
                 enemyObject->Health -= 3;
+                PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);
             }
         }
     }
@@ -337,6 +340,7 @@ void Player::FlareLaunch()
                 Flares[i].isActivated = true;
                 Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 5.7f), 0.3f);
                 Flares[i].position = Position;
+                PlaySoundMem(flareSound, DX_PLAYTYPE_BACK);
                 break;
             }
         }

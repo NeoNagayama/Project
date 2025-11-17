@@ -47,6 +47,7 @@ void stageEndless::Init()
     enemy.cobraSpeed = 0;
     player.isDead = false;
     stageLength = 4000;
+    GoalRange = 0;
     enemy.Health = 2;
     player.forwardSpeed = 2;
     enemy. forwardSpeed = 2;
@@ -55,9 +56,11 @@ void stageEndless::Init()
     Round = 1;
     clearCameraOffsetx = 0;
     StageRandomize();
+    isSaved = false;
 }
 void stageEndless::StartWave()
 {
+    gamePhase = PHASE_RUN;
     Round += 1;
     isCleared = false;
     isGameOver = false;
@@ -76,15 +79,15 @@ void stageEndless::StartWave()
     enemy.isFiring = false;
     enemy.cobraSpeed = 0;
     clearCameraOffsetx = 0;
-    stageLength += player.Position.z + GoalRange;
+    stageLength = player.Position.z + GoalRange;
 }
 void stageEndless::StageRandomize()
 {
     for (int i = 0; i < 50; i++)
     {
-        obstacle[i] = get_rand(0, 25);
-        obstacleType[i] = get_rand(0, 8);
-        moveWallType[i] = get_rand(0, 10);
+        obstacle[i] = get_rand(0, 17);
+        obstacleType[i] = get_rand(0, 5);
+        moveWallType[i] = get_rand(0, 7);
     }
 }
 void stageEndless::main()
@@ -108,7 +111,7 @@ void stageEndless::main()
     SetupCamera_Perspective(1);
     DrawBase();
     DrawObstacles();
-    RoundCount.DrawTextWithSort(0, 1850, "ラウンド:%.f", japaneseFontHandle, SORT_RIGHT, 90, false, GetColor(0, 255, 0), GetColor(50, 50, 50), (float)Round);
+    RoundCount.DrawTextWithSort(0, 1650, "ラウンド:%.f", japaneseFontHandle, SORT_RIGHT, 90, false, GetColor(0, 255, 0), GetColor(50, 50, 50), (float)Round);
     if (player.Health > 0 && !isCleared)
     {
         MV1DrawModel(player.ModelHandle);
@@ -128,18 +131,30 @@ void stageEndless::main()
     if (isStarted)
     {
         Briefing();
+        if (0 == CheckSoundMem(engineSound))
+        {
+            PlaySoundMem(engineSound, DX_PLAYTYPE_LOOP);
+        }
     }
     else
     {
         if (!isPause && !isCleared && !isGameOver)
         {
             Ingame();
+            if (0 == CheckSoundMem(engineSound))
+            {
+                PlaySoundMem(engineSound, DX_PLAYTYPE_LOOP);
+            }
         }
         else if (isCleared)
         {
             enemy.mainProcess(true);
             player.clearProcess();
             WaveResult();
+            if (0 == CheckSoundMem(engineSound))
+            {
+                PlaySoundMem(engineSound, DX_PLAYTYPE_LOOP);
+            }
         }
         else if (isGameOver)
         {
@@ -148,10 +163,20 @@ void stageEndless::main()
             enemy.Position.z += 2;
             enemy.Move(enemy.Position);
             IngameToGameoverModified();
+
+            if (1 == CheckSoundMem(engineSound))
+            {
+                StopSoundMem(engineSound);
+            }
         }
         else
         {
             PauseScreen();
+
+            if (1 == CheckSoundMem(engineSound))
+            {
+                StopSoundMem(engineSound);
+            }
         }
         if (Input_GetKeyboardDown(KEY_INPUT_ESCAPE))
         {
@@ -165,6 +190,11 @@ void stageEndless::IngameToGameoverModified()
     if (gameOverTimer.MeasureTimer(1.0f))
     {
         EndlessGameOver(Round);
+    }
+    if (!isSaved && highScore < Round)
+    {
+        HighScore();
+        isSaved = true;
     }
 }
 void stageEndless::WaveResult()
@@ -220,6 +250,10 @@ void stageEndless::WaveResult()
 }
 void stageEndless::ShowResult()
 {
+    if (GoalRange == 0)
+    {
+        GoalRange = 4000;
+    }
     ReflectToText();
     if (R_Timer.MeasureTimer(0.5f) && resultStage < 4)
     {
@@ -297,6 +331,7 @@ void stageEndless::ResultType()
 }
 void stageEndless::EffectResult()
 {
+    
     switch (negativeResultType)
     {
     case 0:
@@ -324,4 +359,13 @@ void stageEndless::ReflectToText()
     R_Value2[0] = { incleasedHealth };
     R_Value2[1] = { incleasedAmmo };
     R_Value2[2] = { healedHealth };
+}
+void stageEndless::HighScore()
+{
+    int score = Round - 1;
+    FILE* file;
+    errno_t err = fopen_s(&file, "data/hs.dat", "wb");
+    fwrite(&score, sizeof(float), 1, file);
+    fclose(file);
+    highScore = score;
 }

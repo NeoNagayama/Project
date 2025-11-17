@@ -40,6 +40,7 @@ void Enemy::mainProcess(bool mode)
     {
         exp.SetPosition(Position);
         deadPosition = Position;
+        PlaySoundMem(explosionSound, DX_PLAYTYPE_BACK);
         isDead = true;
     }
         Move(VAdd(offset,BasePosition));
@@ -72,6 +73,7 @@ void Enemy::Vulcan()
             {
                  bullets[i].isActivated = false;
                  playerObject->Health -= BULLET_DAMAGE;
+                 PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);
             }
             isReticleShowUp = true;
         }
@@ -91,6 +93,7 @@ void Enemy::FireVulcan(float hormingForcex,float hormingForcey,float distance)
         {
             if (bullets[i].isActivated == false)
             {
+                PlaySoundMem(enemyShotSound, DX_PLAYTYPE_BACK);
                 bullets[i].isActivated = true;
                 bullets[i].StartPosition = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z);
                 bullets[i].target = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + BULLET_TARGET_Z);
@@ -133,6 +136,14 @@ void Enemy::missile()
     }
     if (isGuideLost &&missileflyingTimer > MISSILE_SHOWUP)
     {
+        if (1 == CheckSoundMem(pitbullSound))
+        {
+            StopSoundMem(pitbullSound);
+        }
+        if (1 == CheckSoundMem(missileAlertSound))
+        {
+            StopSoundMem(missileAlertSound);
+        }
         missileObject.guideLosted();
         DespawnTimer += oneFlame;
         if (DespawnTimer > MISSILE_LIFETIME)
@@ -146,6 +157,14 @@ void Enemy::missile()
     }
     else if (isGuideLost)
     {
+        if (1 == CheckSoundMem(pitbullSound))
+        {
+            StopSoundMem(pitbullSound);
+        }
+        if (1 == CheckSoundMem(missileAlertSound))
+        {
+            StopSoundMem(missileAlertSound);
+        }
         isGuideLost = false;
         isLaunched = false;
         missileflyingTimer = 0;
@@ -168,15 +187,30 @@ void Enemy::MissileLaunch()
     missileflyingTimer += oneFlame;
     if (missileflyingTimer > MISSILE_SHOWUP)
     {
-
+        if (1 == CheckSoundMem(missileAlertSound))
+        {
+            StopSoundMem(missileAlertSound);
+        }
+        if (0 == CheckSoundMem(pitbullSound))
+        {
+            PlaySoundMem(pitbullSound, DX_PLAYTYPE_BACK);
+        }
         missileObject.mainProcess(playerObject->Position, MISSILE_HIT_TIME - missileflyingTimer,forwardSpeed);
     }
     else
     {
         missileObject.SetStartPosition(VGet(BasePosition.x, BasePosition.y, BasePosition.z + MISSILE_SPAWN_OFFSET));
+        if (0 == CheckSoundMem(missileAlertSound))
+        {
+            PlaySoundMem(missileAlertSound, DX_PLAYTYPE_BACK);
+        }
     }
     if (missileflyingTimer > MISSILE_HIT_TIME)
     {
+        if (1 == CheckSoundMem(pitbullSound))
+        {
+            StopSoundMem(pitbullSound);
+        }
         isLaunched = false;
         missileflyingTimer = 0;
         missilecooldowntimer = 0;
@@ -190,6 +224,7 @@ void Enemy::MissileLaunch()
         }
         missileCooldown = get_rand(5, 7);
         exp.SetPosition(playerObject->Position);
+        PlaySoundMem(explosionSound, DX_PLAYTYPE_BACK);
     }
 }
 
@@ -375,7 +410,18 @@ bool Enemy::Transition()
 {
     /*playerObject->BasePosition.z += 1;
     playerObject->Move(VAdd(playerObject->BasePosition, playerObject->offset));*/
-    
+    if (1 == CheckSoundMem(pitbullSound))
+    {
+        StopSoundMem(pitbullSound);
+    }
+    if (1 == CheckSoundMem(missileAlertSound))
+    {
+        StopSoundMem(missileAlertSound);
+    }
+    if (0 == CheckSoundMem(frybySound))
+    {
+        PlaySoundMem(frybySound, DX_PLAYTYPE_BACK);
+    }
     MV1DrawModel(ModelHandle);
     if (playerObject->Transition() && transitionMoveZaxis >= TRANSITION_TARGET_POSZ)
     {

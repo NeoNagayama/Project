@@ -33,10 +33,12 @@ void ClearMainProcess()
         if (Input_GetKeyboardDown(KEY_INPUT_S) && isNextSelected == true && !isSceneChanging)
         {
             isNextSelected = false;
+            PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
         }
         if (Input_GetKeyboardDown(KEY_INPUT_W) && isNextSelected == false && !isSceneChanging)
         {
             isNextSelected = true;
+            PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
         }
         Next.mainProcess(isNextSelected, true, 60);
         Next.SetText("Next Stage");
@@ -46,6 +48,8 @@ void ClearMainProcess()
         if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
         {
             isSceneChanging = true;
+            PlaySoundMem(interectSound, DX_PLAYTYPE_BACK, true);
+            StopSoundMem(ingameBgm);
         }
 
         
