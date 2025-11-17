@@ -33,7 +33,6 @@ private:
     const float SPEED = 0.1f;
     const float MAX_SPEED = 1.2f;
     const float MOVE_ANGLE_THLESHOLD = 0.2f;
-    const int MISSILE_DAMAGE = 30;
     const int MISSILE_SPAWN_OFFSET = 25;
     const float MISSILE_HIT_TIME = 3;
     const float MISSILE_SHOWUP = 1.5f;
@@ -41,11 +40,10 @@ private:
     const int MAX_PROJECTILE = 10;
     const float HORMING_SPEED_SCALE = 0.24f;
     const float HORMING_THLESHOLD = 0.3f;
-    const float BULLET_FORWARD_VELOCITY = 5;
+    const float BULLET_FORWARD_VELOCITY = 3;
     const int BULLET_TARGET_Z = 220;
     const int RETICLE_SIZE = 70;
     const int RETICLE_POS_Z = 50;
-    const int BULLET_DAMAGE = 5;
     const int Z_OFFSET = 50;
     //左右移動の速度
     const float moveSpeed = 0.7f;
@@ -89,6 +87,7 @@ private:
     float targetPitch = PI / 2;
 public:
     float cobraSpeed = 0;
+    float forwardSpeed = 2.0f;
     VECTOR deadPosition;
     //機銃を射撃中かどうか
     bool isFiring = false;
@@ -136,4 +135,6 @@ public:
     //遷移中のプレイヤーの座標からのz座標のずれ
     float transitionMoveZaxis = -50.0f;
     void Cobra();
+     int BULLET_DAMAGE = 5;
+     int MISSILE_DAMAGE = 30;
 };

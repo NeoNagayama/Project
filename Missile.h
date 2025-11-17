@@ -11,7 +11,7 @@ private:
     smoke smokes[180];
     int smokeNum = 0;
 public:
-	void mainProcess(VECTOR targetPosition, float remainingTime);
+	void mainProcess(VECTOR targetPosition, float remainingTime,float speed);
 	void SetStartPosition(VECTOR StartPosition);
 	void guideLosted();
     void SetUp();

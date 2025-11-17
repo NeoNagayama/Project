@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Instruction.h"
 #include "StageBuild.h"
+#include "Stage_Endless.h"
 #include <random>
 //現在の場面
 int scene = 0;
@@ -144,6 +145,7 @@ int stage2movewall[50] = {
 stage stage1;
 stage stage2;
 stage stage3;
+stageEndless endless;
 instruction inst;
 builder bil;
 
@@ -189,7 +191,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             switch (stages)
             {
             case STAGE1:
-                stage1.MainProcess();
+                endless.main();
                 break;
             case STAGE2:
                 stage2.MainProcess();
@@ -283,6 +285,7 @@ void Init()
     TitleInitialProcess();
     //ステージ1で最初に一度だけ呼ばれる処理
     LoadStage1();
+    LoadStage2();
     LoadStage3();
     stage1.InitialProcess(stage1Obstacle, stage1ObstacleType,stage1movewall);
     stage2.InitialProcess(stage2Obstacle, stage2ObstacleType, stage2movewall);
@@ -293,9 +296,11 @@ void Init()
     //ゲームオーバー画面で最初に一度だけ呼ばれる処理
     GameOverInitialProcess();
     getStagePointers(&stage1, &stage2, &stage3);
-    GameOverGetStagePointers(&stage1, &stage2, &stage3);
+    GameOverGetStagePointers(&stage1, &stage2, &stage3,&endless);
     ClearGetStagePointers(&stage1, &stage2, &stage3);
     bil.Init();
+    endless.SetUp();
+    endless.Init();
 }
 void LoadStage3()
 {

@@ -431,7 +431,7 @@ void stage::Briefing()
     if (isObjectiveAppeared && objectiveText.fadeInText(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0, 0.2f))
     {
         objectiveText.DrawTextWithSort(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50));
-        countDownText.DrawTextWithSort(0, 1920, "%d", CountDownFontHandle, SORT_CENTER, 450, true, GetColor(255, 255, 30), GetColor(50, 50, 50), countDown);
+        countDownText.DrawTextWithSort(0, 1920, "%.f", CountDownFontHandle, SORT_CENTER, 450, true, GetColor(255, 255, 30), GetColor(50, 50, 50), countDown);
         if (CountDownTimer.MeasureTimer(1))
         {
             CountDownTimer.RestartTimer();
@@ -462,9 +462,9 @@ void stage::Ingame()
         enemy.Health = 0;
         isKilled = true;
     }
-    playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP: %d", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
-    enemyHealthText.DrawTextWithSort(0, 1800, "ENEMY HP: %d", fontHandle, SORT_RIGHT, 500, true, GetColor(255, 0, 0), GetColor(50, 50, 50), enemy.Health);
-    if (player.BasePosition.z > 4000.0f && gamePhase == PHASE_RUN)
+    playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP: %.f", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
+    
+    if (player.BasePosition.z > stageLength && gamePhase == PHASE_RUN)
     {
         gamePhase = PHASE_OVERSHOOT;
     }
@@ -552,7 +552,6 @@ void stage::IngameToGameover()
 {
     if (gameOverTimer.MeasureTimer(1.0f))
     {
-
         GameOverMainProcess();
     }
 }
@@ -578,7 +577,7 @@ void stage::RunPhase()
 {
     objectiveText.DrawTextWithSort(70, 1920, "目標:攻撃を避けて生き残れ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
     DrawGraph(1400, 0, gaugeHandle, true);
-    DrawRectGraph(1400, 43+(994-(994*(player.BasePosition.z / 4000))), 0, 43 + (994 - (994 * (player.BasePosition.z / 4000))), 300, 1080, barHandle, true);
+    DrawRectGraph(1400, 43+(994-(994*(player.BasePosition.z / stageLength))), 0, 43 + (994 - (994 * (player.BasePosition.z / stageLength))), 300, 1080, barHandle, true);
     /*
     DrawBox(1780, 100, 1850, 980, GetColor(180, 180, 180), true, 1);
     DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z / 4000)), 1830, 980, GetColor(0, 255, 0), true);*/
@@ -601,7 +600,7 @@ void stage::ChasePhase()
         if (objectiveText.fadeInText(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0, 0.2f))
         {
             objectiveText.DrawTextWithSort(0, 1920, "クリア目標:敵機を撃墜しろ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0);
-            countDownText.DrawTextWithSort(0, 1920, "%d", CountDownFontHandle, SORT_CENTER, 450, true, GetColor(255, 255, 30), GetColor(50, 50, 50), countDown);
+            countDownText.DrawTextWithSort(0, 1920, "%.f", CountDownFontHandle, SORT_CENTER, 450, true, GetColor(255, 255, 30), GetColor(50, 50, 50), countDown);
             if (CountDownTimer.MeasureTimer(1))
             {
                 CountDownTimer.RestartTimer();
@@ -632,7 +631,7 @@ void stage::ChasePhase()
     else
     {
         enemy.mainProcess(true);
-        missionTime.DrawTextWithSort(0, 1920, "Remaining time : %d/120 sec", fontHandle, SORT_CENTER, 230, false, GetColor(0, 255, 0), GetColor(0, 255, 0),timeLimit-(int)missionTimer.GetElapsed(true));
+        missionTime.DrawTextWithSort(0, 1920, "Remaining time : %.f/120 sec", fontHandle, SORT_CENTER, 230, false, GetColor(0, 255, 0), GetColor(0, 255, 0),timeLimit-(int)missionTimer.GetElapsed(true));
     }
 }
 void stage::PauseScreen()
