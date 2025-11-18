@@ -12,6 +12,7 @@ void instruction::main()
             progress = 255;
             scene = SCENE_INGAME;
             showTimer.RestartTimer();
+            PlaySoundMem(interectSound, DX_PLAYTYPE_BACK, true);
         }
         text.DrawTextWithSort(0, 1920, "PRESS SPACE TO START", BiggerFontHandle, SORT_CENTER, 900, FALSE, GetColor(220, 255, 220));
     }

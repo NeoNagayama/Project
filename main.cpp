@@ -42,6 +42,20 @@ int gaugeHandle;
 int barHandle;
 int E_gauge;
 int E_bar;
+int highScore;
+int interectSound;
+int selectSound;
+int missileAlertSound;
+int pitbullSound;
+int flareSound;
+int playerShotSound;
+int enemyShotSound;
+int frybySound;
+int engineSound;
+int hitSound;
+int explosionSound;
+int ingameBgm;
+int titleBgm;
 float timeScale = 1;
 //ゲームを終了するための条件用の変数
 bool Quit = false;
@@ -188,10 +202,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         switch (scene) {
             //場面別の毎フレーム呼ばれる処理
         case SCENE_INGAME:
+            if (CheckSoundMem(ingameBgm) == 0)
+            {
+                PlaySoundMem(ingameBgm, DX_PLAYTYPE_LOOP);
+            }
             switch (stages)
             {
             case STAGE1:
-                endless.main();
+                stage1.MainProcess();
                 break;
             case STAGE2:
                 stage2.MainProcess();
@@ -206,6 +224,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             break;
         case SCENE_STAGEBUILD:
             bil.main();
+            break;
+        case SCENE_EXTRA:
+            endless.main();
             break;
         default:
             //背景の描画
@@ -267,6 +288,19 @@ void LoadAssets()
     barHandle = LoadGraph("ProgressBar.png");
     E_bar = LoadGraph("EnemyBar.png");
     E_gauge = LoadGraph("EnemyGauge.png");
+    interectSound = LoadSoundMem("sfx/interect2.mp3");
+    selectSound = LoadSoundMem("sfx/interect.mp3");
+    missileAlertSound = LoadSoundMem("sfx/alert.mp3");
+    pitbullSound = LoadSoundMem("sfx/pitbull.mp3");
+    flareSound = LoadSoundMem("sfx/flare.mp3");
+    playerShotSound = LoadSoundMem("sfx/shot2.mp3");
+    enemyShotSound = LoadSoundMem("sfx/enemyShot.mp3");
+    frybySound = LoadSoundMem("sfx/flyby.mp3");
+    engineSound = LoadSoundMem("sfx/playerEngine.mp3");
+    hitSound = LoadSoundMem("sfx/hit.mp3");
+    explosionSound = LoadSoundMem("sfx/explosion.mp3");
+    ingameBgm = LoadSoundMem("sfx/ingame.mp3");
+    titleBgm = LoadSoundMem("sfx/title.mp3");
     fontLoad();
 }
 void setupShadowMap()
@@ -295,7 +329,7 @@ void Init()
     ClearInitialProcess();
     //ゲームオーバー画面で最初に一度だけ呼ばれる処理
     GameOverInitialProcess();
-    getStagePointers(&stage1, &stage2, &stage3);
+    getStagePointers(&stage1, &stage2, &stage3,&endless);
     GameOverGetStagePointers(&stage1, &stage2, &stage3,&endless);
     ClearGetStagePointers(&stage1, &stage2, &stage3);
     bil.Init();
@@ -383,5 +417,25 @@ void LoadStage1()
         fclose(file1);
         fclose(file2);
     }
+}
+void LoadScore()
+{
+    FILE* file;
+    errno_t err = fopen_s(&file, "data/hs.dat", "rb");
+    if (err == 0)
+    {
+        fread(&highScore, sizeof(float), 1, file);
+        fclose(file);
+    }
+    else
+    {
+        highScore = 0;
+    }
+}
+void setVolume()
+{
+    ChangeVolumeSoundMem(120, selectSound);
+    ChangeVolumeSoundMem(120, interectSound);
+    ChangeVolumeSoundMem(60, engineSound);
 }
 

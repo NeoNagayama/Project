@@ -121,6 +121,7 @@ protected:
     VECTOR cameraDirection;
     float remainingTime = 2;
     timer clearCameraTimer;
+    int GoalRange = 0;
     timer gameOverTimer;
     timer missionTimer;
     int timeLimit =120;

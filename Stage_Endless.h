@@ -21,7 +21,7 @@ private:
     float R_Value[4];
     float R_Value2[3];
     timer R_Timer;
-    int Round = 1;
+    int Round = 0;
     int resultStage = 0;
     int resultType = 0;
     int negativeResultType = 0;
@@ -31,9 +31,9 @@ private:
     float baseAmmoCache = 200;
     float incleasedAmmo = 0;
     float incleasedHealth = 0;
-    float healedHealth = 0;
-    int GoalRange = 4000;
+    float healedHealth = 1;
     bool isGetResult = false;
+    bool isSaved = false;
     void StageRandomize();
     void StartWave();
     void WaveResult();
@@ -42,6 +42,7 @@ private:
     void EffectResult();
     void ReflectToText();
     void IngameToGameoverModified();
+    void HighScore();
 public:
     void SetUp();
     void Init();
