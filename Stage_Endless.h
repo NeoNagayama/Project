@@ -43,6 +43,7 @@ private:
     void ReflectToText();
     void IngameToGameoverModified();
     void HighScore();
+    void E_Pause();
 public:
     void SetUp();
     void Init();

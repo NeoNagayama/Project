@@ -100,6 +100,7 @@ protected:
     int gamePhase = 0;
     int choosedButton;
     int countDown = 3;
+    float startPosZ = 0;
     Button resume;
     Button restart;
     Button Stage1ToTitle;

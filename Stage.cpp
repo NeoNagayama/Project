@@ -67,6 +67,8 @@ void stage::MainProcess()
             damageRate.RestartTimer();
         }
     }
+    clsDx();
+    printfDx("%d", player.isDead);
     if (isStarted)
     {
         Briefing();
@@ -74,11 +76,13 @@ void stage::MainProcess()
         {
             PlaySoundMem(engineSound, DX_PLAYTYPE_LOOP);
         }
+        
     }
     else
     {
         if (!isPause &&!isCleared && !isGameOver )
         {
+            player.SetHitBox(2, 2);
             Ingame();
             if (0 == CheckSoundMem(engineSound))
             {
@@ -137,14 +141,18 @@ void stage::Initialize()
     choosedButton = 0;
     player.Health = 100;
     enemy.Health = 100;
+    enemy.isTimeLimit = false;
     player.offset = VGet(0, -5, 0);
     player.BasePosition.z = 0;
+    player.Position = VGet(0,0,0);
+    player.SetHitBox(2, 2);
     gamePhase = 0;
     isKilled = false;
     enemy.transitionMoveZaxis = -50.0f;
     enemy.missilecooldowntimer = 0;
     enemy.missileflyingTimer = 0;
     enemy.isLaunched = false;
+    enemy.firingTimer = 0;
     enemy.isFiring = false;
     enemy.cobraSpeed = 0;
     player.isDead = false;
@@ -444,7 +452,6 @@ void stage::MoveWalls(int pos,int i)
 void stage::Briefing()
 {
     player.transitionProcess(false);
-    player.SetHitBox(2, 2);
     if (fadein(0.5f) && !isObjectiveAppeared)
     {
         progress = 0;
@@ -599,7 +606,7 @@ void stage::RunPhase()
 {
     objectiveText.DrawTextWithSort(70, 1920, "ñ⁄ïW:çUåÇÇîÇØÇƒê∂Ç´écÇÍ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
     DrawGraph(1650, 0, gaugeHandle, true);
-    DrawRectGraph(1650, 43+(994-(994*(player.BasePosition.z / (stageLength-GoalRange)))), 0, 43 + (994 - (994 * (player.BasePosition.z / (stageLength - GoalRange)))), 300, 1080, barHandle, true);
+    DrawRectGraph(1650, 43+(994-(994*((player.BasePosition.z-startPosZ) / (stageLength- startPosZ)))), 0, 43 + (994 - (994 * ((player.BasePosition.z - startPosZ)/ (stageLength - startPosZ)))), 300, 1080, barHandle, true);
     /*
     DrawBox(1780, 100, 1850, 980, GetColor(180, 180, 180), true, 1);
     DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z / 4000)), 1830, 980, GetColor(0, 255, 0), true);*/

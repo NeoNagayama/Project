@@ -13,7 +13,7 @@
 #include <random>
 //現在の場面
 int scene = 0;
-int stages = 0;
+int stages =0;
 //照準用の画像のハンドル
 int reticleHandle = 0;
 //インゲームのシャドウマップのハンドル
@@ -171,13 +171,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     //SetFullScreenResolutionMode(DX_FSRESOLUTIONMODE_MAXIMUM);
     //奥行0.1～1000までをカメラの描画範囲とする
     SetCameraNearFar(0.1f, 5000.0f);
-    SetUseLighting(true);
-    SetLightEnable(true);
+    SetUseLighting(TRUE);
+    SetLightEnable(TRUE);
     SetUseZBuffer3D(TRUE);
     SetWriteZBuffer3D(TRUE);
+    SetUseTransColorGraphCreateFlag(TRUE);
     //(0,10,-20)の視点から(0,10,0)のターゲットを見る角度にカメラを設置
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -20), VGet(0.0f, 0.0f, 0.0f));
     LoadAssets();
+    setVolume();
     setupShadowMap();
     Init();
     MATERIALPARAM Material;
