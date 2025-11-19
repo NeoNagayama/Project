@@ -80,12 +80,12 @@ private:
     float EvadePosDistance = 0;
     timer strobo;
     bool isHide;
-    bool isTimeLimit;
     //位置フレームあたりに上下左右に移動する速度
     float xSpeed = 0.0f, ySpeed = 0.0f;
     float pitchAngle;
     float targetPitch = PI / 2;
 public:
+    bool isTimeLimit;
     float cobraSpeed = 0;
     float forwardSpeed = 2.0f;
     VECTOR deadPosition;

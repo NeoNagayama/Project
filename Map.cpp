@@ -212,8 +212,8 @@ bool wallmove::DrawMoveWall(bool high,bool mid, bool low, VECTOR hitbox1, VECTOR
     }
     if (mid)
     {
-        VECTOR edge1 = VGet(position.x - 15, position.y + 4, position.z - 10);
-        VECTOR edge2 = VGet(position.x + 23, position.y - 4, position.z + 10);
+        VECTOR edge1 = VGet(position.x - 15, position.y - 4, position.z - 10);
+        VECTOR edge2 = VGet(position.x + 23, position.y + 4, position.z + 10);
         MV1SetPosition(cargoHandle, position);
         MV1DrawModel(cargoHandle);
         //DrawDamageBox(edge1, edge2);
@@ -238,7 +238,9 @@ void wallmove::DrawHole(VECTOR edge1, VECTOR edge2)
     DrawCube3D(VGet(-15, edge1.y, edge1.z), VGet(-14.7f, edge2.y, edge2.z), GetColor(0, 0, 0), GetColor(0, 0, 0), true);
     DrawCube3D(VGet(15, edge1.y, edge1.z), VGet(14.7f, edge2.y, edge2.z), GetColor(0, 0, 0), GetColor(0, 0, 0), true);
     SetUseLighting(true);
-    DrawExtendGraph3D(0, edge1.y, edge1.z, 0.05, 0.05, guideHandle, true);
+    SetWriteZBuffer3D(FALSE);
+    DrawExtendGraph3D(0, edge1.y, edge1.z, 0.05, 0.05, guideHandle, TRUE);
+    SetWriteZBuffer3D(TRUE);
 }
 void wallmove::SetUp()
 {

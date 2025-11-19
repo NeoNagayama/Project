@@ -51,8 +51,6 @@ void ClearMainProcess()
             PlaySoundMem(interectSound, DX_PLAYTYPE_BACK, true);
             StopSoundMem(ingameBgm);
         }
-
-        
     }
     else
     {

@@ -130,7 +130,7 @@ void EndlessGameOver(float round)
         if (fadeout(0.5f))
         {
             E_Stage->Init();
-            scene = SCENE_INGAME;
+            scene = SCENE_EXTRA;
             progress = 255;
         }
     }

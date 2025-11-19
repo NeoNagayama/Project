@@ -46,11 +46,15 @@ void stageEndless::Init()
     enemy.isFiring = false;
     enemy.cobraSpeed = 0;
     player.isDead = false;
-    stageLength = 4000;
+    player.Position = VGet(0, 0, 0);
+    player.SetHitBox(2, 2);
+    enemy.isTimeLimit = false;
+    stageLength = 400;
     GoalRange = 0;
     enemy.Health = 2;
     player.forwardSpeed = 2;
     enemy. forwardSpeed = 2;
+    enemy.firingTimer = 0;
     baseAmmo = 200;
     baseHealth = 200;
     Round = 1;
@@ -73,6 +77,7 @@ void stageEndless::StartWave()
     isStarted = true;
     enemy.Health = 2;
     enemy.transitionMoveZaxis = -50.0f;
+    enemy.firingTimer = 0;
     enemy.missilecooldowntimer = 0;
     enemy.missileflyingTimer = 0;
     enemy.isLaunched = false;
@@ -80,6 +85,7 @@ void stageEndless::StartWave()
     enemy.cobraSpeed = 0;
     clearCameraOffsetx = 0;
     stageLength = player.Position.z + GoalRange;
+    startPosZ = player.Position.z;
 }
 void stageEndless::StageRandomize()
 {
@@ -87,7 +93,7 @@ void stageEndless::StageRandomize()
     {
         obstacle[i] = get_rand(0, 17);
         obstacleType[i] = get_rand(0, 5);
-        moveWallType[i] = get_rand(0, 7);
+        moveWallType[i] = get_rand(0, 12);
     }
 }
 void stageEndless::main()
@@ -171,7 +177,7 @@ void stageEndless::main()
         }
         else
         {
-            PauseScreen();
+            E_Pause();
 
             if (1 == CheckSoundMem(engineSound))
             {
@@ -191,7 +197,7 @@ void stageEndless::IngameToGameoverModified()
     {
         EndlessGameOver(Round);
     }
-    if (!isSaved && highScore < Round)
+    if (!isSaved && highScore <= Round)
     {
         HighScore();
         isSaved = true;
@@ -252,7 +258,7 @@ void stageEndless::ShowResult()
 {
     if (GoalRange == 0)
     {
-        GoalRange = 4000;
+        GoalRange = 40;
     }
     ReflectToText();
     if (R_Timer.MeasureTimer(0.5f) && resultStage < 4)
@@ -362,10 +368,36 @@ void stageEndless::ReflectToText()
 }
 void stageEndless::HighScore()
 {
-    int score = Round - 1;
+    int score = Round-1;
     FILE* file;
     errno_t err = fopen_s(&file, "data/hs.dat", "wb");
     fwrite(&score, sizeof(float), 1, file);
     fclose(file);
     highScore = score;
+}
+void stageEndless::E_Pause()
+{
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+    DrawBox(0, 0, 1920, 1080, GetColor(0, 0, 0), 1);
+    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+    PauseControll();
+    if (isRestarting)
+    {
+        StopSoundMem(ingameBgm);
+        if (fadeout(0.5f))
+        {
+            progress = 255;
+            Init();
+        }
+    }
+    if (isQuitting)
+    {
+        StopSoundMem(ingameBgm);
+        if (fadeout(0.5f))
+        {
+            progress = 255;
+            Titleinitialize();
+            scene = SCENE_TITLE;
+        }
+    }
 }
