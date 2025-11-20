@@ -41,6 +41,8 @@ extern int hitSound;
 extern int explosionSound;
 extern int ingameBgm;
 extern int titleBgm;
+extern int playerLight;
+extern int enemyLight;
 enum SCENES
 {
     SCENE_TITLE,

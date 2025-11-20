@@ -1,9 +1,10 @@
 #include "Bullet.h"
-bool Bullet::mainProcess(VECTOR hitbox1, VECTOR hitbox2,int handle)
+bool Bullet::mainProcess(VECTOR hitbox1, VECTOR hitbox2)
 {
     
     StartPosition = VAdd(StartPosition, VScale(VGet(forward.x,-forward.y,forward.z), 1));
-    DrawBillboard3D(StartPosition, 0.5f, 0.5f, 10, 0, handle, true);
+    MV1SetPosition(handle, StartPosition);
+    MV1DrawModel(handle);
     //DrawSphere3D(StartPosition, 0.3f, 32, GetColor(255, 255, 0), GetColor(255, 255, 255), true);
     if (StartPosition.z >= target.z)
     {
@@ -18,4 +19,9 @@ bool Bullet::mainProcess(VECTOR hitbox1, VECTOR hitbox2,int handle)
     /*clsDx();
     printfDx("%f %f\n", hitbox1.z, hitbox2.z);*/
     return false;
+}
+void Bullet::setUp()
+{
+    handle = MV1DuplicateModel(bulletHandle);
+    MV1SetRotationXYZ(handle, VGet(0,0, 45.0f * DX_PI_F / 180.0f ));
 }

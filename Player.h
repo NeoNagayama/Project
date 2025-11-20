@@ -15,6 +15,7 @@ private:
     UIText VulcanText;
     UIText FlareText;
     explosionEffect exp;
+    explosionEffect exp2;
     Enemy* enemyObject;
     static constexpr float NEUTRAL_ANGLE_Y = 0.99f;
     static constexpr int TARGET_CAMERA_POSZ = 20;
@@ -30,8 +31,12 @@ private:
     float bulletPositionY[50];
     //機銃とフレア用の変数
     float firingTimer = 0;
+    float startCameraOffsetx = 6;
+    float cameraStartThleshold = 200;
     float FlareCoolDown = 0;
     float FlareFiringTimer = 0;
+    float cameraZoom = 0.6f;
+    float target = 0;
     static constexpr float firingRate = 0.07f;
     static constexpr float FlareFiringRate = 0.1f;
     static constexpr float FlareInterval = 5;
@@ -40,7 +45,6 @@ private:
     static constexpr int maxAmmo = 200;
     Bullet bullets[200];
     Flare Flares[10];
-    VECTOR CameraPosition;
     void FlareLaunch();
     void VulcanProjectile();
     void InputUp(float speed);
@@ -66,4 +70,8 @@ public:
         enemyObject = enemy;
     }
     bool Transition();
+    VECTOR CameraPosition;
+    void Init();
+    void camSetUp(int pos);
+    int tailLight;
 };

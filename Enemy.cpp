@@ -16,9 +16,30 @@ void Enemy::InitialProcess()
         MV1SetMaterialEmiColor(ModelHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
         MV1SetMaterialSpcPower(ModelHandle, i, 6);
     }
+    for (int i = 0; i < 10; i++)
+    {
+        bullets[i].setUp();
+    }
+}
+void Enemy::Init()
+{
+    Health = 100;
+    isTimeLimit = false;
+    transitionMoveZaxis = -50.0f;
+    missilecooldowntimer = 0;
+    missileflyingTimer = 0;
+    isLaunched = false;
+    firingTimer = 0;
+    isFiring = false;
+    cobraSpeed = 0;
+    firingTimer = 0;
+    MV1SetRotationXYZ(ModelHandle,VGet(0, 0, 0));
+    isDead = false;
+    isDown = false;
 }
 void Enemy::mainProcess(bool mode)
 {
+    
     if (Health > 0)
     {
         if (mode)
@@ -35,18 +56,32 @@ void Enemy::mainProcess(bool mode)
             missile();
             missileObject.Passive();
         }
+
+        Position = MV1GetPosition(ModelHandle);
+    }
+    else
+    {
+        offset.y -= 0.2f*timeScale;
+        BasePosition.z += forwardSpeed * timeScale;
+        MV1SetPosition(ModelHandle, VAdd(BasePosition, offset));
+        MV1SetRotationXYZ(ModelHandle, VAdd(MV1GetRotationXYZ(ModelHandle), VGet(0, 0, 0.1f * timeScale)));
+        if (!isDown && offset.y < -10)
+        {
+            exp2.SetPosition(VAdd(BasePosition, offset));
+            isDown = true;
+        }
     }
     if (!isDead && Health <= 0)
     {
-        exp.SetPosition(Position);
+        exp.SetPosition(VAdd(Position,VGet(0,0,5)));
         deadPosition = Position;
         PlaySoundMem(explosionSound, DX_PLAYTYPE_BACK);
         isDead = true;
     }
         Move(VAdd(offset,BasePosition));
-    Position = MV1GetPosition(ModelHandle);
     SetHitBox(4, 4);
     exp.DrawExprosion();
+    exp2.DrawExprosion();
 }
 void Enemy::Vulcan()
 {
@@ -69,7 +104,7 @@ void Enemy::Vulcan()
         if (bullets[i].isActivated == true)
         {
             
-            if (bullets[i].mainProcess(playerObject->hitbox1, playerObject->hitbox2,enemyBulletHandle))
+            if (bullets[i].mainProcess(playerObject->hitbox1, playerObject->hitbox2))
             {
                  bullets[i].isActivated = false;
                  playerObject->Health -= BULLET_DAMAGE;

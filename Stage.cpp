@@ -29,36 +29,32 @@ void stage::InitialProcess(int obst[50],int type[50],int movewalls[50])
         moveWalls[i].SetUp();
         maps[i].BaseSetUp();
     }
+    for (int i = 0; i < 10; i++)
+    {
+        backWards[i].BaseSetUp();
+    }
 }
 void stage::MainProcess()
 {
-    SetShadowMapDrawArea(shadowHandle, VGet(-120.0f, -1.0f, -20.0f + player.Position.z), VGet(120.0f, 240.0f, 220.0f + player.Position.z));
+    
+    SetShadowMapDrawArea(shadowHandle, VGet(-120.0f, -1.0f, -220.0f + player.CameraPosition.z), VGet(120.0f, 240.0f, 220.0f + player.CameraPosition.z));
     ShadowMap_DrawSetup(shadowHandle);
-    if (player.Health > 0)
+    MV1DrawModel(player.ModelHandle);
+    MV1DrawModel(enemy.ModelHandle);
+    if (isStarted)
     {
-        MV1DrawModel(player.ModelHandle);
-    }
-    if (enemy.Health > 0 && !isStarted)
-    {
-        MV1DrawModel(enemy.ModelHandle);
+
+        DrawBackWards();
     }
     ObstacleShadowDraw();
     moveWallShadow();
     ShadowMap_DrawEnd();
     DrawGraph3D(0, 500, player.Position.z + 1000, backGroundHandle, false);
+    MV1DrawModel(player.ModelHandle);
+    MV1DrawModel(enemy.ModelHandle);
     SetUseShadowMap(0, shadowHandle);
-    SetupCamera_Perspective(1);
     DrawBase();
     DrawObstacles();
-    
-    if (player.Health > 0 && !isCleared)
-    {
-        MV1DrawModel(player.ModelHandle);
-    }
-    if (enemy.Health > 0 && !isStarted)
-    {
-        MV1DrawModel(enemy.ModelHandle);
-    }
     if (isGetDamage)
     {
         if (damageRate.MeasureTimer(0.5f))
@@ -67,10 +63,11 @@ void stage::MainProcess()
             damageRate.RestartTimer();
         }
     }
-    clsDx();
-    printfDx("%d", player.isDead);
     if (isStarted)
     {
+        DrawGraph3D(0, 500, player.Position.z - 1000, backGroundHandle, false);
+        DrawBackWards();
+        enemy.Move(VGet(0, -3, player.Position.z - 120));
         Briefing();
         if (0 == CheckSoundMem(engineSound))
         {
@@ -80,6 +77,8 @@ void stage::MainProcess()
     }
     else
     {
+
+        SetupCamera_Perspective(1);
         if (!isPause &&!isCleared && !isGameOver )
         {
             player.SetHitBox(2, 2);
@@ -125,6 +124,8 @@ void stage::MainProcess()
             choosedButton = 0;
         }
     }
+    SetLightPositionHandle(playerLight, VAdd(VScale(VGet(-player.forward().x, player.forward().y, -player.forward().z), 5), player.Position));
+    SetLightPositionHandle(enemyLight, VAdd(MV1GetPosition(enemy.ModelHandle), VGet(0, 0, -5)));
     
 }
 void stage::Initialize()
@@ -136,26 +137,12 @@ void stage::Initialize()
     isPause = false;
     isRestarting = false;
     PauseControllable = true;
-    isQuitting = false;
-    player.ammo = 200;
+    isQuitting = false; 
     choosedButton = 0;
-    player.Health = 100;
-    enemy.Health = 100;
-    enemy.isTimeLimit = false;
-    player.offset = VGet(0, -5, 0);
-    player.BasePosition.z = 0;
-    player.Position = VGet(0,0,0);
-    player.SetHitBox(2, 2);
     gamePhase = 0;
     isKilled = false;
-    enemy.transitionMoveZaxis = -50.0f;
-    enemy.missilecooldowntimer = 0;
-    enemy.missileflyingTimer = 0;
-    enemy.isLaunched = false;
-    enemy.firingTimer = 0;
-    enemy.isFiring = false;
-    enemy.cobraSpeed = 0;
-    player.isDead = false;
+    enemy.Init();
+    player.Init();
     for (int i = 0; i < 50; i++)
     {
         obstacle[i] = obstacleDefault[i];
@@ -224,7 +211,7 @@ void stage::ObstacleShadowDraw()
         maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
         maps[pos].DrawbaseOutline();
 
-        if (obstacleType[pos] < 2)
+        if (obstacleType[pos] < 2 && maps[pos].position.z >=startPosZ)
         {
             switch (obstacle[pos]) {
             case UPPER:
@@ -275,26 +262,28 @@ void stage::moveWallShadow()
         moveWalls[pos].position.z = 80 * (i + (int)player.Position.z / 80);
         moveWalls[pos].DrawbaseOutline();
 
-
-        switch (moveWallType[pos]) {
-        case HIGH:
-            moveWalls[pos].DrawMoveWall(true, false, false, player.hitbox1, player.hitbox2);
-            break;
-        case MID:
-            moveWalls[pos].DrawMoveWall(false, true, false, player.hitbox1, player.hitbox2);
-            break;
-        case LOW:
-            moveWalls[pos].DrawMoveWall(false, false, true, player.hitbox1, player.hitbox2);
-            break;
-        /*case HIGH_MID:
-            moveWalls[pos].DrawMoveWall(true, true, false, player.hitbox1, player.hitbox2);
-            break;
-        case HIGH_LOW:
-            moveWalls[pos].DrawMoveWall(true, false, true, player.hitbox1, player.hitbox2);
-            break;*/
-        default:
-            moveWalls[pos].DrawMoveWall(false, false, false, player.hitbox1, player.hitbox2);
-            break;
+        if (moveWalls[pos].position.z >= startPosZ)
+        {
+            switch (moveWallType[pos]) {
+            case HIGH:
+                moveWalls[pos].DrawMoveWall(true, false, false, player.hitbox1, player.hitbox2);
+                break;
+            case MID:
+                moveWalls[pos].DrawMoveWall(false, true, false, player.hitbox1, player.hitbox2);
+                break;
+            case LOW:
+                moveWalls[pos].DrawMoveWall(false, false, true, player.hitbox1, player.hitbox2);
+                break;
+                /*case HIGH_MID:
+                    moveWalls[pos].DrawMoveWall(true, true, false, player.hitbox1, player.hitbox2);
+                    break;
+                case HIGH_LOW:
+                    moveWalls[pos].DrawMoveWall(true, false, true, player.hitbox1, player.hitbox2);
+                    break;*/
+            default:
+                moveWalls[pos].DrawMoveWall(false, false, false, player.hitbox1, player.hitbox2);
+                break;
+            }
         }
 
     }
@@ -309,7 +298,18 @@ void stage::DrawBase()
             pos -= 50;
         }
         maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
+        if( maps[pos].position.z >= startPosZ)
         maps[pos].DrawbaseOutline();
+    }
+}
+void stage::DrawBackWards()
+{
+    for (int i = 0; i < 10; i++)
+    {
+        int pos = ((int)player.Position.z % 4000) / 80 - (i-2);
+        backWards[i].position.z = 80 * pos;
+        backWards[i].DrawbaseOutline();
+        
     }
 }
 void stage::DrawObstacles()
@@ -333,15 +333,19 @@ void stage::DrawObstacles()
         maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
         AAs[pos].position.z = 80 * (i + (int)player.Position.z / 80);
         moveWalls[pos].position.z = 80 * (i + (int)player.Position.z / 80);
-        if (obstacleType[pos] < 2)
+        if (maps[pos].position.z >= startPosZ)
         {
-            Obstacles(pos, i);
+            if (obstacleType[pos] < 2)
+            {
+                Obstacles(pos, i);
+            }
+            else
+            {
+                AAGuns(pos, i);
+            }
+
+            MoveWalls(pos, i);
         }
-        else
-        {
-            AAGuns(pos,i);
-        }
-        MoveWalls(pos, i);
     }
 }
 void stage::AAGuns(int pos, int i)
@@ -538,33 +542,31 @@ void stage::IngameToClear()
         {
             timeScale = 1;
         }
-        MV1DrawModel(player.ModelHandle);
         if (clearCameraOffsetx > -9)
         {
-            clearCameraOffsetx = clearCameraOffsetx - smooth(clearCameraOffsetx, -9, 120);
+            clearCameraOffsetx = clearCameraOffsetx - smooth(clearCameraOffsetx, -7, 120);
         }
         else
         {
-            clearCameraOffsetx = -9;
+            clearCameraOffsetx = -7;
         }
         //CameraTargetMove();
         cameraDirection = VAdd(VGet(0, 1, 8), player.BasePosition);
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(clearCameraOffsetx, player.offset.y + 2, -4), player.BasePosition),
+        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(clearCameraOffsetx, player.offset.y + 2, -5), player.BasePosition),
             cameraDirection);
         ClearMainProcess();
     }
     else
     {
-        MV1DrawModel(player.ModelHandle);
         if (enemy.deadPosition.y < player.Position.y)
         {
-            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(player.offset.x, player.offset.y - 2, -5), player.BasePosition),
-                enemy.deadPosition);
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(enemy.offset.x+3, 0 , -15), enemy.BasePosition),
+                VAdd(VGet(enemy.offset.x, enemy.offset.y,0), enemy.BasePosition));
         }
         else
         {
-            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(player.offset.x, player.offset.y + 2, -5), player.BasePosition),
-                enemy.deadPosition);
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(enemy.offset.x+3, 0 , -15), enemy.BasePosition),
+                VAdd(VGet(enemy.offset.x, enemy.offset.y, 0), enemy.BasePosition));
         }
         if (timeScale > 0.2f)
         {
@@ -575,7 +577,9 @@ void stage::IngameToClear()
             timeScale = 0.2f;
         }
         cameraDirection = enemy.deadPosition;
+        
     }
+    player.CameraPosition.z = player.Position.z;
 }
 void stage::IngameToGameover()
 {

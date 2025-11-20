@@ -108,6 +108,7 @@ protected:
     Player player;
     Enemy enemy;
     mapBase maps[50];
+    mapBase backWards[10];
     antiAir AAs[50];
     wallmove moveWalls[50];
     timer objectiveShowTimer;
@@ -132,6 +133,7 @@ protected:
     void ObstacleShadowDraw();
     void moveWallShadow();
     void DrawBase();
+    void DrawBackWards();
     void DrawObstacles();
     void AAGuns(int pos, int i);
     void Obstacles(int pos, int i);
