@@ -58,6 +58,7 @@ int ingameBgm;
 int titleBgm;
 int playerLight;
 int enemyLight;
+int sideObstacle;
 float timeScale = 1;
 //ÉQÅ[ÉÄÇèIóπÇ∑ÇÈÇΩÇﬂÇÃèåèópÇÃïœêî
 bool Quit = false;
@@ -233,17 +234,24 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             break;
         case SCENE_INSTRUCTION:
             inst.main();
+            StopSoundMem(ingameBgm);
             break;
         case SCENE_STAGEBUILD:
             bil.main();
+            StopSoundMem(ingameBgm);
             break;
         case SCENE_EXTRA:
-            endless.main();
+            endless.main(); 
+            if (CheckSoundMem(ingameBgm) == 0)
+            {
+                PlaySoundMem(ingameBgm, DX_PLAYTYPE_LOOP);
+            }
             break;
         default:
             //îwåiÇÃï`âÊ
             DrawGraph3D(0, 600,  1800, backGroundHandle, false);
             TitleMainProcess();
+            StopSoundMem(ingameBgm);
             break;
         }
         WaitTimer(16);
@@ -313,6 +321,7 @@ void LoadAssets()
     explosionSound = LoadSoundMem("sfx/explosion.mp3");
     ingameBgm = LoadSoundMem("sfx/ingame.mp3");
     titleBgm = LoadSoundMem("sfx/title.mp3");
+    sideObstacle = MV1LoadModel("sideObstacle.MV1");
     fontLoad();
 }
 void setupShadowMap()

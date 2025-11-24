@@ -43,6 +43,7 @@ extern int ingameBgm;
 extern int titleBgm;
 extern int playerLight;
 extern int enemyLight;
+extern int sideObstacle;
 enum SCENES
 {
     SCENE_TITLE,

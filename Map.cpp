@@ -34,16 +34,16 @@ bool mapBase::DamageBox(bool upper, bool lower, bool right, bool left, bool cent
     {
         VECTOR edge1 = VGet(position.x + 7, position.y - 15, position.z - 40);
         VECTOR edge2 = VGet(position.x + 15, position.y + 15, position.z + 40);
-        MV1SetPosition(rightwallHandle, VGet(position.x + 11, position.y, position.z));
+        MV1SetPosition(rightwallHandle, VGet(position.x + 12, position.y, position.z));
         MV1DrawModel(rightwallHandle);
         isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
+        DrawDamageBox(edge1, edge2);
     }
     if (left)
     {
         VECTOR edge1 = VGet(position.x - 15, position.y - 15, position.z - 40);
         VECTOR edge2 = VGet(position.x - 7, position.y + 15, position.z + 40);
-        MV1SetPosition(leftwallHandle, VGet(position.x-11, position.y, position.z));
-        MV1DrawModel(leftwallHandle);
+        MV1SetPosition(leftwallHandle, VGet(position.x - 12, position.y, position.z));
         isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
     }
     if (center)
@@ -80,12 +80,10 @@ void mapBase::BaseSetUp()
     upperHandle = MV1DuplicateModel(lowerObstacleHandle);
     BaseWallHandle = MV1DuplicateModel(wallHandle);
     BaseWallHandleRight = MV1DuplicateModel(wallHandle);
-    rightwallHandle = MV1DuplicateModel(lowerObstacleHandle);
-    MV1SetRotationXYZ(rightwallHandle, VGet(0, 0, PI/2));
-    leftwallHandle = MV1DuplicateModel(lowerObstacleHandle);
-    MV1SetRotationXYZ(leftwallHandle, VGet(0, 0, PI/2));
+    rightwallHandle = MV1DuplicateModel(sideObstacle);
+    leftwallHandle = MV1DuplicateModel(sideObstacle);/*
     MV1SetScale(rightwallHandle, VGet(0.01f, 0.01f, 0.012f));
-    MV1SetScale(leftwallHandle, VGet(0.01f, 0.01f, 0.012f));
+    MV1SetScale(leftwallHandle, VGet(0.01f, 0.01f, 0.012f));*/
     MV1SetScale(lowerHandle, VGet(0.01f, 0.01f, 0.01f));
     MV1SetScale(upperHandle, VGet(0.01f, 0.01f, 0.01f));
     for (int i = 0; i < MV1GetMaterialNum(lowerHandle); i++)
