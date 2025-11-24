@@ -16,6 +16,34 @@ void Player::InitialProcess()
         MV1SetMaterialEmiColor(ModelHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
         MV1SetMaterialSpcPower(ModelHandle, i, 6);
     }
+    for (int i = 0; i < 200; i++)
+    {
+        bullets[i].setUp();
+    }
+}
+void Player::Init()
+{
+
+    ammo = 200;
+    startCameraOffsetx = 6;
+    cameraZoom = 0.6f;
+    target = 0;
+    Health = 100;
+    offset = VGet(0, -5, 0);
+    BasePosition.z = -200;
+    Position = VGet(0, 0, -200);
+    forwardSpeed = 2;
+    SetHitBox(2, 2);
+    cameraStartThleshold = 0;
+    isDead = false;
+}
+void Player::camSetUp(int pos)
+{
+    cameraStartThleshold = pos + 200;
+    startCameraOffsetx = 6;
+    cameraZoom = 0.6f;
+    target = 0;
+
 }
 void Player::mainProcess(bool mode)
 {
@@ -24,7 +52,7 @@ void Player::mainProcess(bool mode)
     {
         SetHitBox(2, 2);
 
-
+        DrawSphere3D(VAdd(VScale(VGet(-forward().x, forward().y, -forward().z), 5), Position), 0.2f, 6, GetColor(255, 255, 255), GetColor(255, 255, 255), true);
         BasePosition = VAdd(VGet(0, 0, forwardSpeed *timeScale), BasePosition);
         KeyInput();
         PlayerMoveXY();
@@ -34,6 +62,7 @@ void Player::mainProcess(bool mode)
         if (mode)
         {
             SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+            CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
             Vulcan();
         }
         else
@@ -44,6 +73,17 @@ void Player::mainProcess(bool mode)
 
         }
     }
+    else
+    {
+        offset.y -= 0.2f;
+        BasePosition.z += 1.2f;
+        MV1SetPosition(ModelHandle, VAdd(BasePosition, offset));
+        MV1SetRotationXYZ(ModelHandle, VAdd(MV1GetRotationXYZ(ModelHandle), VGet(0, 0, 0.1f)));
+        if (offset.y < 13)
+        {
+            exp2.SetPosition(MV1GetPosition(ModelHandle));
+        }
+    }
     if (!isDead && Health <= 0)
     {
         exp.SetPosition(Position);
@@ -51,6 +91,7 @@ void Player::mainProcess(bool mode)
         isDead = true;
     }
     exp.DrawExprosion();
+    exp2.DrawExprosion();
 }
 void Player::transitionProcess(bool mode)
 {
@@ -63,13 +104,44 @@ void Player::transitionProcess(bool mode)
     if (mode)
     {
         SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+
+        CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
     }
     else
     {
-        SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+        if (Position.z >= cameraStartThleshold + 20 && startCameraOffsetx >0)
+        {
+            startCameraOffsetx -= 0.1f;
+            
+        }
+        if (Position.z >= cameraStartThleshold + 20)
+        {
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x + startCameraOffsetx, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y,+target),BasePosition));
+            CameraPosition = VAdd(VGet(offset.x + startCameraOffsetx, offset.y + 2, -20), BasePosition);
+            if (cameraZoom < 1)
+            {
+                cameraZoom += 0.02f;
+            }
+            else
+            {
+                cameraZoom = 1;
+            }
+            if (target < 20)
+            {
+                target += 0.5f;
+            }
+            else target = 20;
+        }
+        else
+        {
+            SetCameraPositionAndTarget_UpVecY(VGet(offset.x + startCameraOffsetx, offset.y + 2, cameraStartThleshold), VAdd(VGet(offset.x, offset.y, target), BasePosition));
+            CameraPosition = VGet(offset.x + startCameraOffsetx, offset.y + 2, cameraStartThleshold);
+
+            
+        }
+        SetupCamera_Perspective(cameraZoom);
     }
     
-    CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
 }
 void Player::clearProcess()
 {
@@ -106,10 +178,8 @@ void Player::KeyInput()
         speedLimit = 0.7f;
         targetAngle = VGet(-0.6f, -0.4f, 0);
     }
-    else
-    {
-        InputNeutral(speed);
-    }
+    
+    InputNeutral(speed);
     Limit();
 }
 void Player::InputUp(float speed)
@@ -161,29 +231,35 @@ void Player::InputNeutral(float speed)
     {
         targetAngle = VGet(0, -0.99f, 0);
     }
-    if (x > 0.1f)
+    if (!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_D))
     {
-        x -= speed;
+        if (x > 0.1f)
+        {
+            x -= speed;
+        }
+        else if (x < -0.1f)
+        {
+            x += speed;
+        }
+        else
+        {
+            x = 0;
+        }
     }
-    else if (x < -0.1f)
+    if (!CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_W))
     {
-        x += speed;
-    }
-    else
-    {
-        x = 0;
-    }
-    if (y > 0.1f)
-    {
-        y -= speed;
-    }
-    else if (y < -0.1f)
-    {
-        y += speed;
-    }
-    else
-    {
-        y = 0;
+        if (y > 0.1f)
+        {
+            y -= speed;
+        }
+        else if (y < -0.1f)
+        {
+            y += speed;
+        }
+        else
+        {
+            y = 0;
+        }
     }
 }
 void Player::Limit()
@@ -285,7 +361,7 @@ void Player::VulcanProjectile()
     {
         if (bullets[i].isActivated)
         {
-            if (bullets[i].mainProcess(enemyObject->hitbox1, enemyObject->hitbox2,bulletHandle))
+            if (bullets[i].mainProcess(enemyObject->hitbox1, enemyObject->hitbox2))
             {
                 enemyObject->Health -= 3;
                 PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);

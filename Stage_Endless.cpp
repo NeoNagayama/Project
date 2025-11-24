@@ -19,10 +19,16 @@ void stageEndless::SetUp()
         moveWalls[i].SetUp();
         maps[i].BaseSetUp();
     }
+    for (int i = 0; i < 10; i++)
+    {
+        backWards[i].BaseSetUp();
+    }
     StageRandomize();
 }
 void stageEndless::Init()
 {
+    player.Init();
+    enemy.Init();
     isStarted = true;
     isCleared = false;
     isGameOver = false;
@@ -31,39 +37,22 @@ void stageEndless::Init()
     isRestarting = false;
     PauseControllable = true;
     isQuitting = false;
-    player.ammo = 200;
     choosedButton = 0;
-    player.Health = 100;
-    enemy.Health = 100;
-    player.offset = VGet(0, -5, 0);
-    player.BasePosition.z = 0;
     gamePhase = 0;
     isKilled = false;
-    enemy.transitionMoveZaxis = -50.0f;
-    enemy.missilecooldowntimer = 0;
-    enemy.missileflyingTimer = 0;
-    enemy.isLaunched = false;
-    enemy.isFiring = false;
-    enemy.cobraSpeed = 0;
-    player.isDead = false;
-    player.Position = VGet(0, 0, 0);
-    player.SetHitBox(2, 2);
-    enemy.isTimeLimit = false;
-    stageLength = 400;
+    stageLength = 4000;
     GoalRange = 0;
-    enemy.Health = 2;
-    player.forwardSpeed = 2;
-    enemy. forwardSpeed = 2;
-    enemy.firingTimer = 0;
     baseAmmo = 200;
     baseHealth = 200;
     Round = 1;
     clearCameraOffsetx = 0;
     StageRandomize();
     isSaved = false;
+    startPosZ = 0;
 }
 void stageEndless::StartWave()
 {
+    enemy.Init();
     gamePhase = PHASE_RUN;
     Round += 1;
     isCleared = false;
@@ -75,17 +64,10 @@ void stageEndless::StartWave()
     PauseControllable = true;
     isQuitting = false;
     isStarted = true;
-    enemy.Health = 2;
-    enemy.transitionMoveZaxis = -50.0f;
-    enemy.firingTimer = 0;
-    enemy.missilecooldowntimer = 0;
-    enemy.missileflyingTimer = 0;
-    enemy.isLaunched = false;
-    enemy.isFiring = false;
-    enemy.cobraSpeed = 0;
     clearCameraOffsetx = 0;
     stageLength = player.Position.z + GoalRange;
-    startPosZ = player.Position.z;
+    startPosZ = player.Position.z + 200;
+    player.camSetUp(startPosZ);
 }
 void stageEndless::StageRandomize()
 {
@@ -98,34 +80,24 @@ void stageEndless::StageRandomize()
 }
 void stageEndless::main()
 {
-    
-    SetShadowMapDrawArea(shadowHandle, VGet(-120.0f, -1.0f, -20.0f + player.Position.z), VGet(120.0f, 240.0f, 220.0f + player.Position.z));
+    SetShadowMapDrawArea(shadowHandle, VGet(-120.0f, -1.0f, -220.0f + player.CameraPosition.z), VGet(120.0f, 240.0f, 220.0f + player.CameraPosition.z));
     ShadowMap_DrawSetup(shadowHandle);
-    if (player.Health > 0)
+    MV1DrawModel(player.ModelHandle);
+    MV1DrawModel(enemy.ModelHandle);
+    if (isStarted)
     {
-        MV1DrawModel(player.ModelHandle);
-    }
-    if (enemy.Health > 0 && !isStarted)
-    {
-        MV1DrawModel(enemy.ModelHandle);
+        DrawBackWards();
     }
     ObstacleShadowDraw();
     moveWallShadow();
     ShadowMap_DrawEnd();
     DrawGraph3D(0, 500, player.Position.z + 1000, backGroundHandle, false);
+    MV1DrawModel(player.ModelHandle);
+    MV1DrawModel(enemy.ModelHandle);
     SetUseShadowMap(0, shadowHandle);
-    SetupCamera_Perspective(1);
     DrawBase();
     DrawObstacles();
     RoundCount.DrawTextWithSort(0, 1650, "ƒ‰ƒEƒ“ƒh:%.f", japaneseFontHandle, SORT_RIGHT, 90, false, GetColor(0, 255, 0), GetColor(50, 50, 50), (float)Round);
-    if (player.Health > 0 && !isCleared)
-    {
-        MV1DrawModel(player.ModelHandle);
-    }
-    if (enemy.Health > 0 && !isStarted)
-    {
-        MV1DrawModel(enemy.ModelHandle);
-    }
     if (isGetDamage)
     {
         if (damageRate.MeasureTimer(0.5f))
@@ -136,6 +108,9 @@ void stageEndless::main()
     }
     if (isStarted)
     {
+        DrawGraph3D(0, 500, player.Position.z - 1000, backGroundHandle, false);
+        DrawBackWards();
+        enemy.Move(VGet(0, -3, player.Position.z - 120));
         Briefing();
         if (0 == CheckSoundMem(engineSound))
         {
@@ -144,6 +119,7 @@ void stageEndless::main()
     }
     else
     {
+        SetupCamera_Perspective(1);
         if (!isPause && !isCleared && !isGameOver)
         {
             Ingame();
@@ -164,7 +140,6 @@ void stageEndless::main()
         }
         else if (isGameOver)
         {
-            MV1DrawModel(enemy.ModelHandle);
             player.mainProcess(true);
             enemy.Position.z += 2;
             enemy.Move(enemy.Position);
@@ -190,6 +165,8 @@ void stageEndless::main()
             choosedButton = 0;
         }
     }
+    SetLightPositionHandle(playerLight, VAdd(VScale(VGet(-player.forward().x, player.forward().y, -player.forward().z), 5), player.Position));
+    SetLightPositionHandle(enemyLight, VAdd(MV1GetPosition(enemy.ModelHandle), VGet(0, 0, -5)));
 }
 void stageEndless::IngameToGameoverModified()
 {
@@ -215,7 +192,6 @@ void stageEndless::WaveResult()
         {
             timeScale = 1;
         }
-        MV1DrawModel(player.ModelHandle);
         if (clearCameraOffsetx > -9)
         {
             clearCameraOffsetx = clearCameraOffsetx - smooth(clearCameraOffsetx, -9, 120);
@@ -232,16 +208,15 @@ void stageEndless::WaveResult()
     }
     else
     {
-        MV1DrawModel(player.ModelHandle);
         if (enemy.deadPosition.y < player.Position.y)
         {
-            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(player.offset.x, player.offset.y - 2, -5), player.BasePosition),
-                enemy.deadPosition);
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(enemy.offset.x + 3, 0, -15), enemy.BasePosition),
+                VAdd(VGet(enemy.offset.x, enemy.offset.y, 0), enemy.BasePosition));
         }
         else
         {
-            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(player.offset.x, player.offset.y + 2, -5), player.BasePosition),
-                enemy.deadPosition);
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(enemy.offset.x + 3, 0, -15), enemy.BasePosition),
+                VAdd(VGet(enemy.offset.x, enemy.offset.y, 0), enemy.BasePosition));
         }
         if (timeScale > 0.2f)
         {
@@ -252,6 +227,7 @@ void stageEndless::WaveResult()
             timeScale = 0.2f;
         }
         cameraDirection = enemy.deadPosition;
+
     }
 }
 void stageEndless::ShowResult()

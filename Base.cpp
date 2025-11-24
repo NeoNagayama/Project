@@ -29,7 +29,7 @@ VECTOR base::forward()
     Rotation = MV1GetRotationXYZ(ModelHandle);
     forwardDirection.z = cos(Rotation.x);
     forwardDirection.y = sin(Rotation.x);
-    forwardDirection.x = tan(Rotation.y);
+    forwardDirection.x = sin(Rotation.y);
     return forwardDirection;
 }
 void base::SetRotation(VECTOR vector)

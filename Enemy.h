@@ -22,6 +22,7 @@ private:
     //プレイヤーのポインター
     Player* playerObject;
     explosionEffect exp;
+    explosionEffect exp2;
     const float MAX_MOVE_RANGE = 10.0f;
     const float EVADE_TARGET_DISTANCE = 0.45f;
     const float TRANSITION_TARGET_POSZ = 30.0f;
@@ -46,7 +47,7 @@ private:
     const int RETICLE_POS_Z = 50;
     const int Z_OFFSET = 50;
     //左右移動の速度
-    const float moveSpeed = 0.7f;
+    const float moveSpeed = 0.65f;
     //ロールの速度
     const float rotateSpeed = 0.08f;
     //機銃の連射のレート
@@ -84,6 +85,7 @@ private:
     float xSpeed = 0.0f, ySpeed = 0.0f;
     float pitchAngle;
     float targetPitch = PI / 2;
+    bool isDown = false;
 public:
     bool isTimeLimit;
     float cobraSpeed = 0;
@@ -137,4 +139,6 @@ public:
     void Cobra();
      int BULLET_DAMAGE = 5;
      int MISSILE_DAMAGE = 30;
+     void Init();
+     int E_tailLight;
 };

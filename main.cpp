@@ -56,6 +56,8 @@ int hitSound;
 int explosionSound;
 int ingameBgm;
 int titleBgm;
+int playerLight;
+int enemyLight;
 float timeScale = 1;
 //ÉQÅ[ÉÄÇèIóπÇ∑ÇÈÇΩÇﬂÇÃèåèópÇÃïœêî
 bool Quit = false;
@@ -194,6 +196,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetLightEnableHandle(PlayerLightHandle, true);
     SetLightDifColorHandle(PlayerLightHandle, GetColorF(0.8f, 0.8f, 0.8f, 0.4f));
     SetLightSpcColorHandle(PlayerLightHandle, GetColorF(0.4f, 0.4f, 0.4f, 0.4f));
+    enemyLight = CreatePointLightHandle(VGet(0,0,0), 5, 0.1f, 0.1f, 0.1f);
+    playerLight = CreatePointLightHandle(VGet(0, 0, 0), 5, 0.1f, 0.1f, 0.1f);
+    SetLightDifColorHandle(enemyLight, GetColorF(1, 0.3f, 0, 1));
+    SetLightSpcColorHandle(enemyLight, GetColorF(1, 0.3f, 0, 1));
+    SetLightAmbColorHandle(enemyLight, GetColorF(1, 0.3f, 0, 1));
+    SetLightDifColorHandle(playerLight, GetColorF(0, 0.3f, 1, 1));
+    SetLightSpcColorHandle(playerLight, GetColorF(0, 0.3f, 1, 1));
+    SetLightAmbColorHandle(playerLight, GetColorF(0, 0.3f, 1, 1));
 
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen() && !Quit) {
         Input_UpdateKeyboard();
@@ -273,8 +283,8 @@ void LoadAssets()
     reticleHandle = LoadGraph("Reticle.png", false);
     reticleInsideGaugeHandle = LoadGraph("ReticleInsideGauge.png", false);
     backGroundHandle = LoadGraph("backGround.jpg");
-    bulletHandle = LoadGraph("bullet.png");
-    enemyBulletHandle = LoadGraph("enemyBullet.png");
+    bulletHandle = MV1LoadModel("bullet.mv1");
+    enemyBulletHandle = MV1LoadModel("bullet.mv1");
     //skySphereHandle = MV1LoadModel("SkySphereTest.mv1");
     cargoModelOrigin = MV1LoadModel("cargo.mv1");
     lowerObstacleHandle = MV1LoadModel("LowerObstacle.mv1");
