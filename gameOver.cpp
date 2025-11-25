@@ -51,7 +51,6 @@ void GameOverMainProcess()
     {
         isSceneChangingFromGameOver = true;
         PlaySoundMem(interectSound, DX_PLAYTYPE_BACK, true);
-        StopSoundMem(ingameBgm);
     }
     if (isSceneChangingFromGameOver && !isRetrySelected)
     {
@@ -60,6 +59,7 @@ void GameOverMainProcess()
             Titleinitialize();
             scene = SCENE_TITLE;
             progress = 255;
+            StopSoundMem(ingameBgm);
         }
     }
     else if (isSceneChangingFromGameOver && isRetrySelected)
@@ -83,6 +83,7 @@ void GameOverMainProcess()
             }
             scene = SCENE_INGAME;
             progress = 255;
+            StopSoundMem(ingameBgm);
         }
     }
 }

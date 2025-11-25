@@ -49,7 +49,6 @@ void ClearMainProcess()
         {
             isSceneChanging = true;
             PlaySoundMem(interectSound, DX_PLAYTYPE_BACK, true);
-            StopSoundMem(ingameBgm);
         }
     }
     else
@@ -67,6 +66,7 @@ void ClearMainProcess()
             Titleinitialize();
             scene = SCENE_TITLE;
             progress = 255;
+            StopSoundMem(ingameBgm);
         }
     }
     else if (isNextSelected && isSceneChanging)
@@ -85,6 +85,7 @@ void ClearMainProcess()
             }
             scene = SCENE_INGAME;
             progress = 255;
+            StopSoundMem(ingameBgm);
         }
     }
 }
