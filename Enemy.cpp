@@ -3,7 +3,7 @@
 #include <random>
 void Enemy::InitialProcess()
 {
-    ModelHandle = MV1LoadModel("EnemyModel.mv1");
+    ModelHandle = MV1LoadModel("Resource/EnemyModel.mv1");
     MV1SetPosition(ModelHandle, VGet(0,0, 0));
     MV1SetScale(ModelHandle, VGet(6, 6, 6));
     Position = VGet(0, 0, 0);
@@ -36,6 +36,9 @@ void Enemy::Init()
     MV1SetRotationXYZ(ModelHandle,VGet(0, 0, 0));
     isDead = false;
     isDown = false;
+    isTimeLimit = false;
+    //MISSILE_DAMAGE = 30.0f;
+    BULLET_DAMAGE = 5.0f;
 }
 void Enemy::mainProcess(bool mode)
 {
@@ -108,6 +111,7 @@ void Enemy::Vulcan()
             {
                  bullets[i].isActivated = false;
                  playerObject->Health -= BULLET_DAMAGE;
+                 isGetDamaged = true;
                  PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);
             }
             isReticleShowUp = true;
@@ -188,6 +192,7 @@ void Enemy::missile()
             missileflyingTimer = 0;
             missilecooldowntimer = 0;
             missileCooldown = get_rand(5, 7);
+            DespawnTimer = 0;
         }
     }
     else if (isGuideLost)
@@ -255,10 +260,12 @@ void Enemy::MissileLaunch()
         }
         else
         {
-            playerObject->Health -= MISSILE_DAMAGE;
+            float dmg = MISSILE_DAMAGE;
+            playerObject->Health = playerObject->Health - dmg;
         }
         missileCooldown = get_rand(5, 7);
         exp.SetPosition(playerObject->Position);
+        isGetDamaged = true;
         PlaySoundMem(explosionSound, DX_PLAYTYPE_BACK);
     }
 }

@@ -4,13 +4,16 @@
 #include "main.h"
 #include "ui.h"
 #include "Stage_Endless.h"
-
+#include <string>
+#include <codecvt>
 bool isStartSelected = true;
 bool sceneChanging = false;
 int selected = 0;
+int prog = 0;
 float yaxis = 0;
 float z = 80;
 float x = -100;
+timer timeerrrr;
 VECTOR test = VGet(0,0,0);
 Button Start;
 Button Extra;
@@ -24,6 +27,31 @@ stage* stage1Instance;
 stage* stage2Instance;
 stage* stage3Instance;
 stageEndless* Stage4;
+std::string WStringToString
+(
+    std::wstring oWString
+)
+{
+    // wstring → SJIS
+    int iBufferSize = WideCharToMultiByte(CP_OEMCP, 0, oWString.c_str()
+        , -1, (char*)NULL, 0, NULL, NULL);
+
+    // バッファの取得
+    CHAR* cpMultiByte = new CHAR[iBufferSize];
+
+    // wstring → SJIS
+    WideCharToMultiByte(CP_OEMCP, 0, oWString.c_str(), -1, cpMultiByte
+        , iBufferSize, NULL, NULL);
+
+    // stringの生成
+    std::string oRet(cpMultiByte, cpMultiByte + iBufferSize - 1);
+
+    // バッファの破棄
+    delete[] cpMultiByte;
+
+    // 変換結果を返す
+    return(oRet);
+}
 void getStagePointers(stage* s1, stage* s2, stage* s3,stageEndless* s4) {
     stage1Instance = s1;
     stage2Instance = s2;
@@ -36,7 +64,7 @@ void TitleInitialProcess()
     Start.SetButtonPosition(VGet(1550,445,1),600,100,0.9f);
     Extra.SetButtonPosition(VGet(1550, 645, 1), 600, 100, 0.9f);
     Exit.SetButtonPosition(VGet(1550, 845, 1), 600, 100, 0.9f);
-    modelhandle[0] = MV1LoadModel("PlayerModel.mv1");
+    modelhandle[0] = MV1LoadModel("Resource/PlayerModel.mv1");
     MV1SetPosition(modelhandle[0], VGet(-0.4, 0.2f, -19.2f));
     MV1SetRotationXYZ(modelhandle[0], VGet(0, 2.53f, 0));
     modelhandle[1] = MV1DuplicateModel(modelhandle[0]);
@@ -146,8 +174,21 @@ void TitleButtons()
 }
 void TitleMenu()
 {
+    //std::wstring tt = L"うおｗうおｗうおｗうおｗうおｗうおｗうおｗ\nうおｗうおｗうおｗうおｗうおｗうおｗうおｗうおｗ";
+    //std::wstring sub = tt.substr(0, prog);/*
+    //std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;*/
+    //std::string str = WStringToString(sub);
+    //if (prog < tt.length() && timeerrrr.MeasureTimer(0.1f))
+    //{
+    //    prog += 1;
+    //    timeerrrr.RestartTimer();
+    //}
+    //else if (prog >= tt.length())
+    //{
+    //    prog = 0;
+    //}
     TitleButtons();
-    GameTitle.DrawTextWithSort(1000, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 255));
+    GameTitle.DrawTextWithSort(1000, 1920,"CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 255));
     if ((Input_GetKeyboardDown(KEY_INPUT_SPACE) || Input_GetKeyboardDown(KEY_INPUT_RETURN)))
     {
         sceneChanging = true;

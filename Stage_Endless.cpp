@@ -43,7 +43,7 @@ void stageEndless::Init()
     stageLength = 4000;
     GoalRange = 0;
     baseAmmo = 200;
-    baseHealth = 200;
+    baseHealth = 100;
     Round = 1;
     clearCameraOffsetx = 0;
     StageRandomize();
@@ -323,7 +323,7 @@ void stageEndless::EffectResult()
         break;
     case 1:
         enemy.BULLET_DAMAGE += 1;
-        enemy.MISSILE_DAMAGE += 5;
+        //enemy.MISSILE_DAMAGE += 5.0f;
         break;
     case 2:
         timeLimit -= 10;
