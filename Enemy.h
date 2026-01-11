@@ -87,7 +87,7 @@ private:
     float targetPitch = PI / 2;
     bool isDown = false;
 public:
-    bool isTimeLimit;
+    bool isTimeLimit = false;
     float cobraSpeed = 0;
     float forwardSpeed = 2.0f;
     VECTOR deadPosition;
@@ -137,8 +137,8 @@ public:
     //遷移中のプレイヤーの座標からのz座標のずれ
     float transitionMoveZaxis = -50.0f;
     void Cobra();
-     int BULLET_DAMAGE = 5;
-     int MISSILE_DAMAGE = 30;
+     float BULLET_DAMAGE = 5.0f;
+     float MISSILE_DAMAGE = 30.0f;
      void Init();
      int E_tailLight;
 };

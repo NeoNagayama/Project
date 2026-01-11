@@ -37,13 +37,13 @@ bool mapBase::DamageBox(bool upper, bool lower, bool right, bool left, bool cent
         MV1SetPosition(rightwallHandle, VGet(position.x + 12, position.y, position.z));
         MV1DrawModel(rightwallHandle);
         isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
-        DrawDamageBox(edge1, edge2);
     }
     if (left)
     {
         VECTOR edge1 = VGet(position.x - 15, position.y - 15, position.z - 40);
         VECTOR edge2 = VGet(position.x - 7, position.y + 15, position.z + 40);
         MV1SetPosition(leftwallHandle, VGet(position.x - 12, position.y, position.z));
+        MV1DrawModel(leftwallHandle);
         isHit = checkHit(edge1, edge2, hitbox1, hitbox2, isHit);
     }
     if (center)

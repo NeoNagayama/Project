@@ -4,14 +4,14 @@
 int test;
 void Player::InitialProcess()
 {
-    ModelHandle = MV1LoadModel("PlayerModel.mv1");
+    ModelHandle = MV1LoadModel("Resource/PlayerModel.mv1");
     MV1SetPosition(ModelHandle, VGet(0, -5, -0));
     MV1SetScale(ModelHandle, VGet(6, 6, 6));
     Position = VGet(0, -5, -0); 
     for (int i = 0; i < MV1GetMaterialNum(ModelHandle); i++)
     {
-        MV1SetMaterialDifColor(ModelHandle, i, GetColorF(0.7f, 0.7f, 0.7f, 1.0f));
-        MV1SetMaterialAmbColor(ModelHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+        MV1SetMaterialDifColor(ModelHandle, i, GetColorF(0.7f, 0.7f, 0.5f, 1.0f));
+        MV1SetMaterialAmbColor(ModelHandle, i, GetColorF(0.2f, 0.2f, 0.4f, 1.0f));
         MV1SetMaterialSpcColor(ModelHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
         MV1SetMaterialEmiColor(ModelHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
         MV1SetMaterialSpcPower(ModelHandle, i, 6);
@@ -32,7 +32,7 @@ void Player::Init()
     offset = VGet(0, -5, 0);
     BasePosition.z = -200;
     Position = VGet(0, 0, -200);
-    forwardSpeed = 2;
+    forwardSpeed = DEFAULTSPEED;
     SetHitBox(2, 2);
     cameraStartThleshold = 0;
     isDead = false;
@@ -95,7 +95,7 @@ void Player::mainProcess(bool mode)
 }
 void Player::transitionProcess(bool mode)
 {
-    BasePosition = VAdd(VGet(0, 0, forwardSpeed * timeScale), BasePosition);
+    BasePosition = VAdd(VGet(0, 0, DEFAULTSPEED * timeScale), BasePosition);
     Move(VAdd(BasePosition, offset));
     targetAngle = VGet(0, -0.99f, 0);
     rotatePlayer();
@@ -313,7 +313,7 @@ void Player::PlayerMoveXY()
 }
 void Player::Vulcan()
 {
-    VulcanText.DrawTextWithSort(120, 1920, "VULCAN: %.f", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50), ammo);
+    VulcanText.DrawTextWithSort(120, 1920, "‹@e: %.f", japaneseFontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50), ammo);
     Position = MV1GetPosition(ModelHandle);
     for (int i = 49; i >= 0; i--)
     {

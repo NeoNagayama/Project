@@ -44,6 +44,7 @@ extern int titleBgm;
 extern int playerLight;
 extern int enemyLight;
 extern int sideObstacle;
+extern bool isGetDamaged;
 enum SCENES
 {
     SCENE_TITLE,
@@ -99,3 +100,4 @@ void LoadStage2();
 void LoadStage3();
 void LoadScore();
 void setVolume();
+void CameraShake();

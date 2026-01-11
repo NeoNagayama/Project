@@ -146,6 +146,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Flare.cpp" />
     <ClCompile Include="Instruction.cpp" />
+    <ClCompile Include="setsume.cpp" />
     <ClCompile Include="StageBuild.cpp" />
     <ClCompile Include="Stage_Endless.cpp" />
     <ClCompile Include="Text.cpp" />

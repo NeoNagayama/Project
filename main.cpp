@@ -59,6 +59,7 @@ int titleBgm;
 int playerLight;
 int enemyLight;
 int sideObstacle;
+bool isGetDamaged;
 float timeScale = 1;
 //ÉQÅ[ÉÄÇèIóπÇ∑ÇÈÇΩÇﬂÇÃèåèópÇÃïœêî
 bool Quit = false;
@@ -234,6 +235,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             break;
         case SCENE_INSTRUCTION:
             inst.main();
+            stage1.Initialize();
+            stage2.Initialize();
+            stage3.Initialize();
             StopSoundMem(ingameBgm);
             break;
         case SCENE_STAGEBUILD:
@@ -256,6 +260,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         }
         WaitTimer(16);
         SetUseShadowMap(0, -1);
+        if (isGetDamaged)
+        {
+            CameraShake();
+        }
     }
     DeleteShadowMap(shadowHandle);
     DeleteShadowMap(titleShadowHandle);
@@ -287,41 +295,41 @@ VECTOR VectorDirectionNormalize(VECTOR to, VECTOR from)
 }
 void LoadAssets()
 {
-    carrierHandle = MV1LoadModel("AircraftCarrier.mv1");
-    reticleHandle = LoadGraph("Reticle.png", false);
-    reticleInsideGaugeHandle = LoadGraph("ReticleInsideGauge.png", false);
-    backGroundHandle = LoadGraph("backGround.jpg");
-    bulletHandle = MV1LoadModel("bullet.mv1");
-    enemyBulletHandle = MV1LoadModel("bullet.mv1");
+    carrierHandle = MV1LoadModel("Resource/AircraftCarrier.mv1");
+    reticleHandle = LoadGraph("Resource/Reticle.png", false);
+    reticleInsideGaugeHandle = LoadGraph("Resource/ReticleInsideGauge.png", false);
+    backGroundHandle = LoadGraph("Resource/backGround.jpg");
+    bulletHandle = MV1LoadModel("Resource/bullet.mv1");
+    enemyBulletHandle = MV1LoadModel("Resource/bullet.mv1");
     //skySphereHandle = MV1LoadModel("SkySphereTest.mv1");
-    cargoModelOrigin = MV1LoadModel("cargo.mv1");
-    lowerObstacleHandle = MV1LoadModel("LowerObstacle.mv1");
-    missileBurnerHandle = LoadGraph("missileBurner.png");
-    smokeHandle = LoadGraph("smoke1.png");
-    explosionHandle = LoadGraph("explosion.png");
-    wallHandle = MV1LoadModel("wall.mv1");
-    guideHandle = LoadGraph("guideBeacon.png");
-    instGraph = LoadGraph("Instruction.png");
-    spaceGraph = LoadGraph("Space.png");
-    alertGraph = LoadGraph("MissileAlert.png");
-    gaugeHandle = LoadGraph("ProgressGauge.png");
-    barHandle = LoadGraph("ProgressBar.png");
-    E_bar = LoadGraph("EnemyBar.png");
-    E_gauge = LoadGraph("EnemyGauge.png");
-    interectSound = LoadSoundMem("sfx/interect2.mp3");
-    selectSound = LoadSoundMem("sfx/interect.mp3");
-    missileAlertSound = LoadSoundMem("sfx/alert.mp3");
-    pitbullSound = LoadSoundMem("sfx/pitbull.mp3");
-    flareSound = LoadSoundMem("sfx/flare.mp3");
-    playerShotSound = LoadSoundMem("sfx/shot2.mp3");
-    enemyShotSound = LoadSoundMem("sfx/enemyShot.mp3");
-    frybySound = LoadSoundMem("sfx/flyby.mp3");
-    engineSound = LoadSoundMem("sfx/playerEngine.mp3");
-    hitSound = LoadSoundMem("sfx/hit.mp3");
-    explosionSound = LoadSoundMem("sfx/explosion.mp3");
-    ingameBgm = LoadSoundMem("sfx/ingame.mp3");
-    titleBgm = LoadSoundMem("sfx/title.mp3");
-    sideObstacle = MV1LoadModel("sideObstacle.MV1");
+    cargoModelOrigin = MV1LoadModel("Resource/cargo.mv1");
+    lowerObstacleHandle = MV1LoadModel("Resource/LowerObstacle.mv1");
+    missileBurnerHandle = LoadGraph("Resource/missileBurner.png");
+    smokeHandle = LoadGraph("Resource/smoke1.png");
+    explosionHandle = LoadGraph("Resource/explosion.png");
+    wallHandle = MV1LoadModel("Resource/wall.mv1");
+    guideHandle = LoadGraph("Resource/guideBeacon.png");
+    instGraph = LoadGraph("Resource/Instruction.png");
+    spaceGraph = LoadGraph("Resource/Space.png");
+    alertGraph = LoadGraph("Resource/MissileAlert.png");
+    gaugeHandle = LoadGraph("Resource/ProgressGauge.png");
+    barHandle = LoadGraph("Resource/ProgressBar.png");
+    E_bar = LoadGraph("Resource/EnemyBar.png");
+    E_gauge = LoadGraph("Resource/EnemyGauge.png");
+    interectSound = LoadSoundMem("Resource/sfx/interect2.mp3");
+    selectSound = LoadSoundMem("Resource/sfx/interect.mp3");
+    missileAlertSound = LoadSoundMem("Resource/sfx/alert.mp3");
+    pitbullSound = LoadSoundMem("Resource/sfx/pitbull.mp3");
+    flareSound = LoadSoundMem("Resource/sfx/flare.mp3");
+    playerShotSound = LoadSoundMem("Resource/sfx/shot2.mp3");
+    enemyShotSound = LoadSoundMem("Resource/sfx/enemyShot.mp3");
+    frybySound = LoadSoundMem("Resource/sfx/flyby.mp3");
+    engineSound = LoadSoundMem("Resource/sfx/playerEngine.mp3");
+    hitSound = LoadSoundMem("Resource/sfx/hit.mp3");
+    explosionSound = LoadSoundMem("Resource/sfx/explosion.mp3");
+    ingameBgm = LoadSoundMem("Resource/sfx/ingame.mp3");
+    titleBgm = LoadSoundMem("Resource/sfx/title.mp3");
+    sideObstacle = MV1LoadModel("Resource/sideObstacle.mv1");
     fontLoad();
 }
 void setupShadowMap()
@@ -458,5 +466,15 @@ void setVolume()
     ChangeVolumeSoundMem(120, selectSound);
     ChangeVolumeSoundMem(120, interectSound);
     ChangeVolumeSoundMem(60, engineSound);
+}
+void CameraShake()
+{
+    int range = 3;
+    int mult = 10;
+    VECTOR camPos = GetCameraPosition();
+    VECTOR targetPos = GetCameraTarget();
+    VECTOR offset = VGet((float)get_rand(-range, range) / mult,(float)get_rand(-range, range) / mult, 0);
+    SetCameraPositionAndTarget_UpVecY(VAdd(camPos, offset), VAdd(targetPos, offset));
+    isGetDamaged = false;
 }
 

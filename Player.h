@@ -41,10 +41,12 @@ private:
     static constexpr float FlareFiringRate = 0.1f;
     static constexpr float FlareInterval = 5;
     bool Launching = false;
+    
     int FlareAmount = 10;
     static constexpr int maxAmmo = 200;
     Bullet bullets[200];
     Flare Flares[10];
+    timer invin;
     void FlareLaunch();
     void VulcanProjectile();
     void InputUp(float speed);
@@ -53,9 +55,11 @@ private:
     void rotateOnlyRoll();
     void Limit();
 public:
+    static constexpr float DEFAULTSPEED = 2;
     float ammo = 200;
     float forwardSpeed = 2;
     bool isDead = false;
+    bool isInvincible;
     void InitialProcess();
     void Flare();
     void Vulcan();

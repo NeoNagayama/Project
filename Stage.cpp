@@ -154,10 +154,11 @@ void stage::Initialize()
 }
 void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
 {
-    if (maps[pos].DamageBox(upper, lower, right, left, false, player.hitbox1, player.hitbox2) && !isStarted)
+    if (maps[pos].DamageBox(upper, lower, right, left, false, player.hitbox1, player.hitbox2) && !isStarted && player.Health > 0)
     {
         isDead = true;
         player.Health = 0;
+        isGetDamaged = true;
     }
     if (i == 0 || i == 2 || i == 1)
     {
@@ -169,10 +170,11 @@ void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bo
 }
 void stage::AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
 {
-    if (AAs[pos].DamageZone(upper, lower, right, left,player.hitbox1, player.hitbox2) && !isGetDamage)
+    if (AAs[pos].DamageZone(upper, lower, right, left,player.hitbox1, player.hitbox2) && !isGetDamage && player.Health > 0)
     {
         player.Health -= 5;
         isGetDamage = true;
+        isGetDamaged = true;
         PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);
     }
     
@@ -186,10 +188,11 @@ void stage::AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool 
 }
 void stage::MoveWallDraw(int i ,int pos, bool high,bool mid,bool low)
 {
-    if (moveWalls[pos].DrawMoveWall(high, mid, low, player.hitbox1, player.hitbox2))
+    if (moveWalls[pos].DrawMoveWall(high, mid, low, player.hitbox1, player.hitbox2) && !isStarted && player.Health > 0)
     {
         isDead = true;
         player.Health = 0;
+        isGetDamaged = true;
     }
     
     if (i == 0 || i == 1 || i== 2)
@@ -327,8 +330,6 @@ void stage::DrawObstacles()
             int t = 15 + ((int)player.Position.z % 4000) / 80;
             obstacle[t-50] = get_rand(0, 25);
             obstacleType[t-50] = get_rand(0, 8);
-            clsDx();
-            printfDx("wow");
         }
         maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
         AAs[pos].position.z = 80 * (i + (int)player.Position.z / 80);
@@ -484,6 +485,8 @@ void stage::Briefing()
 }
 void stage::Ingame()
 {
+    clsDx();
+    printfDx("%.f", enemy.MISSILE_DAMAGE);
     //IngameToClear();
     if (player.ammo < 1 || player.Health <= 0)
     {
@@ -583,6 +586,7 @@ void stage::IngameToClear()
 }
 void stage::IngameToGameover()
 {
+    
     if (gameOverTimer.MeasureTimer(1.0f))
     {
         GameOverMainProcess();
