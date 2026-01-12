@@ -76,8 +76,8 @@ bool mapBase::checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR pl
 void mapBase::BaseSetUp()
 {
 
-    lowerHandle = MV1DuplicateModel(lowerObstacleHandle);
-    upperHandle = MV1DuplicateModel(lowerObstacleHandle);
+    lowerHandle = MV1DuplicateModel(horizontalObstacleHandle);
+    upperHandle = MV1DuplicateModel(horizontalObstacleHandle);
     BaseWallHandle = MV1DuplicateModel(wallHandle);
     BaseWallHandleRight = MV1DuplicateModel(wallHandle);
     rightwallHandle = MV1DuplicateModel(sideObstacle);
