@@ -19,7 +19,7 @@ void stageEndless::SetUp()
         moveWalls[i].SetUp();
         maps[i].BaseSetUp();
     }
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 30; i++)
     {
         backWards[i].BaseSetUp();
     }

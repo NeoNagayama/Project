@@ -15,6 +15,9 @@ void stage::InitialProcess(int obst[50],int type[50],int movewalls[50])
     Buttons[0].SetText("Resume");
     Buttons[1].SetText("Restart");
     Buttons[2].SetText("Quit");
+    Buttons[0].init(buttonGraph);
+    Buttons[1].init(buttonGraph);
+    Buttons[2].init(buttonGraph);
     player.InitialProcess();
     enemy.InitialProcess();
     player.EnemySet(&enemy);
@@ -29,7 +32,7 @@ void stage::InitialProcess(int obst[50],int type[50],int movewalls[50])
         moveWalls[i].SetUp();
         maps[i].BaseSetUp();
     }
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 30; i++)
     {
         backWards[i].BaseSetUp();
     }
@@ -211,44 +214,47 @@ void stage::ObstacleShadowDraw()
         {
             pos -= 50;
         }
-        maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
-        maps[pos].DrawbaseOutline();
-
-        if (obstacleType[pos] < 2 && maps[pos].position.z >=startPosZ)
+        if (pos >= 0)
         {
-            switch (obstacle[pos]) {
-            case UPPER:
-                maps[pos].DamageBox(true, false, false, false, false, player.hitbox1, player.hitbox2);
-                break;
-            case LOWER:
-                maps[pos].DamageBox(false, true, false, false, false, player.hitbox1, player.hitbox2);
-                break;
-            case RIGHT:
-                maps[pos].DamageBox(false, false, true, false, false, player.hitbox1, player.hitbox2);
-                break;
-            case LEFT:
-                maps[pos].DamageBox(false, false, false, true, false, player.hitbox1, player.hitbox2);
-                break;
-            case UPPER_LOWER:
-                maps[pos].DamageBox(true, true, false, false, false, player.hitbox1, player.hitbox2);
-                break;
-            case UPPER_RIGHT:
-                maps[pos].DamageBox(true, false, true, false, false, player.hitbox1, player.hitbox2);
-                break;
-            case UPPER_LEFT:
-                maps[pos].DamageBox(true, false, false, true, false, player.hitbox1, player.hitbox2);
-                break;
-            case LOWER_RIGHT:
-                maps[pos].DamageBox(false, true, true, false, false, player.hitbox1, player.hitbox2);
-                break;
-            case LOWER_LEFT:
-                maps[pos].DamageBox(false, true, false, true, false, player.hitbox1, player.hitbox2);
-                break;
-            case RIGHT_LEFT:
-                maps[pos].DamageBox(false, false, true, true, false, player.hitbox1, player.hitbox2);
-                break;
-            default:
-                break;
+            maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
+            maps[pos].DrawbaseOutline();
+
+            if (obstacleType[pos] < 2 && maps[pos].position.z >= startPosZ)
+            {
+                switch (obstacle[pos]) {
+                case UPPER:
+                    maps[pos].DamageBox(true, false, false, false, false, player.hitbox1, player.hitbox2);
+                    break;
+                case LOWER:
+                    maps[pos].DamageBox(false, true, false, false, false, player.hitbox1, player.hitbox2);
+                    break;
+                case RIGHT:
+                    maps[pos].DamageBox(false, false, true, false, false, player.hitbox1, player.hitbox2);
+                    break;
+                case LEFT:
+                    maps[pos].DamageBox(false, false, false, true, false, player.hitbox1, player.hitbox2);
+                    break;
+                case UPPER_LOWER:
+                    maps[pos].DamageBox(true, true, false, false, false, player.hitbox1, player.hitbox2);
+                    break;
+                case UPPER_RIGHT:
+                    maps[pos].DamageBox(true, false, true, false, false, player.hitbox1, player.hitbox2);
+                    break;
+                case UPPER_LEFT:
+                    maps[pos].DamageBox(true, false, false, true, false, player.hitbox1, player.hitbox2);
+                    break;
+                case LOWER_RIGHT:
+                    maps[pos].DamageBox(false, true, true, false, false, player.hitbox1, player.hitbox2);
+                    break;
+                case LOWER_LEFT:
+                    maps[pos].DamageBox(false, true, false, true, false, player.hitbox1, player.hitbox2);
+                    break;
+                case RIGHT_LEFT:
+                    maps[pos].DamageBox(false, false, true, true, false, player.hitbox1, player.hitbox2);
+                    break;
+                default:
+                    break;
+                }
             }
         }
     }
@@ -262,30 +268,33 @@ void stage::moveWallShadow()
         {
             pos -= 50;
         }
-        moveWalls[pos].position.z = 80 * (i + (int)player.Position.z / 80);
-        moveWalls[pos].DrawbaseOutline();
-
-        if (moveWalls[pos].position.z >= startPosZ)
+        if (pos >= 0)
         {
-            switch (moveWallType[pos]) {
-            case HIGH:
-                moveWalls[pos].DrawMoveWall(true, false, false, player.hitbox1, player.hitbox2);
-                break;
-            case MID:
-                moveWalls[pos].DrawMoveWall(false, true, false, player.hitbox1, player.hitbox2);
-                break;
-            case LOW:
-                moveWalls[pos].DrawMoveWall(false, false, true, player.hitbox1, player.hitbox2);
-                break;
-                /*case HIGH_MID:
-                    moveWalls[pos].DrawMoveWall(true, true, false, player.hitbox1, player.hitbox2);
+            moveWalls[pos].position.z = 80 * (i + (int)player.Position.z / 80);
+            moveWalls[pos].DrawbaseOutline();
+
+            if (moveWalls[pos].position.z >= startPosZ)
+            {
+                switch (moveWallType[pos]) {
+                case HIGH:
+                    moveWalls[pos].DrawMoveWall(true, false, false, player.hitbox1, player.hitbox2);
                     break;
-                case HIGH_LOW:
-                    moveWalls[pos].DrawMoveWall(true, false, true, player.hitbox1, player.hitbox2);
-                    break;*/
-            default:
-                moveWalls[pos].DrawMoveWall(false, false, false, player.hitbox1, player.hitbox2);
-                break;
+                case MID:
+                    moveWalls[pos].DrawMoveWall(false, true, false, player.hitbox1, player.hitbox2);
+                    break;
+                case LOW:
+                    moveWalls[pos].DrawMoveWall(false, false, true, player.hitbox1, player.hitbox2);
+                    break;
+                    /*case HIGH_MID:
+                        moveWalls[pos].DrawMoveWall(true, true, false, player.hitbox1, player.hitbox2);
+                        break;
+                    case HIGH_LOW:
+                        moveWalls[pos].DrawMoveWall(true, false, true, player.hitbox1, player.hitbox2);
+                        break;*/
+                default:
+                    moveWalls[pos].DrawMoveWall(false, false, false, player.hitbox1, player.hitbox2);
+                    break;
+                }
             }
         }
 
@@ -300,14 +309,17 @@ void stage::DrawBase()
         {
             pos -= 50;
         }
-        maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
-        if( maps[pos].position.z >= startPosZ)
-        maps[pos].DrawbaseOutline();
+        if (pos >= 0)
+        {
+            maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
+            if (maps[pos].position.z >= startPosZ)
+                maps[pos].DrawbaseOutline();
+        }
     }
 }
 void stage::DrawBackWards()
 {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 30; i++)
     {
         int pos = ((int)player.Position.z % 4000) / 80 - (i-2);
         backWards[i].position.z = 80 * pos;
@@ -331,21 +343,24 @@ void stage::DrawObstacles()
             obstacle[t-50] = get_rand(0, 25);
             obstacleType[t-50] = get_rand(0, 8);
         }
-        maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
-        AAs[pos].position.z = 80 * (i + (int)player.Position.z / 80);
-        moveWalls[pos].position.z = 80 * (i + (int)player.Position.z / 80);
-        if (maps[pos].position.z >= startPosZ)
+        if (pos >= 0)
         {
-            if (obstacleType[pos] < 2)
+            maps[pos].position.z = 80 * (i + (int)player.Position.z / 80);
+            AAs[pos].position.z = 80 * (i + (int)player.Position.z / 80);
+            moveWalls[pos].position.z = 80 * (i + (int)player.Position.z / 80);
+            if (maps[pos].position.z >= startPosZ)
             {
-                Obstacles(pos, i);
-            }
-            else
-            {
-                AAGuns(pos, i);
-            }
+                if (obstacleType[pos] < 2)
+                {
+                    Obstacles(pos, i);
+                }
+                else
+                {
+                    AAGuns(pos, i);
+                }
 
-            MoveWalls(pos, i);
+                MoveWalls(pos, i);
+            }
         }
     }
 }
@@ -488,17 +503,20 @@ void stage::Ingame()
     clsDx();
     printfDx("%.f", enemy.MISSILE_DAMAGE);
     //IngameToClear();
-    if (player.ammo < 1 || player.Health <= 0)
+    if (player.Health <= 0)
     {
-        player.Health = 0;
         isDead = true;
+        player.Health = 0;
     }
     if (enemy.Health <= 0)
     {
         enemy.Health = 0;
         isKilled = true;
     }
-    playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP: %.f", fontHandle, SORT_LEFT, 500, true, GetColor(0, 255, 0), GetColor(50, 50, 50), player.Health);
+    DrawExtendGraph(54, 130, 410, 205, uiBox_03, true);
+    playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP", fontHandle, SORT_LEFT, 150, true, GetColor(0, 255, 0));
+    DrawExtendGraph(50, 200, 720, 286, playerHealthGauge, true);
+    DrawRectExtendGraph(74, 213, 74 + (622 * (player.Health / 100)), 273, 0, 0, 2122*(player.Health/100) , 176, playerHealthBar,true);
     
     if (player.BasePosition.z > stageLength && gamePhase == PHASE_RUN)
     {
@@ -661,7 +679,7 @@ void stage::ChasePhase()
     }
     objectiveText.DrawTextWithSort(70, 1920, "–Ú•W:“G‹@‚ðŒ‚’Ä‚µ‚ë", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
     
-    if (missionTimer.MeasureTimer(timeLimit))
+    if (missionTimer.MeasureTimer(timeLimit) || player.ammo <= 0)
     {
         enemy.Cobra();
     }

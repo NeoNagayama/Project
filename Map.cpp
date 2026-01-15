@@ -91,8 +91,8 @@ void mapBase::BaseSetUp()
         MV1SetMaterialDifColor(lowerHandle, i, GetColorF(1.0f, 0.7f, 0.7f, 1.0f));
         MV1SetMaterialAmbColor(lowerHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
         MV1SetMaterialSpcColor(lowerHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
-        MV1SetMaterialEmiColor(lowerHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
-        MV1SetMaterialSpcPower(lowerHandle, i, 6);
+        MV1SetMaterialEmiColor(lowerHandle, i, GetColorF(0.5f, 0.5f, 0.5f, 0.2f));
+        MV1SetMaterialSpcPower(lowerHandle, i, 2);
     }
     for (int i = 0; i < MV1GetMaterialNum(upperHandle); i++)
     {
@@ -100,7 +100,7 @@ void mapBase::BaseSetUp()
         MV1SetMaterialAmbColor(upperHandle, i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
         MV1SetMaterialSpcColor(upperHandle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
         MV1SetMaterialEmiColor(upperHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
-        MV1SetMaterialSpcPower(upperHandle, i, 6);
+        MV1SetMaterialSpcPower(upperHandle, i, 2);
     }
     materialSetUp(BaseWallHandle);
     materialSetUp(BaseWallHandleRight);
@@ -114,7 +114,7 @@ void mapBase::materialSetUp(int handle)
         MV1SetMaterialDifColor(handle, i, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
         MV1SetMaterialAmbColor(handle, i, GetColorF(0.4f, 0.4f, 0.4f, 1.0f));
         MV1SetMaterialSpcColor(handle, i, GetColorF(0.4f, 0.4f, 0.4f, 1));
-        MV1SetMaterialEmiColor(handle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.4f));
+        MV1SetMaterialEmiColor(handle, i, GetColorF(0.5f, 0.5f, 0.5f, 0.5f));
         MV1SetMaterialSpcPower(handle, i, 2);
     }
 }

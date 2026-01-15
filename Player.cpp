@@ -289,7 +289,7 @@ void Player::KeyInput()
     //Dキーを押していてかつx座標の速度が0.7未満の時
     else if (CheckHitKey(KEY_INPUT_D) && x < 0.7f)
     {
-        //x座標の移動速度を上げる
+        //x軸の移動速度を上げる
         x += speed;
         //移動速度の上限を0.7にする
         speedLimit = 0.7f;
@@ -299,7 +299,7 @@ void Player::KeyInput()
     //Aキーを押していてかつx座標の速度が-0.7より多い時
     else if (CheckHitKey(KEY_INPUT_A) && x > -0.7f)
     {
-        //x座標の移動速度を減らす
+        //x軸の移動速度を減らす
         x -= speed;
         //移動速度の上限を0.7にする
         speedLimit = 0.7f;
@@ -311,325 +311,425 @@ void Player::KeyInput()
     //移動速度が上限を超えないようにする処理
     Limit();
 }
-/**
+/*
  * @brief 上方向に移動しているときの処理
  * @details 上方向に移動する捜査をしているときの
  */
-
 void Player::InputUp(float speed)
 {
+    //Dキーが押されているとき
     if (CheckHitKey(KEY_INPUT_D))
     {
+        //x軸の移動速度を上げる
         x += speed;
+        //移動速度の上限を0.49にする
         speedLimit = 0.49f;
+        //プレイヤーの回転すべき角度を変更する
         targetAngle = VGet(0.5f, -0.5f, 0);
     }
+    //Aキーが押されているとき
     else if (CheckHitKey(KEY_INPUT_A))
     {
+        //x軸の移動速度を下げる
         x -= speed;
+        //移動速度の上限を0.49にする
         speedLimit = 0.49f;
+        //プレイヤーの回転すべき角度を変更する
         targetAngle = VGet(-0.5f, -0.5f, 0);
     }
+    //Wキーのみが押されているとき
     else
     {
+        //移動速度の上限を0.7にする
         speedLimit = 0.7f;
+        //プレイヤーの回転すべき角度を水平に変更する
         targetAngle = VGet(0, -1, 0);
     }
+    //y軸の移動速度を上げる
     y += speed;
 }
+/*
+ * @brief 下方向に移動しているときの処理
+ * @details 下方向に移動する捜査をしているときの
+ */
 void Player::InputDown(float speed)
 {
+    //Dキーが押されているとき
     if (CheckHitKey(KEY_INPUT_D))
     {
+        //x軸の移動速度を上げる
         x += speed;
+        //移動速度の上限を0.49にする
         speedLimit = 0.49f;
+        //プレイヤーの回転すべき角度を変更する
         targetAngle = VGet(0.5f, 0.5f, 0);
     }
+    //Aキーが押されているとき
     else if (CheckHitKey(KEY_INPUT_A))
     {
+        //x軸の移動速度を下げる
         x -= speed;
+        //移動速度の上限を0.49にする
         speedLimit = 0.49f;
+        //プレイヤーの回転すべき角度を変更する
         targetAngle = VGet(-0.5f, 0.5f, 0);
     }
+    //Sキーのみが押されているとき
     else
     {
+        //移動速度の上限を0.7にする
         speedLimit = 0.7f;
+        //プレイヤーの回転すべき角度を変更する
         targetAngle = VGet(0, 0.99f, 0);
     }
+    //y軸の移動速度を下げる
     y -= speed;
 }
+/*
+ * @brief 操作していないときの処理
+ * @details WSキー,ADキー,WASDキーそれぞれの操作していないときの処理を行う
+ * 
+ * @param float speed 1フレーム当たりの速度を減少させる値
+ */
 void Player::InputNeutral(float speed)
 {
-
+    //WASDキー全てが押されていない場合
     if (!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W))
     {
+        //機体が回転すべき角度を水平にする
         targetAngle = VGet(0, -0.99f, 0);
     }
+    //ADキーが押されていない場合
     if (!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_D))
     {
+        //x軸の移動速度が0.1よりも多い場合
         if (x > 0.1f)
         {
+            //x軸の移動速度を減少させ0に近づける
             x -= speed;
         }
+        //x軸の移動速度が-0.1未満の場合
         else if (x < -0.1f)
         {
+            //x軸の移動速度を増加させ0に近づける
             x += speed;
         }
+        //x軸の移動速度が-0.1以上0.1以下の場合
         else
         {
+            //x軸の移動速度を0にする
             x = 0;
         }
     }
+    //WSキーが押されていない場合
     if (!CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_W))
     {
+        //y軸の移動速度が0.1よりも多い場合
         if (y > 0.1f)
         {
+            //y軸の移動速度を減少させ0に近づける
             y -= speed;
         }
+        //y軸の移動速度が-0.1よりも少ない場合
         else if (y < -0.1f)
         {
+            //y軸の移動速度を増加させ0に近づける
             y += speed;
         }
+        //y軸の移動速度が-0.1以上0.1以下の場合
         else
         {
+            //y軸の移動速度を0にする
             y = 0;
         }
     }
 }
+/*
+ * @brief 移動速度が上限を超えないようにする
+ * @details x軸y軸それぞれの移動速度が制限を超えると
+ *          上限内に戻す
+ */
 void Player::Limit()
 {
-    if (x >= speedLimit)
+    if (x >= speedLimit)//x軸の移動速度が上限を超えた場合
     {
-        x = speedLimit;
+        x = speedLimit;//x軸の移動速度に上限の値を入れる
     }
-    else if (x <= -speedLimit)
+    else if (x <= -speedLimit)//x軸の移動速度が下限を超えた場合
     {
-        x = -speedLimit;
+        x = -speedLimit;//x軸の移動速度に下限の値を入れる
     }
-    if (y >= speedLimit)
+    if (y >= speedLimit)//y軸の移動速度が上限を超えた場合
     {
-        y = speedLimit;
+        y = speedLimit;//y軸の移動速度に上限の値を入れる
     }
-    else if (y <= -speedLimit)
+    else if (y <= -speedLimit)//y軸の移動速度が下限を超えた場合
     {
-        y = -speedLimit;
+        y = -speedLimit;//y軸の移動速度に下限の値を入れる
     }
 }
+/*
+ * @brief プレイヤーのxy平面上の移動処理
+ * @details プレイヤーの移動する座標を変数に入れ
+ *          移動できる範囲から出ないようにする
+ */
 void Player::PlayerMoveXY()
 {
+    /* @brief 1フレーム当たりの実際に移動する距離 */
     float xSpeed, ySpeed;
+    //プレイヤーの位置が移動可能範囲から出ていると0,出ていなければ移動すべき距離を入れる
     xSpeed = (offset.x > moveRange || offset.x < -moveRange) ? 0 : x * moveSpeed;
     ySpeed = (offset.y > moveRange|| offset.y < -moveRange) ? 0:y * moveSpeed;
-    if (Rotation.y == DegToRad(90))
+    offset = VAdd(VGet(xSpeed, ySpeed, 0), offset);//プレイヤーの現在の位置に移動すべき距離を足す
+    if (offset.x > moveRange || offset.x < -moveRange)//プレイヤーのx座標が移動可能範囲から出ていたら
     {
-        offset = VAdd(VGet(0, ySpeed, -xSpeed), offset);
+        offset.x = (offset.x > moveRange) ? moveRange : -moveRange;//範囲内に戻す
     }
-    else if (Rotation.y == DegToRad(-90))
+    if (offset.y > moveRange || offset.y < -moveRange)//プレイヤーのy座標が移動可能範囲から出ていたら
     {
-        offset = VAdd(VGet(0, ySpeed, xSpeed), offset);
+        offset.y = (offset.y > moveRange) ? moveRange : -moveRange;//範囲内に戻す
     }
-    else
+    if (offset.z > moveRange || offset.z < -moveRange)//プレイヤーのz座標が移動可能範囲から出ていたら
     {
-        offset = VAdd(VGet(xSpeed, ySpeed, 0), offset);
-    }
-    if (offset.x > moveRange || offset.x < -moveRange)
-    {
-        offset.x = (offset.x > moveRange) ? moveRange : -moveRange;
-    }
-    if (offset.y > moveRange || offset.y < -moveRange)
-    {
-        offset.y = (offset.y > moveRange) ? moveRange : -moveRange;
-    }
-    if (offset.z > moveRange || offset.z < -moveRange)
-    {
-        offset.z = (offset.z > moveRange) ? moveRange : -moveRange;
+        offset.z = (offset.z > moveRange) ? moveRange : -moveRange;//範囲内に戻す
     }
 }
+/*
+ * @brief プレイヤーの機銃関連の処理
+ * @details プレイヤーの機銃の残弾表示,照準の表示,弾の処理
+ */
 void Player::Vulcan()
 {
-    VulcanText.DrawTextWithSort(120, 1920, "機銃: %.f", japaneseFontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50), ammo);
-    Position = MV1GetPosition(ModelHandle);
-    for (int i = 49; i >= 0; i--)
+    DrawExtendGraph(580, 640, 850, 700, uiBox_01, true);
+    //機銃の残弾を表示する
+    VulcanText.DrawTextWithSort(600, 850, "機銃: %.f", japaneseFontHandle, SORT_LEFT, 645, true, GetColor(0, 255, 0), GetColor(50, 50, 50), ammo);
+    Position = MV1GetPosition(ModelHandle);//プレイヤーのモデルの座標を取得する
+    for (int i = 49; i >= 0; i--)//50フレーム分のxy座標を配列に入れる,49から初めて0まで1づつ減らす
     {
-        if (i == 0)
+        if (i == 0)//iが0のとき
         {
+            //現在の座標を配列に入れる
             bulletPositionX[i] = Position.x;
             bulletPositionY[i] = Position.y;
         }
-        else
+        else//iが0以外のとき
         {
+            //値を1づつずらす
             bulletPositionX[i] = bulletPositionX[i - 1];
             bulletPositionY[i] = bulletPositionY[i - 1];
         }
     }
+    //xy座標が10フレーム前でz座標が50前の位置を取得する
     VECTOR ReticleCenter = ConvWorldPosToScreenPos(VAdd(VGet(bulletPositionX[10], bulletPositionY[10], BasePosition.z), VGet(0, 0, 50)));
+    //取得した位置に照準を表示する
     DrawExtendGraph((int)ReticleCenter.x- 70, (int)ReticleCenter.y + 70, (int)ReticleCenter.x + 70, (int)ReticleCenter.y - 70, reticleHandle, true);
-
-
+    //取得した位置に残弾のゲージを表示する
     DrawCircleGauge((int)ReticleCenter.x, (int)ReticleCenter.y, (double)((float)ammo / (float)maxAmmo) * 100, reticleInsideGaugeHandle, 0,0.1);
+    //機銃の弾の処理
     VulcanProjectile();
    
 }
+/*
+ * @brief 機銃の弾の処理
+ * @details 機銃の弾の移動,当たり判定等の処理を行う
+ */
 void Player::VulcanProjectile()
 {
+    //スペースキーが押されていて発射の間隔をあいていて残弾が0より多い
     if (CheckHitKey(KEY_INPUT_SPACE) && firingTimer > firingRate && ammo > 0)
     {
+        //時間計測用の変数を0にする
         firingTimer = 0;
-        ammo--;
-        for (int i = 0; i < 200; i++)
+        ammo--;//残弾を1減らす
+        for (int i = 0; i < 200; i++)//弾のインスタンスの分繰り返す
         {
+            //弾が発射されていなかったら
             if (!bullets[i].isActivated)
             {
-
-                PlaySoundMem(playerShotSound, DX_PLAYTYPE_BACK);
-                bullets[i].isActivated = true;
-                bullets[i].target = VAdd(Position, VGet(0, 0, 90));
-                bullets[i].forward = VGet(0, 0, forwardSpeed + 4);
-                bullets[i].StartPosition = VAdd(Position, VGet(forward().x, -forward().y, forward().z));
-                break;
+                PlaySoundMem(playerShotSound, DX_PLAYTYPE_BACK);                                            //射撃音を鳴らす
+                bullets[i].isActivated = true;                                                              //発射された状態か判断するflagをtrueにする
+                bullets[i].target = VAdd(Position, VGet(0, 0, 90));                                         //弾が到達すべき場所を指定する
+                bullets[i].forward = VGet(0, 0, forwardSpeed + 4);                                          //弾が前進する速度を指定する
+                bullets[i].StartPosition = VAdd(Position, VGet(forward().x, -forward().y, forward().z));    //弾が発射された位置を指定する
+                break;                                                                                      //for文を抜ける
             }
         }
     }
-    firingTimer += oneFlame;
-    for (int i = 0; i < 200; i++)
+    firingTimer += oneFlame;//時間計測用の変数に1フレーム分の秒数を足す
+    for (int i = 0; i < 200; i++)//弾のインスタンスの分繰り返す
     {
-        if (bullets[i].isActivated)
+        if (bullets[i].isActivated)//弾が発射された場合
         {
-            if (bullets[i].mainProcess(enemyObject->hitbox1, enemyObject->hitbox2))
+            if (bullets[i].mainProcess(enemyObject->hitbox1, enemyObject->hitbox2))//弾の毎フレーム呼ばれる処理を行い敵ののヒットボックスに当たった場合
             {
-                enemyObject->Health -= 3;
-                PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);
+                enemyObject->Health -= 3;                   //敵の体力を3減らす
+                PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);   //被弾時の効果音を鳴らす
             }
         }
     }
 }
+/*
+ * @brief フレアの処理
+ * @details フレアのクールダウン,UIの表示の処理を行う
+ */
 void Player::Flare()
 {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; i++)//フレアのインスタンスの数繰り返す
     {
-        Flares[i].Passive();
+        Flares[i].Passive();//射出されていないときも常に呼ばれる処理
     }
+    //スペースキーが押されていてクールダウンが終わっていてすでに発射されていないとき
     if (CheckHitKey(KEY_INPUT_SPACE) && FlareCoolDown > FlareInterval && !Launching)
     {
-        FlareCoolDown = 0;
-        Launching = true;
-        FlareAmount = 10;
-        enemyObject->isGuideLost = true;
+        FlareCoolDown = 0;//時間計測用の変数に0を入れる
+        Launching = true;//フレアを射出しているかどうかのflagをtrueにする
+        FlareAmount = 10;//発射するフレアの数の変数に10を入れる
+        enemyObject->isGuideLost = true;//敵がミサイルのロックを失ったかどうかのflagをtrueにする
     }
-    if (FlareCoolDown > FlareInterval)
+    
+    if (FlareCoolDown > FlareInterval)//クールダウンが終わっているとき
     {
-        FlareText.DrawTextWithSort(120, 1920, "FLARE:READY", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
+        DrawExtendGraph(580, 640, 850, 700, uiBox_01, true);
+        //UIにフレアが使用可能と表示する
+        FlareText.DrawTextWithSort(600, 850, "FLARE:READY", fontHandle, SORT_LEFT, 645, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
     }
-    else
+    else//クールダウンが終わっていないとき
     {
-        FlareText.DrawTextWithSort(120, 1920, "FLARE: %.f", fontHandle, SORT_LEFT, 600, true, GetColor(0, 255, 0), GetColor(50, 50, 50),  5-FlareCoolDown);
+        DrawExtendGraph(580, 640, 850, 700, uiBox_02, true);
+        //フレアが再使用可能になるまでの時間を表示する
+        FlareText.DrawTextWithSort(600, 850, "FLARE: %.f", fontHandle, SORT_LEFT, 645, true, GetColor(255, 0, 0), GetColor(50, 50, 50),  5-FlareCoolDown);
     }
+    //フレアを射出中のとき
     if (Launching)
     {
+        //フレアの射出の処理
         FlareLaunch();
     }
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; i++)//フレアのインスタンスの数繰り返す
     {
-        if (Flares[i].isActivated)
+        if (Flares[i].isActivated)//射出されているとき
         {
+            //フレアの毎フレーム呼ばれる処理を行う
             Flares[i].mainProcess();
         }
     }
-    FlareCoolDown += 0.016f;
-    
+    FlareCoolDown += oneFlame;//時間計測用の変数に1フレーム分の秒数を足す
 }
+/*
+ * @brief フレア射出時の処理
+ * @details フレアの射出の間隔やインスタンス別に射出されたときの最初の処理を行う
+ */
 void Player::FlareLaunch()
 {
-    FlareFiringTimer += 0.016f;
-    if (FlareFiringTimer > FlareFiringRate)
+    FlareFiringTimer += oneFlame;//時間計測用の変数に1フレーム分の秒数を足す
+    if (FlareFiringTimer > FlareFiringRate)//前回の射出から十分な時間がたったら
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)//フレアのインスタンスの数繰り返す
         {
-            if (!Flares[i].isActivated)
+            if (!Flares[i].isActivated)//まだ射出されていないとき
             {
-                Flares[i].isActivated = true;
-                Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 5.7f), 0.3f);
-                Flares[i].position = Position;
-                PlaySoundMem(flareSound, DX_PLAYTYPE_BACK);
+                Flares[i].isActivated = true;                                                   //射出されたかどうかのflagをtrueにする
+                Flares[i].forward = VScale(VGet(upper().x, -upper().y * 0.2f, 5.7f), 0.3f);     //フレアが進むべき方向と速度を入れる
+                Flares[i].position = Position;                                                  //フレアの初期位置にプレイヤーの位置を入れる
+                PlaySoundMem(flareSound, DX_PLAYTYPE_BACK);                                     //フレアの射出音を再生する
                 break;
             }
         }
-        FlareFiringTimer = 0;
-        FlareAmount--;
+        FlareFiringTimer = 0;//時間計測用の変数に0を入れる
+        FlareAmount--;//残りの射出すべきフレアの数を減らす
     }
-    if (FlareAmount <= 0)
+    if (FlareAmount <= 0)//フレアを射出しきったら
     {
-        Launching = false;
+        Launching = false;//射出中のflagをfalseにする
     }
 }
+/*
+ * @brief プレイヤーの回転
+ * @details 操作しているキーやtargetAngleの数値をもとに
+ *          機体を回転させ回転すべきピッチ方向の角度を出す
+ */
 void Player::rotatePlayer()
 {
+    /* @brief 現在のプレイヤーのモデルの上方向の二次元ベクトルを取得するための変数 */
     float x, y;
-    x = cos(atan2(upper().y - 0, upper().x - 0));
-    y = sin(atan2(upper().y - 0, upper().x - 0));
+    //現在のプレイヤーのモデルの上方向の二次元ベクトルを取得する
+    x = cos(atan2(upper().y, upper().x));
+    y = sin(atan2(upper().y, upper().x));
+    //現在の角度と向くべき角度の差を求める
     float difInAngle = ((targetAngle.x * y) - (targetAngle.y * x));
-    if (difInAngle > 0.05f)
+    if (difInAngle > 0.05f)//求めた差が0.05より大きい場合
     {
-        Rotate(VGet(0, 0, -rotateSpeed * smooth(difInAngle, 0, 2)));
+        Rotate(VGet(0, 0, -rotateSpeed * smooth(difInAngle, 0, 2)));//z軸を-方向に回転させる
     }
-    else if (difInAngle < -0.05f)
+    else if (difInAngle < -0.05f)//求めた差が-0.05未満場合
     {
-        Rotate(VGet(0, 0, rotateSpeed * smooth(difInAngle, 0, 2)));
+        Rotate(VGet(0, 0, rotateSpeed * smooth(difInAngle, 0, 2)));//z軸を+方向に回転させる
         
     }
+    //WASDキーのどれかが押されている場合
     if (CheckHitKey(KEY_INPUT_A) || CheckHitKey(KEY_INPUT_S) || CheckHitKey(KEY_INPUT_D) || CheckHitKey(KEY_INPUT_W))
     {
-        if (difInAngle < -0.5f || difInAngle > 0.5f)
+        if (difInAngle < -0.5f || difInAngle > 0.5f)//求めた差が0.5より大きいか-0.5より小さいとき
         {
-            targetAnglePitch = VGet(0, 0.3f* ((1-abs(difInAngle))/0.5f), 0.7f );
+            targetAnglePitch = VGet(0, 0.3f* ((1-abs(difInAngle))/0.5f), 0.7f );//求めた差をもとにピッチ方向の向くべき角度を求める
         }
         else
         {
+            //Sキーだけが押されているとき
             if (!CheckHitKey(KEY_INPUT_A) && CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W))
             {
-                targetAnglePitch = VGet(0, 0.3f, 0.7f);
+                targetAnglePitch = VGet(0, 0.3f, 0.7f);//機体が下を向くようにする
             }
             else
             {
-                targetAnglePitch = VGet(0, -0.3f*((0.5f-abs(difInAngle))/0.5f), 0.7f);
+                targetAnglePitch = VGet(0, -0.3f*((0.5f-abs(difInAngle))/0.5f), 0.7f);//求めた差をもとにピッチ方向の向くべき角度を求める
             }
         }
     }
-    else
+    else//何も操作されていないとき
     {
-        targetAnglePitch = VGet(0, 0, 1);
+        targetAnglePitch = VGet(0, 0, 1);//機体が正面を向くようにする
     }
-
-    
 }
+/*
+ * @brief プレイヤーのロールのみの処理
+ * @details プレイヤーの回転処理からピッチに関するものを排除した関数
+ */
 void Player::rotateOnlyRoll()
 {
+    /* @brief 現在のプレイヤーのモデルの上方向の二次元ベクトルを取得するための変数 */
     float x, y;
+    //現在のプレイヤーのモデルの上方向の二次元ベクトルを取得する
     x = cos(atan2(upper().y - 0, upper().x - 0));
     y = sin(atan2(upper().y - 0, upper().x - 0));
+    //現在の角度と向くべき角度の差を求める
     float difInAngle = ((targetAngle.x * y) - (targetAngle.y * x));
-    if (difInAngle > 0.05f)
+    if (difInAngle > 0.05f)//求めた差が0.05より大きい場合
     {
-        Rotate(VGet(0, 0, -rotateSpeed * smooth(difInAngle, 0, 2)));
+        Rotate(VGet(0, 0, -rotateSpeed * smooth(difInAngle, 0, 2)));//求めた差をもとにピッチ方向の向くべき角度を求める
     }
-    else if (difInAngle < -0.05f)
+    else if (difInAngle < -0.05f)//機体が下を向くようにする
     {
-        Rotate(VGet(0, 0, rotateSpeed * smooth(difInAngle, 0, 2)));
+        Rotate(VGet(0, 0, rotateSpeed * smooth(difInAngle, 0, 2)));//求めた差をもとにピッチ方向の向くべき角度を求める
 
     }
 }
 
 void Player::pitch()
 {
+    /* @brief 現在のプレイヤーのモデルの正面方向の二次元ベクトルを取得するための変数 */
     float z, y;
+    //現在のプレイヤーのモデルの正面方向の二次元ベクトルを取得する
     z = cos(atan2(forward().y - 0, forward().z - 0));
     y = sin(atan2(forward().y - 0, forward().z - 0));
+    //現在の角度と向くべき角度の差を求める
     float difInAngle = (((targetAnglePitch.z*0.4f) * y) - ((targetAnglePitch.y * 0.4f) * z));
-    if (Rotation.x <= 0.4f && Rotation.x >= -0.4f)
+    if (Rotation.x <= 0.4f && Rotation.x >= -0.4f)//x軸の回転が+-0.4以内か
     {
+        //差が0.005よりも大きく0.5未満の場合
         if (difInAngle > 0.005f && difInAngle < 0.5f)
         {
-            Rotate(VGet(-rotateSpeed * smooth(difInAngle, 0, 1), 0, 0));
+            Rotate(VGet(-rotateSpeed * smooth(difInAngle, 0, 1), 0, 0));//
         }
         else if (difInAngle < -0.005f && difInAngle > -0.5f)
         {

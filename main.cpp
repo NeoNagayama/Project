@@ -49,6 +49,15 @@ int guideHandle;
 int instGraph;
 /** @brief  スペースキーの画像*/
 int spaceGraph;
+int buttonGraph;
+int buttonGraphRed;
+int menuBackground;
+int gameOverBackGround;
+int uiBox_01;
+int uiBox_02;
+int uiBox_03;
+int playerHealthGauge;
+int playerHealthBar;
 /** @brief  ミサイルの警告の画像*/
 int alertGraph;
 /** @brief  クリアまでの距離を表示するゲージのハンドル*/
@@ -224,7 +233,7 @@ int DirectionalLightHandle;
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    SetGraphMode(1920, 1080, 32) ,ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);
+    SetGraphMode(1920, 1080, 32) ,ChangeWindowMode(false), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);
     //SetFullScreenResolutionMode(DX_FSRESOLUTIONMODE_MAXIMUM);
     //奥行0.1～1000までをカメラの描画範囲とする
     SetCameraNearFar(0.1f, 5000.0f);
@@ -279,6 +288,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetLightDifColorHandle(playerLight, GetColorF(0, 0.3f, 1, 1));
     SetLightSpcColorHandle(playerLight, GetColorF(0, 0.3f, 1, 1));
     SetLightAmbColorHandle(playerLight, GetColorF(0, 0.3f, 1, 1));
+    SetFogEnable(TRUE);					// フォグを有効にする
+    SetFogColor(150, 160, 181);			// フォグの色にする
+    SetFogStartEnd(600.0f, 800.0f);	// フォグの開始距離
     /*毎フレーム呼ばれる処理
       Bool型のQuitがTrueになると
       while文を抜けてゲームを終了する*/
@@ -453,6 +465,15 @@ void LoadAssets()
     guideHandle = LoadGraph("Resource/guideBeacon.png");
     instGraph = LoadGraph("Resource/Instruction.png");
     spaceGraph = LoadGraph("Resource/Space.png");
+    buttonGraph = LoadGraph("Resource/Buttons/ButtonLarge.png");
+    buttonGraphRed = LoadGraph("Resource/Buttons/ButtonLargeRed.png");
+    menuBackground = LoadGraph("Resource/Buttons/Back.png");
+    gameOverBackGround = LoadGraph("Resource/Buttons/Back2.png");
+    uiBox_01 = LoadGraph("Resource/Buttons/Box_01.png");
+    uiBox_02 = LoadGraph("Resource/Buttons/Box_02.png");
+    uiBox_03 = LoadGraph("Resource/Buttons/Box_03.png");
+    playerHealthGauge = LoadGraph("Resource/Buttons/gauge.png");
+    playerHealthBar = LoadGraph("Resource/Buttons/bar.png");
     alertGraph = LoadGraph("Resource/MissileAlert.png");
     gaugeHandle = LoadGraph("Resource/ProgressGauge.png");
     barHandle = LoadGraph("Resource/ProgressBar.png");

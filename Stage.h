@@ -108,7 +108,7 @@ protected:
     Player player;
     Enemy enemy;
     mapBase maps[50];
-    mapBase backWards[10];
+    mapBase backWards[30];
     antiAir AAs[50];
     wallmove moveWalls[50];
     timer objectiveShowTimer;

@@ -13,6 +13,7 @@ private:
     float progress = 256;
     float subExplSize = 0.7f;
     float size = 0;
+    float angle = 0;
     const float LIFETIME = 3;
     VECTOR MovePosition(VECTOR pos, VECTOR dir);
     void DrawSubExpl(VECTOR pos, VECTOR dir);

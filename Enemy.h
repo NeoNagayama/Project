@@ -138,7 +138,7 @@ public:
     float transitionMoveZaxis = -50.0f;
     void Cobra();
      float BULLET_DAMAGE = 5.0f;
-     float MISSILE_DAMAGE = 30.0f;
+     const float MISSILE_DAMAGE = 30.0f;
      void Init();
      int E_tailLight;
 };

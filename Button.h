@@ -2,9 +2,16 @@
 #include "DxLib.h"
 #include <string>
 #include"Text.h"
+enum anchorPosition
+{
+    ANCHOR_LEFT,
+    ANCHOR_CENTER,
+    ANCHOR_RIGHT
+};
 class Button
 {
 private:
+    int GraphHandle;
     UIText buttonTextDraw;
     std::string buttonText;
     VECTOR ActualPosition;
@@ -14,7 +21,8 @@ private:
     bool isSelected = false;
 public:
     void mainProcess(bool isSelected,bool shadow,int yoffset);
-    void SetButtonPosition(VECTOR CenterPosition, float width, float height, float reductionRatio);
+    void init(int OriginGraphHandle);
+    void SetButtonPosition(VECTOR CenterPosition, float width, float height, float reductionRatio, int anchor = ANCHOR_CENTER);
     float BoxSizeChange(float actual,float target,bool mode,float from);
     void SetText(std::string text);
     VECTOR NotSelectedPosition1 = VGet(1.0f, 1.0f, 2.0f);
