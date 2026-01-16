@@ -479,7 +479,7 @@ void stage::Briefing()
     }
     if (isObjectiveAppeared && objectiveText.fadeInText(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50), 0, 0.2f))
     {
-        objectiveText.DrawTextWithSort(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(255, 255, 255), GetColor(50, 50, 50));
+        objectiveText.DrawTextWithSort(0, 1920, "クリア目標:攻撃を避けて生き残れ", biggerJpFontHandle, SORT_CENTER, 300, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
         countDownText.DrawTextWithSort(0, 1920, "%.f", CountDownFontHandle, SORT_CENTER, 450, true, GetColor(255, 255, 30), GetColor(50, 50, 50), countDown);
         if (CountDownTimer.MeasureTimer(1))
         {
@@ -513,12 +513,12 @@ void stage::Ingame()
         enemy.Health = 0;
         isKilled = true;
     }
-    DrawExtendGraph(54, 130, 410, 205, uiBox_03, true);
-    playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP", fontHandle, SORT_LEFT, 150, true, GetColor(0, 255, 0));
-    DrawExtendGraph(50, 200, 720, 286, playerHealthGauge, true);
-    DrawRectExtendGraph(74, 213, 74 + (622 * (player.Health / 100)), 273, 0, 0, 2122*(player.Health/100) , 176, playerHealthBar,true);
+    DrawExtendGraph(54, 830, 410, 905, uiBox_03, true);
+    playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP", fontHandle, SORT_LEFT, 850, true, GetColor(0, 255, 0));
+    DrawExtendGraph(50, 900, 720, 986, playerHealthGauge, true);
+    DrawRectExtendGraph(74, 913, 74 + (622 * (player.Health / 100)), 973, 0, 0, 2122*(player.Health/100) , 176, playerHealthBar,true);
     
-    if (player.BasePosition.z > stageLength && gamePhase == PHASE_RUN)
+    if (player.BasePosition.z > stageLength-1000 && gamePhase == PHASE_RUN)
     {
         gamePhase = PHASE_OVERSHOOT;
     }
@@ -631,11 +631,14 @@ void stage::CameraTargetMove()
 void stage::RunPhase()
 {
     objectiveText.DrawTextWithSort(70, 1920, "目標:攻撃を避けて生き残れ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
-    DrawGraph(1650, 0, gaugeHandle, true);
-    DrawRectGraph(1650, 43+(994-(994*((player.BasePosition.z-startPosZ) / (stageLength- startPosZ)))), 0, 43 + (994 - (994 * ((player.BasePosition.z - startPosZ)/ (stageLength - startPosZ)))), 300, 1080, barHandle, true);
+    /*DrawGraph(1650, 0, playerHealthGauge, true);
+    DrawRectGraph(1650, 43+(994-(994*((player.BasePosition.z-startPosZ) / (stageLength- startPosZ)))), 0, 43 + (994 - (994 * ((player.BasePosition.z - startPosZ)/ (stageLength - startPosZ)))), 300, 1080, playerHealthBar, true);*/
+    DrawExtendGraph(1716, 100, 1820, 980, gaugeHandle, true);
+    DrawRectExtendGraph(1738, 135 + (810 -810* ((player.BasePosition.z - startPosZ) / (stageLength - startPosZ))), 1798, 945, 0, 2097 - (2097 * (player.BasePosition.z - startPosZ) / (stageLength - startPosZ)), 156, 2097 * (player.BasePosition.z - startPosZ) / (stageLength - startPosZ), barHandle, true);
     /*
     DrawBox(1780, 100, 1850, 980, GetColor(180, 180, 180), true, 1);
     DrawBox(1800, 100 + 880 - (880 * (player.BasePosition.z / 4000)), 1830, 980, GetColor(0, 255, 0), true);*/
+    
     player.mainProcess(false);
     enemy.mainProcess(false);
 }
@@ -673,8 +676,8 @@ void stage::ChasePhase()
     }
     else
     {
-        DrawExtendGraph(300, 0,1620,206, E_gauge, true);
-        DrawRectExtendGraph(350 + (1220 - (1220 * ((float)enemy.Health / 100))),0, 1570,206,60,0, 1766 * ((float)enemy.Health / 100), 300, E_bar, true);
+        DrawExtendGraph(450, 50,1470,241, E_gauge, true);
+        DrawRectExtendGraph(476 ,65, 476  + (968 * ((float)enemy.Health / 100)),165,0,0, 3305 * ((float)enemy.Health / 100), 376, E_bar, true);
         player.mainProcess(true);
     }
     objectiveText.DrawTextWithSort(70, 1920, "目標:敵機を撃墜しろ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
