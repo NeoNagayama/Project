@@ -260,8 +260,7 @@ void Enemy::MissileLaunch()
         }
         else
         {
-            float dmg = MISSILE_DAMAGE;
-            playerObject->Health = playerObject->Health - dmg;
+            (*playerObject).Health -= MISSILE_DAMAGE;
         }
         missileCooldown = get_rand(5, 7);
         exp.SetPosition(playerObject->Position);

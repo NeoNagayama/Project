@@ -44,6 +44,15 @@ extern float timeScale;
 extern int instGraph;
 /** @brief  スペースキーの画像*/
 extern int spaceGraph;
+extern int buttonGraph;
+extern int buttonGraphRed;
+extern int menuBackground;
+extern int gameOverBackGround;
+extern int uiBox_01;
+extern int uiBox_02;
+extern int uiBox_03;
+extern int playerHealthGauge;
+extern int playerHealthBar;
 /** @brief  ミサイルの警告の画像*/
 extern int alertGraph;
 /** @brief  クリアまでの距離を表示するゲージのハンドル*/

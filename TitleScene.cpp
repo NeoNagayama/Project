@@ -61,9 +61,12 @@ void getStagePointers(stage* s1, stage* s2, stage* s3,stageEndless* s4) {
 
 void TitleInitialProcess()
 {
-    Start.SetButtonPosition(VGet(1550,445,1),600,100,0.9f);
-    Extra.SetButtonPosition(VGet(1550, 645, 1), 600, 100, 0.9f);
-    Exit.SetButtonPosition(VGet(1550, 845, 1), 600, 100, 0.9f);
+    Start.SetButtonPosition(VGet(1550,445,1),600,150,0.9f,ANCHOR_RIGHT);
+    Extra.SetButtonPosition(VGet(1550, 645, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
+    Exit.SetButtonPosition(VGet(1550, 845, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
+    Start.init(buttonGraph);
+    Extra.init(buttonGraph);
+    Exit.init(buttonGraph);
     modelhandle[0] = MV1LoadModel("Resource/PlayerModel.mv1");
     MV1SetPosition(modelhandle[0], VGet(-0.4, 0.2f, -19.2f));
     MV1SetRotationXYZ(modelhandle[0], VGet(0, 2.53f, 0));
@@ -77,7 +80,7 @@ void TitleInitialProcess()
         for (int i = 0; i < MV1GetMaterialNum(modelhandle[j]); i++)
         {
             MV1SetMaterialDifColor(modelhandle[j], i, GetColorF(0.7f, 0.7f, 0.7f, 1.0f));
-            MV1SetMaterialAmbColor(modelhandle[j], i, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+            MV1SetMaterialAmbColor(modelhandle[j], i, GetColorF(0.4f, 0.4f, 0.4f, 1.0f));
             MV1SetMaterialSpcColor(modelhandle[j], i, GetColorF(0.4f, 0.4f, 0.4f, 1));
             MV1SetMaterialEmiColor(modelhandle[j], i, GetColorF(0.3f, 0.3f, 0.3f, 0.2f));
             MV1SetMaterialSpcPower(modelhandle[j], i, 6);
@@ -112,6 +115,7 @@ void TitleMainProcess()
         smokes1[i].DrawSmoke();
         smokes2[i].DrawSmoke();
     }
+    DrawExtendGraph(1000, -200, 2131, 1832, menuBackground, true);
     TitleMenu();
     if (Input_GetKeyboardDown(KEY_INPUT_P))
     {
@@ -174,19 +178,6 @@ void TitleButtons()
 }
 void TitleMenu()
 {
-    //std::wstring tt = L"‚¤‚¨‚—‚¤‚¨‚—‚¤‚¨‚—‚¤‚¨‚—‚¤‚¨‚—‚¤‚¨‚—‚¤‚¨‚—\n‚¤‚¨‚—‚¤‚¨‚—‚¤‚¨‚—‚¤‚¨‚—‚¤‚¨‚—‚¤‚¨‚—‚¤‚¨‚—‚¤‚¨‚—";
-    //std::wstring sub = tt.substr(0, prog);/*
-    //std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;*/
-    //std::string str = WStringToString(sub);
-    //if (prog < tt.length() && timeerrrr.MeasureTimer(0.1f))
-    //{
-    //    prog += 1;
-    //    timeerrrr.RestartTimer();
-    //}
-    //else if (prog >= tt.length())
-    //{
-    //    prog = 0;
-    //}
     TitleButtons();
     GameTitle.DrawTextWithSort(1000, 1920,"CANYON RUN", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 255));
     if ((Input_GetKeyboardDown(KEY_INPUT_SPACE) || Input_GetKeyboardDown(KEY_INPUT_RETURN)))

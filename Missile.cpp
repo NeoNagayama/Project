@@ -33,7 +33,7 @@ void Missile::guideLosted()
 }
 void Missile::SetUp()
 {
-    MissileHandle= MV1LoadModel("MissileModel.mv1");
+    MissileHandle= MV1LoadModel("Resource/MissileModel.mv1");
     for (int i = 0; i < MV1GetMaterialNum(MissileHandle); i++)
     {
         MV1SetMaterialDifColor(MissileHandle, i, GetColorF(0.7f, 0.7f, 0.7f, 1.0f));

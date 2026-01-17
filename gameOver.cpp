@@ -28,9 +28,12 @@ void GameOverInitialProcess()
 {
     Retry.SetButtonPosition(VGet(500, 700, 1), 800, 200, 0.8f);
     GameOverToTitle.SetButtonPosition(VGet(1410, 700, 1), 800, 200, 0.8f);
+    Retry.init(buttonGraphRed);
+    GameOverToTitle.init(buttonGraphRed);
 }
 void GameOverMainProcess()
 {
+    DrawExtendGraph(-8, 139, 1928, 941, gameOverBackGround, true);
     if (Input_GetKeyboardDown(KEY_INPUT_D) && isRetrySelected == true && !isSceneChangingFromGameOver)
     {
         isRetrySelected = false;
@@ -46,7 +49,7 @@ void GameOverMainProcess()
     Retry.SetText("Retry");
     GameOverToTitle.mainProcess(!isRetrySelected, true, 60);
     GameOverToTitle.SetText("Title");
-    GameOverText.DrawTextWithSort(0, 1920, "Mission Failed", titleFontHandle, SORT_CENTER, 200, true, GetColor(170, 0, 0));
+    GameOverText.DrawTextWithSort(0, 1920, "Mission Failed", titleFontHandle, SORT_CENTER, 350, true, GetColor(255, 0, 0));
     if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
     {
         isSceneChangingFromGameOver = true;
