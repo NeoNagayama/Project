@@ -518,7 +518,7 @@ void stage::Ingame()
     DrawExtendGraph(50, 900, 720, 986, playerHealthGauge, true);
     DrawRectExtendGraph(74, 913, 74 + (622 * (player.Health / 100)), 973, 0, 0, 2122*(player.Health/100) , 176, playerHealthBar,true);
     
-    if (player.BasePosition.z > stageLength-1000 && gamePhase == PHASE_RUN)
+    if (player.BasePosition.z > stageLength-2500 && gamePhase == PHASE_RUN)
     {
         gamePhase = PHASE_OVERSHOOT;
     }
@@ -678,6 +678,7 @@ void stage::ChasePhase()
     {
         DrawExtendGraph(450, 50,1470,241, E_gauge, true);
         DrawRectExtendGraph(476 ,65, 476  + (968 * ((float)enemy.Health / 100)),165,0,0, 3305 * ((float)enemy.Health / 100), 376, E_bar, true);
+        enemyHealthText.DrawTextWithSort(0, 1920, "ENEMY HP", BiggerFontHandle, SORT_CENTER, 180, true, GetColor(255, 0, 0));
         player.mainProcess(true);
     }
     objectiveText.DrawTextWithSort(70, 1920, "–Ú•W:“G‹@‚ðŒ‚’Ä‚µ‚ë", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
