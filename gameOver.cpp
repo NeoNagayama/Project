@@ -97,6 +97,7 @@ void GameOverInitialize()
 }
 void EndlessGameOver(float round)
 {
+    DrawExtendGraph(-8, 139, 1928, 941, gameOverBackGround, true);
     if (Input_GetKeyboardDown(KEY_INPUT_D) && isRetrySelected == true && !isSceneChangingFromGameOver)
     {
         isRetrySelected = false;
@@ -112,8 +113,8 @@ void EndlessGameOver(float round)
     Retry.SetText("Retry");
     GameOverToTitle.mainProcess(!isRetrySelected, true, 60);
     GameOverToTitle.SetText("Title");
-    GameOverText.DrawTextWithSort(0, 1920, "You Survived %.f Round", titleFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 0),GetColor(50,50,50),round-1);
-    HighScoreText.DrawTextWithSort(0, 1920, "HighScore:%.fRound", fontHandle, SORT_CENTER, 400, true, GetColor(255, 255, 0), GetColor(50, 50, 50),highScore);
+    GameOverText.DrawTextWithSort(0, 1920, "You Survived %.f Round", titleFontHandle, SORT_CENTER, 350, true, GetColor(255, 255, 0),GetColor(50,50,50),round-1);
+    HighScoreText.DrawTextWithSort(0, 1920, "HighScore:%.fRound", fontHandle, SORT_CENTER, 550, true, GetColor(255, 255, 0), GetColor(50, 50, 50),highScore);
     if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
     {
         isSceneChangingFromGameOver = true;
