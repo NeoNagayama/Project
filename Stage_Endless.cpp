@@ -65,7 +65,7 @@ void stageEndless::StartWave()
     isQuitting = false;
     isStarted = true;
     clearCameraOffsetx = 0;
-    stageLength = player.Position.z + GoalRange;
+    stageLength = player.Position.z + GoalRange + 200;
     startPosZ = player.Position.z + 200;
     player.camSetUp(startPosZ);
 }
@@ -234,7 +234,7 @@ void stageEndless::ShowResult()
 {
     if (GoalRange == 0)
     {
-        GoalRange = 40;
+        GoalRange = 4000;
     }
     ReflectToText();
     if (R_Timer.MeasureTimer(0.5f) && resultStage < 4)

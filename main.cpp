@@ -109,6 +109,7 @@ bool isGetDamaged;
 float timeScale = 1;
 /** @brief  ゲームを終了するか*/
 bool Quit = false;
+int isSucceceed = 0;
 /** @brief  ステージ1の障害物の位置*/
 int stage1Obstacle[50] = {
     0,0,0,0,0,
@@ -300,7 +301,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen() && !Quit) {
         //キーボード操作がされているか判断する処理
         Input_UpdateKeyboard();
-        // 通常の描画結果を書き込むスクリーンを描画対象にする
 
         //場面の切り替え
         switch (scene) {
@@ -363,15 +363,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             StopSoundMem(ingameBgm);
             break;
         }
-        //60fpsの1フレーム分待機する
-        WaitTimer(16);
-        //セットしたシャドウマップを解除する
-        SetUseShadowMap(0, -1);
         //ダメージを受けたらカメラの振動の処理を呼び出す
         if (isGetDamaged)
         {
             CameraShake();
         }
+        //60fpsの1フレーム分待機する
+        WaitTimer(16);
+        //セットしたシャドウマップを解除する
+        SetUseShadowMap(0, -1);
+        
     }
     //使用したシャドウマップを削除する
     DeleteShadowMap(shadowHandle);
@@ -528,6 +529,7 @@ void Init()
     LoadStage1();
     LoadStage2();
     LoadStage3();
+    LoadScore();
     //各ステージの初期化
     stage1.InitialProcess(stage1Obstacle, stage1ObstacleType,stage1movewall);
     stage2.InitialProcess(stage2Obstacle, stage2ObstacleType, stage2movewall);
@@ -695,11 +697,13 @@ void LoadScore()
     errno_t err = fopen_s(&file, "data/hs.dat", "rb");
     if (err == 0)
     {
+        isSucceceed = 1;
         fread(&highScore, sizeof(float), 1, file);
         fclose(file);
     }
     else
     {
+        isSucceceed = 0;
         highScore = 0;
     }
 }

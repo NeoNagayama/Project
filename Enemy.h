@@ -116,7 +116,7 @@ public:
     //起動時に呼び出される処理
     void InitialProcess();
     //機銃に関する処理
-    void Vulcan();
+    void Vulcan(bool isCutscene);
     //毎フレーム呼ばれる処理
     void mainProcess(bool mode);
     //回避軌道を決定する関数

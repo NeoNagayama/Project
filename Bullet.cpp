@@ -2,7 +2,7 @@
 bool Bullet::mainProcess(VECTOR hitbox1, VECTOR hitbox2)
 {
     
-    StartPosition = VAdd(StartPosition, VScale(VGet(forward.x,-forward.y,forward.z), 1));
+    StartPosition = VAdd(StartPosition, VScale(VGet(forward.x,-forward.y,forward.z * timeScale), 1));
     MV1SetPosition(handle, StartPosition);
     MV1DrawModel(handle);
     //DrawSphere3D(StartPosition, 0.3f, 32, GetColor(255, 255, 0), GetColor(255, 255, 255), true);
