@@ -132,6 +132,7 @@ void Player::mainProcess(bool mode)
             Flare();
 
         }
+        
     }
     //体力が0以下の時
     else
@@ -480,7 +481,7 @@ void Player::PlayerMoveXY()
     //プレイヤーの位置が移動可能範囲から出ていると0,出ていなければ移動すべき距離を入れる
     xSpeed = (offset.x > moveRange || offset.x < -moveRange) ? 0 : x * moveSpeed;
     ySpeed = (offset.y > moveRange|| offset.y < -moveRange) ? 0:y * moveSpeed;
-    offset = VAdd(VGet(xSpeed, ySpeed, 0), offset);//プレイヤーの現在の位置に移動すべき距離を足す
+    offset = VAdd(VGet(xSpeed*timeScale, ySpeed * timeScale, 0), offset);//プレイヤーの現在の位置に移動すべき距離を足す
     if (offset.x > moveRange || offset.x < -moveRange)//プレイヤーのx座標が移動可能範囲から出ていたら
     {
         offset.x = (offset.x > moveRange) ? moveRange : -moveRange;//範囲内に戻す
@@ -501,7 +502,7 @@ void Player::PlayerMoveXY()
 void Player::Vulcan()
 {
     DrawExtendGraph(580, 640, 850, 700, uiBox_01, true);
-    //機銃の残弾を表示する
+    /*機銃の残弾を表示する*/
     VulcanText.DrawTextWithSort(600, 850, "機銃: %.f", japaneseFontHandle, SORT_LEFT, 645, true, GetColor(0, 255, 0), GetColor(50, 50, 50), ammo);
     Position = MV1GetPosition(ModelHandle);//プレイヤーのモデルの座標を取得する
     for (int i = 49; i >= 0; i--)//50フレーム分のxy座標を配列に入れる,49から初めて0まで1づつ減らす
@@ -562,7 +563,7 @@ void Player::VulcanProjectile()
         {
             if (bullets[i].mainProcess(enemyObject->hitbox1, enemyObject->hitbox2))//弾の毎フレーム呼ばれる処理を行い敵ののヒットボックスに当たった場合
             {
-                enemyObject->Health -= 3;                   //敵の体力を3減らす
+                enemyObject->Health -= 30;                   //敵の体力を3減らす
                 PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);   //被弾時の効果音を鳴らす
             }
         }

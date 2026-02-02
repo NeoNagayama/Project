@@ -1,15 +1,12 @@
 #include "VisualEffects.h"
 void explosionEffect::DrawExprosion()
 {
-    if (angle >= 2 * DX_PI)
-    {
-        angle = 0;
-    }
-    angle + 0.02f;
+    
+    angle += 0.02f;
     progress += oneFlame;
     size += 20 * oneFlame;
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * (1 - progress / LIFETIME));
-    DrawBillboard3D(BasePosition, 0.5f, 0.5f, size, angle, explosionHandle, TRUE);
+    DrawBillboard3D(BasePosition, 0.5f, 0.5f, size, progress, explosionHandle, TRUE);
     DrawSubExpl(Position1, Direction1);
     DrawSubExpl(Position2, Direction2);
     DrawSubExpl(Position3, Direction3);
@@ -17,16 +14,13 @@ void explosionEffect::DrawExprosion()
 }
 bool explosionEffect::DrawSingleExplosion()
 {
-    if (angle >= 2 * DX_PI)
-    {
-        angle = 0;
-    }
-    angle + 0.02f;
+    
+    angle += 0.02f;
     progress += oneFlame * timeScale;
     size += (20 * oneFlame) * timeScale;
     SetWriteZBuffer3D(FALSE);
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * (1 - progress / (LIFETIME-1.5f)));
-    DrawBillboard3D(BasePosition, 0.5f, 0.5f, size, angle, explosionHandle, TRUE);
+    DrawBillboard3D(BasePosition, 0.5f, 0.5f, size, progress, explosionHandle, TRUE);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
     SetWriteZBuffer3D(TRUE);
     return (progress > LIFETIME ? true : false);

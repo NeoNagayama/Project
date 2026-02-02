@@ -148,6 +148,7 @@
     <ClCompile Include="Instruction.cpp" />
     <ClCompile Include="setsume.cpp" />
     <ClCompile Include="StageBuild.cpp" />
+    <ClCompile Include="StageFilming.cpp" />
     <ClCompile Include="Stage_Endless.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="gameOver.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Flare.h" />
     <ClInclude Include="Instruction.h" />
     <ClInclude Include="StageBuild.h" />
+    <ClInclude Include="StageFilming.h" />
     <ClInclude Include="Stage_Endless.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="gameOver.h" />

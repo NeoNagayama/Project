@@ -55,7 +55,8 @@ void Enemy::mainProcess(bool mode)
         else
         {
             BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, -Z_OFFSET));
-            Vulcan();
+            offset = playerObject->offset;
+            Vulcan(false);
             missile();
             missileObject.Passive();
         }
@@ -86,7 +87,7 @@ void Enemy::mainProcess(bool mode)
     exp.DrawExprosion();
     exp2.DrawExprosion();
 }
-void Enemy::Vulcan()
+void Enemy::Vulcan(bool isCutscene)
 {
     firingCooldown += oneFlame;
     float hormingForcex = 0, hormingForcey = 0;
@@ -117,7 +118,7 @@ void Enemy::Vulcan()
             isReticleShowUp = true;
         }
     }
-    if (isReticleShowUp)
+    if (isReticleShowUp && !isCutscene)
     {
         VECTOR GraphPosition = ConvWorldPosToScreenPos(VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + RETICLE_POS_Z));
         DrawExtendGraph((int)GraphPosition.x - RETICLE_SIZE, (int)GraphPosition.y - RETICLE_SIZE, (int)GraphPosition.x + RETICLE_SIZE, (int)GraphPosition.y + RETICLE_SIZE, reticleHandle, true);
@@ -221,9 +222,9 @@ void Enemy::MissileLaunch()
     }
     if (!isHide)
     {
-        DrawExtendGraph(670, 630, 1250, 740, alertGraph, true);
+        DrawExtendGraph(750, 680, 1170, 740, alertGraph, true);
     }
-    DrawExtendGraph(670, 765, 1250, 900, spaceGraph, true);
+    DrawExtendGraph(750, 760, 1170, 820, spaceGraph, true);
     missileflyingTimer += oneFlame;
     if (missileflyingTimer > MISSILE_SHOWUP)
     {

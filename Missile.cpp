@@ -2,7 +2,7 @@
 void Missile::mainProcess(VECTOR targetPosition ,float remainingTime,float speed)
 {
 	remainingTime = remainingTime / 0.016f;
-	Angle = VScale(VNorm(VGet(targetPosition.x-Position.x, targetPosition.y - Position.y, targetPosition.z - Position.z)), speed + 0.3f);
+	Angle = VScale(VNorm(VGet(targetPosition.x-Position.x, targetPosition.y - Position.y, targetPosition.z - Position.z)), (speed + 0.3f) * timeScale);
 	Position = VAdd(Position, Angle);
     MV1SetPosition(MissileHandle, Position);
     MV1SetRotationXYZ(MissileHandle, VNorm(VGet(targetPosition.x - Position.x, targetPosition.y - Position.y, targetPosition.z - Position.z)));

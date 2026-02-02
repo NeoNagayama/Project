@@ -7,7 +7,7 @@ void smoke::DrawSmoke()
         return;
     }
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255*(1-progress/LIFETIME));
-    DrawBillboard3D(Position, 0.5f, 0.5f, 0.8f,0, smokeHandle,true);
+    DrawBillboard3D(Position, 0.5f, 0.5f, 0.8f,progress, smokeHandle,true);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
     return;
 }
