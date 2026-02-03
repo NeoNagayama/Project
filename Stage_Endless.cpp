@@ -274,14 +274,21 @@ void stageEndless::ShowResult()
     if (!isGetResult && R_Timer.MeasureTimer(10.0f))
     {
         baseHealthCache = 20 * (player.ammo / (baseAmmo-50));
-        incleasedHealth = 20 * (player.ammo / (baseAmmo - 50));
+        if (difficulty == 0)
+        {
+            incleasedHealth = (20 * (player.ammo / (baseAmmo - 50)))/2;
+        }
+        else
+        {
+            incleasedHealth = 20 * (player.ammo / (baseAmmo - 50));
+        }
         baseAmmoCache = 30 * (player.Health / baseHealth);
         incleasedAmmo = 30 * (player.Health / baseHealth);
         player.Health += (baseHealth * (player.ammo / (baseAmmo - 50)));
         healedHealth = (baseHealth * (player.ammo / (baseAmmo - 50)));
-        if (difficulty == 0)
+        if(difficulty == 0)
         {
-            baseHealth += baseHealthCache /2;
+            baseHealth += baseHealthCache/2;
         }
         else
         {

@@ -19,6 +19,7 @@ Button Start;
 Button Extra;
 Button Exit;
 UIText GameTitle;
+UIText info;
 int modelhandle[4];
 smoke smokes1[180];
 smoke smokes2[180];
@@ -200,6 +201,7 @@ void TitleMenu()
                 scene = SCENE_INSTRUCTION;
             }
         }
+        info.DrawTextWithSort(90, 1920, "ゲームをステージ1から開始します", biggerJpFontHandle, SORT_LEFT, 800, true, GetColor(255, 255, 255));
         break;
     case 1:
         if (sceneChanging)
@@ -209,15 +211,17 @@ void TitleMenu()
                 Stage4->Init();
                 progress = 255;
                 Stage4->isStarted = true;
-                scene = SCENE_EXTRA;
+                scene = SCENE_INST_EX;
             }
         }
+        info.DrawTextWithSort(90, 1920, "エンドレスモードを開始します\n高難易度です", biggerJpFontHandle, SORT_LEFT, 800, true, GetColor(255, 255, 255));
         break;
     default:
         if (sceneChanging)
         {
             Quit = true;
         }
+        info.DrawTextWithSort(90, 1920, "ゲームを終了します", biggerJpFontHandle, SORT_LEFT, 800, true, GetColor(255, 255, 255));
         break;
     }
     

@@ -108,7 +108,8 @@ enum SCENES
     SCENE_INGAME,       //インゲーム
     SCENE_INSTRUCTION,  //操作説明画面
     SCENE_STAGEBUILD,   //ステージ制作画面
-    SCENE_EXTRA         //エンドレスモード画面
+    SCENE_EXTRA,        //エンドレスモード画面
+    SCENE_INST_EX
 };
 /** @brief ステージのenum */
 enum STAGES

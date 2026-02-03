@@ -339,6 +339,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             StopSoundMem(ingameBgm);
             break;
             //ステージ制作を行う時の処理
+        case SCENE_INST_EX:
+            inst.main(SCENE_EXTRA);
+            StopSoundMem(ingameBgm);
+            break;
         case SCENE_STAGEBUILD:
             //ステージ制作画面の主要な処理
             bil.main();
