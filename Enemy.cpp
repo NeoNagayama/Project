@@ -111,7 +111,7 @@ void Enemy::Vulcan(bool isCutscene)
             if (bullets[i].mainProcess(playerObject->hitbox1, playerObject->hitbox2))
             {
                  bullets[i].isActivated = false;
-                 playerObject->Health -= BULLET_DAMAGE;
+                 if(playerObject->isImmortal)playerObject->Health -= BULLET_DAMAGE;
                  isGetDamaged = true;
                  PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);
             }
@@ -255,13 +255,24 @@ void Enemy::MissileLaunch()
         isLaunched = false;
         missileflyingTimer = 0;
         missilecooldowntimer = 0;
-        if (isTimeLimit)
+        if (!playerObject->isImmortal)
         {
-            playerObject->Health = 0;
-        }
-        else
-        {
-            (*playerObject).Health -= MISSILE_DAMAGE;
+            if (isTimeLimit)
+            {
+                playerObject->Health = 0;
+            }
+            else
+            {
+                if (difficulty == 0)
+                {
+                    (*playerObject).Health -= MISSILE_DAMAGE * 0.5f;
+                    (*playerObject).isImmortal = true;
+                }
+                else
+                {
+                    (*playerObject).Health -= MISSILE_DAMAGE;
+                }
+            }
         }
         missileCooldown = get_rand(5, 7);
         exp.SetPosition(playerObject->Position);
@@ -300,9 +311,18 @@ void Enemy::EnemyMoveXY()
     }
 
     Acceleration();
-    xSpeed =xSpeed *moveSpeed;
-    
-    ySpeed =  ySpeed * moveSpeed;
+    if (difficulty == 0)
+    {
+        xSpeed = xSpeed * (moveSpeed * 0.8f);
+
+        ySpeed = ySpeed * (moveSpeed * 0.8f);
+    }
+    else
+    {
+        xSpeed = xSpeed * moveSpeed;
+
+        ySpeed = ySpeed * moveSpeed;
+    }
     
     if (Rotation.y == DegToRad(90))
     {

@@ -99,6 +99,7 @@ extern int enemyLight;
 extern int sideObstacle;
 /** @brief  プレイヤーがダメージを受けたか*/
 extern bool isGetDamaged;
+extern int difficulty;
 
 /** @brief 画面識別用のenum */
 enum SCENES

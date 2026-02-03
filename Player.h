@@ -41,12 +41,13 @@ private:
     static constexpr float FlareFiringRate = 0.1f;
     static constexpr float FlareInterval = 5;
     bool Launching = false;
-    
     int FlareAmount = 10;
     static constexpr int maxAmmo = 200;
     Bullet bullets[200];
     Flare Flares[10];
     timer invin;
+    timer ImmortalTimer;
+    timer stroboTimer;
     void FlareLaunch();
     void VulcanProjectile();
     void InputUp(float speed);
@@ -54,6 +55,7 @@ private:
     void InputNeutral(float speed);
     void rotateOnlyRoll();
     void Limit();
+    void Immortal();
 public:
     static constexpr float DEFAULTSPEED = 2;
     float ammo = 200;
@@ -78,4 +80,5 @@ public:
     void Init();
     void camSetUp(int pos);
     int tailLight;
+    bool isImmortal = false;
 };

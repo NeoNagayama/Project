@@ -10,7 +10,7 @@ public:
     VECTOR Position;
     VECTOR Rotation;
     VECTOR Scale;
-
+    bool isInvisible = false;
     VECTOR BasePosition;
     VECTOR targetAngle;
     float Health = 100;
@@ -27,4 +27,5 @@ public:
     void TestHitBox();
     void DrawhitBoxToUI();
     void calcBox();
+    void Draw();
 };

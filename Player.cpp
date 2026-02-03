@@ -75,7 +75,7 @@ void Player::Init()
 void Player::camSetUp(int pos)
 {
     //カメラの位置をプレイヤーに追従させる位置を設定する
-    cameraStartThleshold = pos + 200;
+    cameraStartThleshold = pos;
     //カメラ演出時のカメラのx軸上のずれ
     startCameraOffsetx = 6;
     //カメラをズームさせる
@@ -93,6 +93,7 @@ void Player::camSetUp(int pos)
 
 void Player::mainProcess(bool mode)
 {
+    Immortal();
     //体力が0でないとき
     if (Health > 0)
     {
@@ -563,7 +564,14 @@ void Player::VulcanProjectile()
         {
             if (bullets[i].mainProcess(enemyObject->hitbox1, enemyObject->hitbox2))//弾の毎フレーム呼ばれる処理を行い敵ののヒットボックスに当たった場合
             {
-                enemyObject->Health -= 30;                   //敵の体力を3減らす
+                if (difficulty == 0)
+                {
+                    enemyObject->Health -= 6;
+                }
+                else
+                {
+                    enemyObject->Health -= 3;                   //敵の体力を3減らす
+                }
                 PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);   //被弾時の効果音を鳴らす
             }
         }
@@ -799,5 +807,19 @@ void Player::autoEvade()
     {
         targetAngle = VGet(0, -NEUTRAL_ANGLE_Y, 0);
         rotatePlayer();
+    }
+}
+void Player::Immortal()
+{
+    if (isImmortal && ImmortalTimer.MeasureTimer(2))
+    {
+        isImmortal = false;
+        isInvisible = false;
+        ImmortalTimer.RestartTimer();
+    }
+    if (isImmortal && stroboTimer.MeasureTimer(0.2f))
+    {
+        isInvisible = isInvisible ? false : true;
+        stroboTimer.RestartTimer();
     }
 }
