@@ -65,3 +65,10 @@ void base::DrawhitBoxToUI()
 {
     DrawCube3D(hitbox1, hitbox2, GetColor(0, 255, 0), GetColor(0, 255, 0), false);
 }
+void base::Draw()
+{
+    if (!isInvisible)
+    {
+        MV1DrawModel(ModelHandle);
+    }
+}

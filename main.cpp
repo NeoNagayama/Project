@@ -110,6 +110,7 @@ float timeScale = 1;
 /** @brief  ゲームを終了するか*/
 bool Quit = false;
 int isSucceceed = 0;
+int difficulty = 0;
 /** @brief  ステージ1の障害物の位置*/
 int stage1Obstacle[50] = {
     0,0,0,0,0,
@@ -329,7 +330,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             //操作説明画面の処理
         case SCENE_INSTRUCTION:
             //操作説明画面のインスタンスのメインの処理
-            inst.main();
+            inst.main(SCENE_INGAME);
             //操作説明終了後に処理を行う各ステージのインスタンスの初期化
             stage1.Initialize();
             stage2.Initialize();
@@ -338,6 +339,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             StopSoundMem(ingameBgm);
             break;
             //ステージ制作を行う時の処理
+        case SCENE_INST_EX:
+            inst.main(SCENE_EXTRA);
+            StopSoundMem(ingameBgm);
+            break;
         case SCENE_STAGEBUILD:
             //ステージ制作画面の主要な処理
             bil.main();
@@ -523,6 +528,7 @@ void setupShadowMap()
 
 void Init()
 {
+    inst.Init();
     //タイトル画面で最初に一度だけ呼ばれる処理 
     TitleInitialProcess();
     //各ステージの障害物の配置をロードする

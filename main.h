@@ -99,6 +99,7 @@ extern int enemyLight;
 extern int sideObstacle;
 /** @brief  プレイヤーがダメージを受けたか*/
 extern bool isGetDamaged;
+extern int difficulty;
 
 /** @brief 画面識別用のenum */
 enum SCENES
@@ -107,7 +108,8 @@ enum SCENES
     SCENE_INGAME,       //インゲーム
     SCENE_INSTRUCTION,  //操作説明画面
     SCENE_STAGEBUILD,   //ステージ制作画面
-    SCENE_EXTRA         //エンドレスモード画面
+    SCENE_EXTRA,        //エンドレスモード画面
+    SCENE_INST_EX
 };
 /** @brief ステージのenum */
 enum STAGES

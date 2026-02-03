@@ -117,6 +117,7 @@ protected:
     UIText objectiveText;
     UIText countDownText;
     UIText playerHealthText;
+    UIText playerHealthIndi;
     UIText enemyHealthText;
     UIText missionTime;
     VECTOR cameraTarget;

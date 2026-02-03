@@ -2,11 +2,20 @@
 #include "main.h"
 #include "Input.h"
 #include "Text.h"
+#include "Button.h"
 class instruction
 {
 private:
     UIText text;
     timer showTimer;
+    Button normal;
+    Button hard;
+    bool pressSpace = false;
+    int phase = 0;
+    int dif = 0;
 public:
-    void main();
+    void Init();
+    void main(int scene);
+    void inst();
+    void choiceDifficulty(int scene);
 };

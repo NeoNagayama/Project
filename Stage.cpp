@@ -52,7 +52,7 @@ void stage::MainProcess()
     moveWallShadow();
     ShadowMap_DrawEnd();
     DrawGraph3D(0, 500, player.Position.z + 1000, backGroundHandle, false);
-    MV1DrawModel(player.ModelHandle);
+    player.Draw();
     MV1DrawModel(enemy.ModelHandle);
     SetUseShadowMap(0, shadowHandle);
     DrawBase();
@@ -157,11 +157,20 @@ void stage::Initialize()
 }
 void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
 {
-    if (maps[pos].DamageBox(upper, lower, right, left, false, player.hitbox1, player.hitbox2) && !isStarted && player.Health > 0)
+    if (maps[pos].DamageBox(upper, lower, right, left, false, player.hitbox1, player.hitbox2) && !isStarted && player.Health > 0 && !player.isImmortal)
     {
-        isDead = true;
-        player.Health = 0;
-        isGetDamaged = true;
+        if (difficulty == 0)
+        {
+            player.Health -= 20;
+            player.isImmortal = true;
+            isGetDamaged = true;
+        }
+        else
+        {
+            isDead = true;
+            player.Health = 0;
+            isGetDamaged = true;
+        }
     }
     if (i == 0 || i == 2 || i == 1)
     {
@@ -173,7 +182,7 @@ void stage::Obstacle_Draw(int i ,int pos, bool upper, bool lower, bool right, bo
 }
 void stage::AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool left)
 {
-    if (AAs[pos].DamageZone(upper, lower, right, left,player.hitbox1, player.hitbox2) && !isGetDamage && player.Health > 0 && !isPause)
+    if (AAs[pos].DamageZone(upper, lower, right, left,player.hitbox1, player.hitbox2) && !isGetDamage && player.Health > 0 && !isPause && !player.isImmortal)
     {
         player.Health -= 5;
         isGetDamage = true;
@@ -191,11 +200,20 @@ void stage::AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool 
 }
 void stage::MoveWallDraw(int i ,int pos, bool high,bool mid,bool low)
 {
-    if (moveWalls[pos].DrawMoveWall(high, mid, low, player.hitbox1, player.hitbox2) && !isStarted && player.Health > 0)
+    if (moveWalls[pos].DrawMoveWall(high, mid, low, player.hitbox1, player.hitbox2) && !isStarted && player.Health > 0 && !player.isImmortal)
     {
-        isDead = true;
-        player.Health = 0;
-        isGetDamaged = true;
+        if (difficulty == 0)
+        {
+            player.Health -= 20;
+            player.isImmortal = true;
+            isGetDamaged = true;
+        }
+        else
+        {
+            isDead = true;
+            player.Health = 0;
+            isGetDamaged = true;
+        }
     }
     
     if (i == 0 || i == 1 || i== 2)
@@ -497,6 +515,7 @@ void stage::Briefing()
             objectiveText.resetAlpha();
             enemy.isFiring = false;
             enemy.firingCooldown = -2.0f;
+            player.isImmortal = true;
         }
     }
     isDead = false;
@@ -514,7 +533,8 @@ void stage::Ingame()
         isKilled = true;
     }
     DrawExtendGraph(54, 830, 410, 905, uiBox_03, true);
-    playerHealthText.DrawTextWithSort(120, 1920, "PLAYER HP", fontHandle, SORT_LEFT, 850, true, GetColor(0, 255, 0));
+    playerHealthText.DrawTextWithSort(90, 1920, "PLAYER HP", fontHandle, SORT_LEFT, 850, true, GetColor(0, 255, 0));
+    playerHealthIndi.DrawTextWithSort(290, 1920, "%.f", fontHandle, SORT_LEFT, 850, true, GetColor(0, 255, 0),GetColor(50,50,50),player.Health);
     DrawExtendGraph(50, 900, 720, 986, playerHealthGauge, true);
     DrawRectExtendGraph(74, 913, 74 + (622 * (player.Health / 100)), 973, 0, 0, 2122*(player.Health/100) , 176, playerHealthBar,true);
     
@@ -655,6 +675,7 @@ void stage::ChasePhase()
             if (objectiveShowTimer.MeasureTimer(3))
             {
                 isObjectiveAppeared = false;
+                player.isImmortal = true;
                 countDown = 3;
                 objectiveShowTimer.RestartTimer();
                 CountDownTimer.RestartTimer();

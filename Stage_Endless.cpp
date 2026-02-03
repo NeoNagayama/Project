@@ -40,7 +40,7 @@ void stageEndless::Init()
     choosedButton = 0;
     gamePhase = 0;
     isKilled = false;
-    stageLength = 4000;
+    stageLength = 800;
     GoalRange = 0;
     baseAmmo = 200;
     baseHealth = 100;
@@ -92,7 +92,7 @@ void stageEndless::main()
     moveWallShadow();
     ShadowMap_DrawEnd();
     DrawGraph3D(0, 500, player.Position.z + 1000, backGroundHandle, false);
-    MV1DrawModel(player.ModelHandle);
+    player.Draw();
     MV1DrawModel(enemy.ModelHandle);
     SetUseShadowMap(0, shadowHandle);
     DrawBase();
@@ -174,7 +174,7 @@ void stageEndless::IngameToGameoverModified()
     {
         EndlessGameOver(Round);
     }
-    if (!isSaved && highScore <= Round)
+    if (!isSaved && highScore <= Round-1)
     {
         HighScore();
         isSaved = true;
@@ -274,12 +274,26 @@ void stageEndless::ShowResult()
     if (!isGetResult && R_Timer.MeasureTimer(10.0f))
     {
         baseHealthCache = 20 * (player.ammo / (baseAmmo-50));
-        incleasedHealth = 20 * (player.ammo / (baseAmmo - 50));
+        if (difficulty == 0)
+        {
+            incleasedHealth = (20 * (player.ammo / (baseAmmo - 50)))/2;
+        }
+        else
+        {
+            incleasedHealth = 20 * (player.ammo / (baseAmmo - 50));
+        }
         baseAmmoCache = 30 * (player.Health / baseHealth);
         incleasedAmmo = 30 * (player.Health / baseHealth);
         player.Health += (baseHealth * (player.ammo / (baseAmmo - 50)));
         healedHealth = (baseHealth * (player.ammo / (baseAmmo - 50)));
-        baseHealth += baseHealthCache;
+        if(difficulty == 0)
+        {
+            baseHealth += baseHealthCache/2;
+        }
+        else
+        {
+            baseHealth += baseHealthCache;
+        }
         baseAmmo += baseAmmoCache;
         if (player.Health > baseHealth)
         {
