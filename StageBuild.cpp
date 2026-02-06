@@ -84,7 +84,7 @@ void builder::main()
         }
         MoveWalls(i, i);
     }
-    SetCameraPositionAndTarget_UpVecY(VGet(cam.x,cam.y, (pos*80) +cam.z), VGet(0, 0, pos * 80));
+    SetCameraPositionAndTarget_UpVecY(VGet(cam.x,cam.y, ((float)pos*80) +cam.z), VGet(0, 0, (float)pos * 80));
     SetupCamera_Perspective(1.2f);
 }
 void builder::Init()

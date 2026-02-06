@@ -72,7 +72,7 @@ void Player::Init()
  *
  */
 
-void Player::camSetUp(int pos)
+void Player::camSetUp(float pos)
 {
     //カメラの位置をプレイヤーに追従させる位置を設定する
     cameraStartThleshold = pos;
@@ -723,7 +723,10 @@ void Player::rotateOnlyRoll()
 
     }
 }
-
+/*
+ * @brief プレイヤーのピッチ方向の回転処理
+ * @details rotatePlayerで出された向くべき角度に向けて回転する処理
+ */
 void Player::pitch()
 {
     /* @brief 現在のプレイヤーのモデルの正面方向の二次元ベクトルを取得するための変数 */
@@ -740,25 +743,29 @@ void Player::pitch()
         {
             Rotate(VGet(-rotateSpeed * smooth(difInAngle, 0, 1), 0, 0));//
         }
+        //差が-0.005未満で-0.5よりも大きくの場合
         else if (difInAngle < -0.005f && difInAngle > -0.5f)
         {
             Rotate(VGet(rotateSpeed * smooth(difInAngle, 0, 1), 0, 0));
         }
+        //差が-0.5未満の場合
         else if (difInAngle < -0.5f)
         {
             Rotate(VGet(-rotateSpeed * smooth(difInAngle, 0, 1), 0, 0));
         }
+        //差が0.5を超える場合
         else if (difInAngle > 0.5f)
         {
             Rotate(VGet(rotateSpeed * smooth(difInAngle, 0, 1), 0, 0));
         }
+        //移動のキーが押されていないときに水平にする
         else if(!CheckHitKey(KEY_INPUT_A) && !CheckHitKey(KEY_INPUT_S) && !CheckHitKey(KEY_INPUT_D) && !CheckHitKey(KEY_INPUT_W) )
         {
             Rotation = MV1GetRotationXYZ(ModelHandle);
             SetRotation(VGet(0, Rotation.y, Rotation.z));
         }
     }
-    else if(Rotation.x > 0.4f)
+    else if(Rotation.x > 0.4f)//x軸の回転が+-0.4を超えたときに0.4に戻す
     {
         Rotation = MV1GetRotationXYZ(ModelHandle);
         SetRotation(VGet(0.4f, Rotation.y, Rotation.z));
@@ -770,56 +777,72 @@ void Player::pitch()
     }
         
 }
+/*
+ * @brief フェーズの遷移時のプレイヤーの動き
+ * @details 逃走フェーズから追跡フェーズへの遷移じのプレイヤーとカメラの動き
+ */
 bool Player::Transition()
 {
-    autoEvade();
+    autoEvade();//障害物のない位置に移動する
+    /* @brief 遷移終了時にカメラがいるべき座標 */
     VECTOR targetCameraPosition = VAdd(VGet(offset.x , offset.y + 2 , -16), BasePosition);
+    /* @brief カメラから移動する先の座標へのベクトル */
     VECTOR cameraToTargetVector = VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z);
+    /* @brief カメラの移動する先の座標までの距離 */
     float distance = sqrtf((cameraToTargetVector.x * cameraToTargetVector.x) + (cameraToTargetVector.y * cameraToTargetVector.y) + (cameraToTargetVector.z * cameraToTargetVector.z));
-    BasePosition = VAdd(VGet(0, 0, forwardSpeed), BasePosition);
-    pitch();
-    Move(VAdd(BasePosition, offset));
-    if (distance <1.5f)
+    BasePosition = VAdd(VGet(0, 0, forwardSpeed), BasePosition);//プレイヤーの座標を前進させる
+    pitch();//プレイヤーのピッチ方向の回転処理
+    Move(VAdd(BasePosition, offset));//プレイヤーの座標をモデルに反映させる
+    if (distance <1.5f)//distanceが1.5未満の時のカメラの位置と角度の処理
     {
         rotatePlayer();
         CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition);
         SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -16), BasePosition), VAdd(VGet(offset.x, offset.y, TARGET_CAMERA_POSZ), BasePosition));
-        return true;
+        return true;//真を返す
     }
-    else
+    else//distanceが1.5以上の時のカメラの位置と角度の処理
     {
         CameraPosition = VAdd(VAdd(CameraPosition, VScale(VNorm(VGet(targetCameraPosition.x - CameraPosition.x, targetCameraPosition.y - CameraPosition.y, targetCameraPosition.z - CameraPosition.z)), 0.17f)), VGet(0, 0, forwardSpeed));
         SetCameraPositionAndTarget_UpVecY(VGet(offset.x, offset.y + 2, CameraPosition.z), VAdd(VGet(offset.x, offset.y, TARGET_CAMERA_POSZ), BasePosition));
-        return false;
+        return false;//偽を返す
     }
 }
+/*
+ * @brief 障害物に当たらないように移動する
+ * @details 演出中に障害物に当たらないように真ん中に移動する処理
+ */
 void Player::autoEvade()
 {
+    /* @brief 中心までの距離 */
     float distance = sqrtf((-offset.x * -offset.x) + (-offset.y * -offset.y));
-    if (distance >= 1)
+    if (distance >= 1)//中心までの距離が1以上のとき
     {
-        targetAngle = VNorm(VGet(-offset.x, -offset.y, 0));
-        offset = VAdd(VScale(targetAngle, moveSpeed * timeScale), offset);
-        targetAngle.y = -targetAngle.y;
-        rotatePlayer();
+        targetAngle = VNorm(VGet(-offset.x, -offset.y, 0));//中心までの角度を求める
+        offset = VAdd(VScale(targetAngle, moveSpeed * timeScale), offset);//中心に向けて移動する
+        targetAngle.y = -targetAngle.y;//
+        rotatePlayer();//プレイヤーを回転させる
     }
-    else
+    else//中心までの距離が1未満のとき
     {
-        targetAngle = VGet(0, -NEUTRAL_ANGLE_Y, 0);
-        rotatePlayer();
+        targetAngle = VGet(0, -NEUTRAL_ANGLE_Y, 0);//プレイヤーが向くべき角度を水平にする
+        rotatePlayer();//プレイヤーを回転させる
     }
 }
+/*
+ * @brief 無敵時間の処理
+ * @details 無敵時間の時間計測の処理
+ */
 void Player::Immortal()
 {
-    if (isImmortal && ImmortalTimer.MeasureTimer(2))
+    if (isImmortal && ImmortalTimer.MeasureTimer(2))//無敵時間中で2秒たったら
     {
-        isImmortal = false;
-        isInvisible = false;
-        ImmortalTimer.RestartTimer();
+        isImmortal = false;//無敵時間を終わらせる
+        isInvisible = false;//プレイヤーを描画する
+        ImmortalTimer.RestartTimer();//タイマーをリセットする
     }
-    if (isImmortal && stroboTimer.MeasureTimer(0.2f))
+    if (isImmortal && stroboTimer.MeasureTimer(0.2f))//無敵時間中で0.2秒たったら
     {
-        isInvisible = isInvisible ? false : true;
-        stroboTimer.RestartTimer();
+        isInvisible = isInvisible ? false : true;//プレイヤーの描画のフラグを切り替える
+        stroboTimer.RestartTimer();//タイマーをリセットする
     }
 }

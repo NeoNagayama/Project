@@ -64,7 +64,7 @@ extern int E_gauge;
 /** @brief  敵の体力ゲージの値*/
 extern int E_bar;
 /** @brief  エンドレスモードのハイスコア*/
-extern int highScore;
+extern float highScore;
 /** @brief  決定した時の効果音*/
 extern int interectSound;
 /** @brief  選択した時の効果音*/
@@ -100,6 +100,7 @@ extern int sideObstacle;
 /** @brief  プレイヤーがダメージを受けたか*/
 extern bool isGetDamaged;
 extern int difficulty;
+extern int instBackGraph;
 
 /** @brief 画面識別用のenum */
 enum SCENES

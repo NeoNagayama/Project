@@ -12,12 +12,19 @@ class explosionEffect;
 class Player: public base
 {
 private:
+    /* @brief 機銃の残弾表示用のUI */
     UIText VulcanText;
+    /* @brief フレアの使用可能までの時間表示用のUI */
     UIText FlareText;
+    /* @brief 爆発のエフェクト */
     explosionEffect exp;
+    /* @brief 爆発のエフェクト */
     explosionEffect exp2;
+    /* @brief 敵のポインタ */
     Enemy* enemyObject;
+    /* @brief 水平時のy軸の角度 */
     static constexpr float NEUTRAL_ANGLE_Y = 0.99f;
+    /* @brief  */
     static constexpr int TARGET_CAMERA_POSZ = 20;
     static constexpr float moveSpeed= 0.4f;
     float speedLimit = 0.7f;
@@ -78,7 +85,7 @@ public:
     bool Transition();
     VECTOR CameraPosition;
     void Init();
-    void camSetUp(int pos);
+    void camSetUp(float pos);
     int tailLight;
     bool isImmortal = false;
 };

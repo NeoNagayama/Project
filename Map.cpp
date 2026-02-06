@@ -167,7 +167,7 @@ void antiAir::DrawDamageBoxTransparent(VECTOR edge1, VECTOR edge2)
     {
         if (expls[i].DrawSingleExplosion())
         {
-            expls[i].SetPosition(VGet(get_rand(edge1.x, edge2.x), get_rand(edge1.y, edge2.y), get_rand(edge1.z, edge2.z)));
+            expls[i].SetPosition(VGet((float)get_rand((int)edge1.x, (int)edge2.x), (float)get_rand((int)edge1.y, (int)edge2.y), (float)get_rand((int)edge1.z, (int)edge2.z)));
         }
     }
 
@@ -220,8 +220,8 @@ bool wallmove::DrawMoveWall(bool high,bool mid, bool low, VECTOR hitbox1, VECTOR
     }
     if (low)
     {
-        VECTOR edge1 = VGet(position.x - 15, position.y - 7, position.z - 10);
-        VECTOR edge2 = VGet(position.x + 23, position.y - 15, position.z + 10);
+        VECTOR edge1 = VGet(position.x - 15, position.y - 15, position.z - 10);
+        VECTOR edge2 = VGet(position.x + 23, position.y - 7, position.z + 10);
         MV1SetPosition(cargoHandle, VGet(position.x, position.y -11, position.z));
         MV1DrawModel(cargoHandle);
         //DrawDamageBox(edge1, edge2);
@@ -237,7 +237,7 @@ void wallmove::DrawHole(VECTOR edge1, VECTOR edge2)
     DrawCube3D(VGet(15, edge1.y, edge1.z), VGet(14.7f, edge2.y, edge2.z), GetColor(0, 0, 0), GetColor(0, 0, 0), true);
     SetUseLighting(true);
     SetWriteZBuffer3D(FALSE);
-    DrawExtendGraph3D(0, edge1.y, edge1.z, 0.05, 0.05, guideHandle, TRUE);
+    DrawExtendGraph3D(0, edge1.y + edge2.y, edge1.z, 0.05, 0.05, guideHandle, TRUE);
     SetWriteZBuffer3D(TRUE);
 }
 void wallmove::SetUp()

@@ -3,12 +3,13 @@
 void instruction::Init()
 {
     normal.init(buttonGraph);
-    normal.SetButtonPosition(VGet(960, 540, 1), 400, 100, 0.9f);
-    hard.init(buttonGraph);
-    hard.SetButtonPosition(VGet(960, 740, 1), 400, 100, 0.9f);
+    normal.SetButtonPosition(VGet(1500, 540, 1), 400, 100, 0.9f,ANCHOR_RIGHT);
+    hard.init(buttonGraphRed);
+    hard.SetButtonPosition(VGet(1500, 740, 1), 400, 100, 0.9f, ANCHOR_RIGHT);
 }
-void instruction::main(int scene)
+void instruction::main(int nextScene)
 {
+    DrawGraph(0, 0, instBackGraph, true);
     if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
     {
         pressSpace = true;
@@ -18,7 +19,7 @@ void instruction::main(int scene)
         inst();
         break;
     default:
-        choiceDifficulty(scene);
+        choiceDifficulty(nextScene);
         break;
     }
 }
@@ -39,8 +40,17 @@ void instruction::inst()
         text.DrawTextWithSort(0, 1920, "PRESS SPACE TO START", BiggerFontHandle, SORT_CENTER, 900, FALSE, GetColor(220, 255, 220));
     }
 }
-void instruction::choiceDifficulty(int scenea)
+void instruction::choiceDifficulty(int nextScene)
 {
+    text.DrawTextWithSort(0, 1920, "難易度選択", biggerJpFontHandle, SORT_CENTER, 200, true, GetColor(255, 255, 255),GetColor(10,10,10));
+    if (dif == 0)
+    {
+        info.DrawTextWithSort(90, 1920, "おすすめ", biggerJpFontHandle, SORT_LEFT, 600, true, GetColor(255, 255, 255), GetColor(10, 10, 10));
+    }
+    else
+    {
+        info.DrawTextWithSort(90, 1920, "ノーマルに比べダメージが大きくなり\n壁にぶつかると即ゲームオーバー", biggerJpFontHandle, SORT_LEFT, 600, true, GetColor(255, 255, 255), GetColor(10, 10, 10));
+    }
     normal.mainProcess(dif == 0, true, 30);
     normal.SetText("NORMAL");
     hard.mainProcess(dif == 1, true, 30);
@@ -53,7 +63,7 @@ void instruction::choiceDifficulty(int scenea)
     {
         difficulty = dif;
         progress = 255;
-        scene = scenea;
+        scene = nextScene;
         pressSpace = false;
         phase = 0;
     }

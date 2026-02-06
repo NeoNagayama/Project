@@ -55,7 +55,6 @@ void Enemy::mainProcess(bool mode)
         else
         {
             BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, -Z_OFFSET));
-            offset = playerObject->offset;
             Vulcan(false);
             missile();
             missileObject.Passive();
@@ -111,7 +110,7 @@ void Enemy::Vulcan(bool isCutscene)
             if (bullets[i].mainProcess(playerObject->hitbox1, playerObject->hitbox2))
             {
                  bullets[i].isActivated = false;
-                 if(playerObject->isImmortal)playerObject->Health -= BULLET_DAMAGE;
+                 if(!playerObject->isImmortal)playerObject->Health -= BULLET_DAMAGE;
                  isGetDamaged = true;
                  PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);
             }
@@ -313,9 +312,9 @@ void Enemy::EnemyMoveXY()
     Acceleration();
     if (difficulty == 0)
     {
-        xSpeed = xSpeed * (moveSpeed * 0.8f);
+        xSpeed = xSpeed * (moveSpeed * 0.9f);
 
-        ySpeed = ySpeed * (moveSpeed * 0.8f);
+        ySpeed = ySpeed * (moveSpeed * 0.9f);
     }
     else
     {
@@ -389,10 +388,10 @@ void Enemy::roll()
 void Enemy::barrelRoll()
 {
     EvadePosDistance = 0;
-    int x = MAX_MOVE_RANGE > moveRangeX ? moveRangeX : MAX_MOVE_RANGE;
-    int lowerX = -MAX_MOVE_RANGE < minimumMoveRangeX ? minimumMoveRangeX : -MAX_MOVE_RANGE;
-    int y = MAX_MOVE_RANGE > moveRangeY ? moveRangeY : MAX_MOVE_RANGE;
-    int lowerY = -MAX_MOVE_RANGE < minimumMoveRangeY ? minimumMoveRangeY : -MAX_MOVE_RANGE;
+    float x = MAX_MOVE_RANGE > moveRangeX ? moveRangeX : MAX_MOVE_RANGE;
+    float lowerX = -MAX_MOVE_RANGE < minimumMoveRangeX ? minimumMoveRangeX : -MAX_MOVE_RANGE;
+    float y = MAX_MOVE_RANGE > moveRangeY ? moveRangeY : MAX_MOVE_RANGE;
+    float lowerY = -MAX_MOVE_RANGE < minimumMoveRangeY ? minimumMoveRangeY : -MAX_MOVE_RANGE;
     switch (evadeCount) {
     case 1:
 

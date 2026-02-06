@@ -6,6 +6,7 @@
 #include "main.h"
 Button Next;
 Button BackToTitle;
+timer result;
 UIText ClearText;
 bool isNextSelected = true;
 bool isSceneChanging = false;
@@ -96,4 +97,35 @@ void ClearInitialize()
     isSceneChanging = false;
     isNextSelected = true;
     controllable = false;
+}
+void ClearMainStage3()
+{
+    if (controllable)
+    {
+        ClearText.DrawTextWithSort(200, 1920, "ALL STAGE CLEARED", titleFontHandle, SORT_LEFT, 500, true, GetColor(255, 255, 170), GetColor(50, 50, 50));
+        if (result.MeasureTimer(3))
+        {
+            isSceneChanging = true;
+            result.RestartTimer();
+        }
+    }
+    else
+    {
+        if (fadein(0.5f))
+        {
+            controllable = true;
+            progress = 0;
+        }
+    }
+    if (isSceneChanging)
+    {
+        if (fadeout(0.5f))
+        {
+            Titleinitialize();
+            scene = SCENE_TITLE;
+            stages = 0;
+            progress = 255;
+            StopSoundMem(ingameBgm);
+        }
+    }
 }

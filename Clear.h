@@ -5,6 +5,7 @@
 
 void ClearInitialProcess();
 void ClearMainProcess();
+void ClearMainStage3();
 void ClearInitialize();
 class stage;
 

@@ -69,12 +69,12 @@ void TitleInitialProcess()
     Extra.init(buttonGraph);
     Exit.init(buttonGraph);
     modelhandle[0] = MV1LoadModel("Resource/PlayerModel.mv1");
-    MV1SetPosition(modelhandle[0], VGet(-0.4, 0.2f, -19.2f));
+    MV1SetPosition(modelhandle[0], VGet(-0.4f, 0.2f, -19.2f));
     MV1SetRotationXYZ(modelhandle[0], VGet(0, 2.53f, 0));
     modelhandle[1] = MV1DuplicateModel(modelhandle[0]);
     modelhandle[2] = MV1DuplicateModel(modelhandle[0]);
     modelhandle[3] = MV1DuplicateModel(carrierHandle);
-    MV1SetPosition(modelhandle[3], VGet(0.78, -1.28f, -18.3));
+    MV1SetPosition(modelhandle[3], VGet(0.78f, -1.28f, -18.3f));
     MV1SetRotationXYZ(modelhandle[3], VGet(0, PI, 0));
     for (int j = 0; j < 4; j++)
     {
@@ -118,11 +118,11 @@ void TitleMainProcess()
     }
     DrawExtendGraph(1000, -200, 2131, 1832, menuBackground, true);
     TitleMenu();
-    if (Input_GetKeyboardDown(KEY_INPUT_P))
+    /*if (Input_GetKeyboardDown(KEY_INPUT_P))
     {
         scene = SCENE_STAGEBUILD;
         StopSoundMem(titleBgm);
-    }
+    }*/
 }
 void Titleinitialize()
 {

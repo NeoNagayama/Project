@@ -66,11 +66,11 @@ bool UIText::fadeInText(int xleft, int xright, std::string text, int FontHandle,
         width = (((xright - xleft) - width) / 2) + xleft;
         if (shadow)
         {
-            SetDrawBlendMode(DX_BLENDMODE_ALPHA, ShadowAlpha);
+            SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)ShadowAlpha);
             DrawFormatStringToHandle(width + 3, y + 2, shadowcolor, FontHandle, const_cast<char*>(text.c_str()), value);
             SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
         }
-        SetDrawBlendMode(DX_BLENDMODE_ALPHA, TextAlpha);
+        SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)TextAlpha);
         DrawFormatStringToHandle(width, y, FontColor, FontHandle, const_cast<char*>(text.c_str()), value);
         SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
     }
@@ -80,11 +80,11 @@ bool UIText::fadeInText(int xleft, int xright, std::string text, int FontHandle,
         width = ((xright - xleft) - width) + xleft;
         if (shadow)
         {
-            SetDrawBlendMode(DX_BLENDMODE_ALPHA, ShadowAlpha);
+            SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)ShadowAlpha);
             DrawFormatStringToHandle(width + 3, y + 2, shadowcolor, FontHandle, const_cast<char*>(text.c_str()), value);
             SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
         }
-        SetDrawBlendMode(DX_BLENDMODE_ALPHA, TextAlpha);
+        SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)TextAlpha);
         DrawFormatStringToHandle(width, y, FontColor, FontHandle, const_cast<char*>(text.c_str()), value);
         SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
     }
@@ -92,11 +92,11 @@ bool UIText::fadeInText(int xleft, int xright, std::string text, int FontHandle,
     {
         if (shadow)
         {
-            SetDrawBlendMode(DX_BLENDMODE_ALPHA, ShadowAlpha);
+            SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)ShadowAlpha);
             DrawFormatStringToHandle(xleft + 3, y + 2, shadowcolor, FontHandle, const_cast<char*>(text.c_str()), value);
             SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
         }
-        SetDrawBlendMode(DX_BLENDMODE_ALPHA, TextAlpha);
+        SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)TextAlpha);
         DrawFormatStringToHandle(xleft, y, FontColor, FontHandle, const_cast<char*>(text.c_str()), value);
         SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
     }

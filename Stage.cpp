@@ -49,7 +49,7 @@ void stage::MainProcess()
         DrawBackWards();
     }
     ObstacleShadowDraw();
-    moveWallShadow();
+    if(!isCleared) moveWallShadow();
     ShadowMap_DrawEnd();
     DrawGraph3D(0, 500, player.Position.z + 1000, backGroundHandle, false);
     player.Draw();
@@ -128,7 +128,14 @@ void stage::MainProcess()
     }
     SetLightPositionHandle(playerLight, VAdd(VScale(VGet(-player.forward().x, player.forward().y, -player.forward().z), 5), player.Position));
     SetLightPositionHandle(enemyLight, VAdd(MV1GetPosition(enemy.ModelHandle), VGet(0, 0, -5)));
-    
+    if (gamePhase == PHASE_OVERSHOOT || gamePhase == PHASE_CHASE)
+    {
+        control.DrawTextWithSort(0, 1920, "ëÄçÏï˚ñ@  à⁄ìÆ:WASD  çUåÇ:SPACE  íÜíf:ESC", japaneseFontHandle, SORT_CENTER, 1000, true, GetColor(0, 255, 0));
+    }
+    else
+    {
+        control.DrawTextWithSort(0, 1920, "ëÄçÏï˚ñ@  à⁄ìÆ:WASD  É~ÉTÉCÉãÇÃâÒî:SPACE  íÜíf:ESC", japaneseFontHandle, SORT_CENTER, 1000, true, GetColor(0, 255, 0));
+    }
 }
 void stage::Initialize()
 {
@@ -200,7 +207,7 @@ void stage::AAGun_Draw(int i ,int pos, bool upper, bool lower, bool right, bool 
 }
 void stage::MoveWallDraw(int i ,int pos, bool high,bool mid,bool low)
 {
-    if (moveWalls[pos].DrawMoveWall(high, mid, low, player.hitbox1, player.hitbox2) && !isStarted && player.Health > 0 && !player.isImmortal)
+    if (moveWalls[pos].DrawMoveWall(high, mid, low, player.hitbox1, player.hitbox2) && !isStarted && player.Health > 0 && !player.isImmortal && !isObjectiveAppeared)
     {
         if (difficulty == 0)
         {
@@ -377,8 +384,7 @@ void stage::DrawObstacles()
                 {
                     AAGuns(pos, i);
                 }
-
-                MoveWalls(pos, i);
+                if (!isCleared) MoveWalls(pos, i);
             }
         }
     }
@@ -536,7 +542,7 @@ void stage::Ingame()
     playerHealthText.DrawTextWithSort(90, 1920, "PLAYER HP", fontHandle, SORT_LEFT, 850, true, GetColor(0, 255, 0));
     playerHealthIndi.DrawTextWithSort(290, 1920, "%.f", fontHandle, SORT_LEFT, 850, true, GetColor(0, 255, 0),GetColor(50,50,50),player.Health);
     DrawExtendGraph(50, 900, 720, 986, playerHealthGauge, true);
-    DrawRectExtendGraph(74, 913, 74 + (622 * (player.Health / 100)), 973, 0, 0, 2122*(player.Health/100) , 176, playerHealthBar,true);
+    DrawRectExtendGraph(74, 913,(int)( 74 + (622 * (player.Health / 100))), 973, 0, 0, (int)(2122*(player.Health/100)) , 176, playerHealthBar,true);
     
     if (player.BasePosition.z > stageLength && gamePhase == PHASE_RUN)
     {
@@ -588,7 +594,14 @@ void stage::IngameToClear()
         cameraDirection = VAdd(VGet(0, 1, 8), player.BasePosition);
         SetCameraPositionAndTarget_UpVecY(VAdd(VGet(clearCameraOffsetx, player.offset.y + 2, -5), player.BasePosition),
             cameraDirection);
-        ClearMainProcess();
+        if (stages == 2)
+        {
+            ClearMainStage3();
+        }
+        else
+        {
+            ClearMainProcess();
+        }
     }
     else
     {
@@ -645,7 +658,7 @@ void stage::RunPhase()
 {
     objectiveText.DrawTextWithSort(70, 1920, "ñ⁄ïW:çUåÇÇîÇØÇƒê∂Ç´écÇÍ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
     DrawExtendGraph(1716, 100, 1820, 980, gaugeHandle, true);
-    DrawRectExtendGraph(1738, 135 + (810 -810* ((player.BasePosition.z - startPosZ) / (stageLength - startPosZ))), 1798, 945, 0, 2097 - (2097 * (player.BasePosition.z - startPosZ) / (stageLength - startPosZ)), 156, 2097 * (player.BasePosition.z - startPosZ) / (stageLength - startPosZ), barHandle, true);
+    DrawRectExtendGraph(1738,(int)( 135 + (810 -810* ((player.BasePosition.z - startPosZ) / (stageLength - startPosZ)))), 1798, 945, 0,(int)( 2097 - (2097 * (player.BasePosition.z - startPosZ) / (stageLength - startPosZ))), 156,(int)( 2097 * (player.BasePosition.z - startPosZ) / (stageLength - startPosZ)), barHandle, true);
     
     player.mainProcess(false);
     enemy.mainProcess(false);
@@ -686,7 +699,7 @@ void stage::ChasePhase()
     else
     {
         DrawExtendGraph(450, 50,1470,241, E_gauge, true);
-        DrawRectExtendGraph(476 ,65, 476  + (968 * ((float)enemy.Health / 100)),165,0,0, 3305 * ((float)enemy.Health / 100), 376, E_bar, true);
+        DrawRectExtendGraph(476 ,65, (int)(476  + (968 * ((float)enemy.Health / 100))),165,0,0, (int)(3305 * ((float)enemy.Health / 100)), 376, E_bar, true);
         enemyHealthText.DrawTextWithSort(0, 1920, "ENEMY HP", BiggerFontHandle, SORT_CENTER, 180, true, GetColor(255, 0, 0));
         player.mainProcess(true);
     }
@@ -699,7 +712,7 @@ void stage::ChasePhase()
     else
     {
         enemy.mainProcess(true);
-        missionTime.DrawTextWithSort(0, 1920, "Remaining time : %.f/120 sec", fontHandle, SORT_CENTER, 230, false, GetColor(0, 255, 0), GetColor(0, 255, 0),timeLimit-(int)missionTimer.GetElapsed(true));
+        missionTime.DrawTextWithSort(0, 1920, "Remaining time : %.f/120 sec", fontHandle, SORT_CENTER, 230, false, GetColor(0, 255, 0), GetColor(0, 255, 0),timeLimit-missionTimer.GetElapsed(true));
     }
 }
 void stage::PauseScreen()

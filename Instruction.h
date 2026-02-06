@@ -7,6 +7,7 @@ class instruction
 {
 private:
     UIText text;
+    UIText info;
     timer showTimer;
     Button normal;
     Button hard;
@@ -15,7 +16,7 @@ private:
     int dif = 0;
 public:
     void Init();
-    void main(int scene);
+    void main(int nextScene);
     void inst();
-    void choiceDifficulty(int scene);
+    void choiceDifficulty(int nextScene);
 };

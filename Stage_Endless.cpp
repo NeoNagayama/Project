@@ -10,6 +10,9 @@ void stageEndless::SetUp()
     Buttons[0].SetText("Resume");
     Buttons[1].SetText("Restart");
     Buttons[2].SetText("Quit");
+    Buttons[0].init(buttonGraph);
+    Buttons[1].init(buttonGraph);
+    Buttons[2].init(buttonGraph);
     player.InitialProcess();
     enemy.InitialProcess();
     player.EnemySet(&enemy);
@@ -40,7 +43,7 @@ void stageEndless::Init()
     choosedButton = 0;
     gamePhase = 0;
     isKilled = false;
-    stageLength = 800;
+    stageLength =4000;
     GoalRange = 0;
     baseAmmo = 200;
     baseHealth = 100;
@@ -89,7 +92,7 @@ void stageEndless::main()
         DrawBackWards();
     }
     ObstacleShadowDraw();
-    moveWallShadow();
+    if (!isCleared) moveWallShadow();
     ShadowMap_DrawEnd();
     DrawGraph3D(0, 500, player.Position.z + 1000, backGroundHandle, false);
     player.Draw();
@@ -167,14 +170,22 @@ void stageEndless::main()
     }
     SetLightPositionHandle(playerLight, VAdd(VScale(VGet(-player.forward().x, player.forward().y, -player.forward().z), 5), player.Position));
     SetLightPositionHandle(enemyLight, VAdd(MV1GetPosition(enemy.ModelHandle), VGet(0, 0, -5)));
+    if (gamePhase == PHASE_OVERSHOOT || gamePhase == PHASE_CHASE)
+    {
+        control.DrawTextWithSort(0, 1920, "操作方法  移動:WASD  攻撃:SPACE  中断:ESC", japaneseFontHandle, SORT_CENTER, 1000, true, GetColor(0, 255, 0));
+    }
+    else
+    {
+        control.DrawTextWithSort(0, 1920, "操作方法  移動:WASD  ミサイルの回避:SPACE  中断:ESC", japaneseFontHandle, SORT_CENTER, 1000, true, GetColor(0, 255, 0));
+    }
 }
 void stageEndless::IngameToGameoverModified()
 {
     if (gameOverTimer.MeasureTimer(1.0f))
     {
-        EndlessGameOver(Round);
+        EndlessGameOver((float)Round);
     }
-    if (!isSaved && highScore <= Round-1)
+    if (!isSaved && highScore <= (float)Round-1)
     {
         HighScore();
         isSaved = true;

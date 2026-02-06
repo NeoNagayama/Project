@@ -12,7 +12,7 @@
 #include "Stage_Endless.h"
 #include <random>
 
-/** @brief 現在のゲームの場面 */
+/* @brief 現在のゲームの場面 */
 int scene = 0;
 /** @brief 現在プレイ中のステージ */
 int stages =0;
@@ -59,6 +59,7 @@ int uiBox_02;
 int uiBox_03;
 int playerHealthGauge;
 int playerHealthBar;
+int instBackGraph;
 /** @brief  ミサイルの警告の画像*/
 int alertGraph;
 /** @brief  クリアまでの距離を表示するゲージのハンドル*/
@@ -70,7 +71,7 @@ int E_gauge;
 /** @brief  敵の体力ゲージの値*/
 int E_bar;
 /** @brief  エンドレスモードのハイスコア*/
-int highScore;
+float highScore;
 /** @brief  決定した時の効果音*/
 int interectSound;
 /** @brief  選択した時の効果音*/
@@ -503,6 +504,7 @@ void LoadAssets()
     ingameBgm = LoadSoundMem("Resource/sfx/ingame.mp3");
     titleBgm = LoadSoundMem("Resource/sfx/title.mp3");
     sideObstacle = MV1LoadModel("Resource/sideObstacle.mv1");
+    instBackGraph = LoadGraph("Resource/instBack.jpg");
     fontLoad();
 }
 /**

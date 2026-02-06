@@ -45,7 +45,7 @@ private:
     const int BULLET_TARGET_Z = 220;
     const int RETICLE_SIZE = 70;
     const int RETICLE_POS_Z = 50;
-    const int Z_OFFSET = 50;
+    const float Z_OFFSET = 50;
     //左右移動の速度
     const float moveSpeed = 0.65f;
     //ロールの速度

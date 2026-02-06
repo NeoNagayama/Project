@@ -11,11 +11,11 @@ enum anchorPosition
 class Button
 {
 private:
-    int GraphHandle;
+    int GraphHandle = 0;
     UIText buttonTextDraw;
     std::string buttonText;
-    VECTOR ActualPosition;
-    VECTOR ActualPosition2;
+    VECTOR ActualPosition = VGet(0,0,0);
+    VECTOR ActualPosition2 = VGet(0, 0, 0);
     COLOR16 NotSelectedColor = GetColor(1, 8, 60);
     COLOR16 SelectedColor = GetColor(4, 202, 206);
     bool isSelected = false;
