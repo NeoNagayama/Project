@@ -1,7 +1,7 @@
 #include"Enemy.h"
 #include <cmath>
 #include <random>
-void Enemy::InitialProcess()
+void Enemy::SetUp()
 {
     ModelHandle = MV1LoadModel("Resource/EnemyModel.mv1");
     MV1SetPosition(ModelHandle, VGet(0,0, 0));
@@ -40,21 +40,21 @@ void Enemy::Init()
     //MISSILE_DAMAGE = 30.0f;
     BULLET_DAMAGE = 5.0f;
 }
-void Enemy::mainProcess(bool mode)
+void Enemy::Main(bool mode)
 {
     
     if (Health > 0)
     {
         if (mode)
         {
-            BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, Z_OFFSET));
+            BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, (float)Z_OFFSET));
             run();
             EnemyMoveXY();
             roll();
         }
         else
         {
-            BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, -Z_OFFSET));
+            BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, (float) - Z_OFFSET));
             offset = playerObject->offset;
             Vulcan(false);
             missile();
@@ -108,10 +108,10 @@ void Enemy::Vulcan(bool isCutscene)
         if (bullets[i].isActivated == true)
         {
             
-            if (bullets[i].mainProcess(playerObject->hitbox1, playerObject->hitbox2))
+            if (bullets[i].Main(playerObject->hitbox1, playerObject->hitbox2))
             {
                  bullets[i].isActivated = false;
-                 if(playerObject->isImmortal)playerObject->Health -= BULLET_DAMAGE;
+                 if(!playerObject->isImmortal)playerObject->Health -= BULLET_DAMAGE;
                  isGetDamaged = true;
                  PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);
             }
@@ -192,7 +192,7 @@ void Enemy::missile()
             isLaunched = false;
             missileflyingTimer = 0;
             missilecooldowntimer = 0;
-            missileCooldown = get_rand(5, 7);
+            missileCooldown = (float)get_rand(5, 7);
             DespawnTimer = 0;
         }
     }
@@ -210,7 +210,7 @@ void Enemy::missile()
         isLaunched = false;
         missileflyingTimer = 0;
         missilecooldowntimer = 0;
-        missileCooldown = get_rand(5, 7);
+        missileCooldown = (float)get_rand(5, 7);
     }
 }
 void Enemy::MissileLaunch()
@@ -236,7 +236,7 @@ void Enemy::MissileLaunch()
         {
             PlaySoundMem(pitbullSound, DX_PLAYTYPE_BACK);
         }
-        missileObject.mainProcess(playerObject->Position, MISSILE_HIT_TIME - missileflyingTimer,forwardSpeed);
+        missileObject.Main(playerObject->Position, MISSILE_HIT_TIME - missileflyingTimer,forwardSpeed);
     }
     else
     {
@@ -274,7 +274,7 @@ void Enemy::MissileLaunch()
                 }
             }
         }
-        missileCooldown = get_rand(5, 7);
+        missileCooldown = (float)get_rand(5, 7);
         exp.SetPosition(playerObject->Position);
         isGetDamaged = true;
         PlaySoundMem(explosionSound, DX_PLAYTYPE_BACK);
@@ -389,10 +389,10 @@ void Enemy::roll()
 void Enemy::barrelRoll()
 {
     EvadePosDistance = 0;
-    int x = MAX_MOVE_RANGE > moveRangeX ? moveRangeX : MAX_MOVE_RANGE;
-    int lowerX = -MAX_MOVE_RANGE < minimumMoveRangeX ? minimumMoveRangeX : -MAX_MOVE_RANGE;
-    int y = MAX_MOVE_RANGE > moveRangeY ? moveRangeY : MAX_MOVE_RANGE;
-    int lowerY = -MAX_MOVE_RANGE < minimumMoveRangeY ? minimumMoveRangeY : -MAX_MOVE_RANGE;
+    float x = MAX_MOVE_RANGE > moveRangeX ? moveRangeX : MAX_MOVE_RANGE;
+    float lowerX = -MAX_MOVE_RANGE < minimumMoveRangeX ? minimumMoveRangeX : -MAX_MOVE_RANGE;
+    float y = MAX_MOVE_RANGE > moveRangeY ? moveRangeY : MAX_MOVE_RANGE;
+    float lowerY = -MAX_MOVE_RANGE < minimumMoveRangeY ? minimumMoveRangeY : -MAX_MOVE_RANGE;
     switch (evadeCount) {
     case 1:
 
@@ -415,8 +415,8 @@ void Enemy::barrelRoll()
 void Enemy::H_Fluctuating()
 {
     EvadePosDistance = 0;
-    int x = MAX_MOVE_RANGE > moveRangeX ? moveRangeX : MAX_MOVE_RANGE;
-    int lowerX = -MAX_MOVE_RANGE < minimumMoveRangeX ? minimumMoveRangeX : -MAX_MOVE_RANGE;
+    float x = MAX_MOVE_RANGE > moveRangeX ? moveRangeX : MAX_MOVE_RANGE;
+    float lowerX = -MAX_MOVE_RANGE < minimumMoveRangeX ? minimumMoveRangeX : -MAX_MOVE_RANGE;
     switch (evadeCount) {
     case 1:
 
@@ -437,8 +437,8 @@ void Enemy::H_Fluctuating()
 void Enemy::V_Fluctuating()
 {
     EvadePosDistance = 0;
-    int y = MAX_MOVE_RANGE > moveRangeY ? moveRangeY : MAX_MOVE_RANGE;
-    int lowerY = -MAX_MOVE_RANGE < minimumMoveRangeY ? minimumMoveRangeY : -MAX_MOVE_RANGE;
+    float y = MAX_MOVE_RANGE > moveRangeY ? moveRangeY : MAX_MOVE_RANGE;
+    float lowerY = -MAX_MOVE_RANGE < minimumMoveRangeY ? minimumMoveRangeY : -MAX_MOVE_RANGE;
     switch (evadeCount) {
     case 1:
         EvadeMove(FLUC_RANGE, y, 2);
@@ -454,7 +454,7 @@ void Enemy::V_Fluctuating()
         break;
     }
 }
-void Enemy::EvadeMove(int x,int y,int count)
+void Enemy::EvadeMove(float x, float y,int count)
 {
     targetAngle = VGet(x - offset.x, y - offset.y, 0);
     EvadePosDistance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));

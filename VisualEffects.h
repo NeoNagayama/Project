@@ -3,10 +3,10 @@
 class explosionEffect
 {
 private:
-    VECTOR BasePosition;
-    VECTOR Position1;
-    VECTOR Position2;
-    VECTOR Position3;
+    VECTOR BasePosition = zeroVector;
+    VECTOR Position1 = zeroVector;
+    VECTOR Position2 = zeroVector;
+    VECTOR Position3 = zeroVector;
     VECTOR Direction1 = VNorm(VGet(3,1,0));
     VECTOR Direction2 = VNorm(VGet(-3,-4, 0));
     VECTOR Direction3 = VNorm(VGet(-6, -1, 0));

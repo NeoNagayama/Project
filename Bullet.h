@@ -4,13 +4,13 @@
 class Bullet
 {
 private:
-    VECTOR position;
-    int handle;
+    VECTOR position = zeroVector;
+    int handle = 0;
 public:
     bool isActivated = false;
-    VECTOR target;
-    VECTOR forward;
-    VECTOR StartPosition;
-    bool mainProcess(VECTOR hitbox1,VECTOR hitbox2);
+    VECTOR target = zeroVector;
+    VECTOR forward = zeroVector;
+    VECTOR StartPosition = zeroVector;
+    bool Main(VECTOR hitbox1,VECTOR hitbox2);
     void setUp();
 };

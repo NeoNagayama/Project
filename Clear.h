@@ -3,9 +3,10 @@
 #include "Button.h"
 #include "Input.h"
 
-void ClearInitialProcess();
-void ClearMainProcess();
+void ClearSetUp();
+void ClearMain();
 void ClearInitialize();
+void ClearStage3();
 class stage;
 
 extern stage* clear_stage1Instance;

@@ -6,7 +6,7 @@ void Button::init(int OriginGraphHandle)
 {
     GraphHandle = OriginGraphHandle;
 }
-void Button::mainProcess(bool isSelected, bool shadow ,int yoffset)
+void Button::Main(bool isSelected, bool shadow ,int yoffset)
 {
     if (isSelected)
     {
@@ -15,7 +15,7 @@ void Button::mainProcess(bool isSelected, bool shadow ,int yoffset)
         /*DrawBox((int)Button::ActualPosition.x, (int)Button::ActualPosition.y, (int)Button::ActualPosition2.x, (int)Button::ActualPosition2.y, Button::SelectedColor, 1);
         DrawBox((int)Button::ActualPosition.x, (int)Button::ActualPosition.y, (int)Button::ActualPosition2.x, (int)Button::ActualPosition2.y, GetColor(255,255,255), 0,3);*/
         DrawExtendGraph((int)Button::ActualPosition.x, (int)Button::ActualPosition.y, (int)Button::ActualPosition2.x, (int)Button::ActualPosition2.y, GraphHandle, true);
-        buttonTextDraw.DrawTextWithSort((int)ActualPosition.x, (int)ActualPosition2.x, buttonText, BiggerFontHandle, SORT_CENTER, (int)ActualPosition.y + (int)yoffset*0.6f, true, GetColor(255, 255, 255));
+        buttonTextDraw.DrawTextWithSort((int)ActualPosition.x, (int)ActualPosition2.x, buttonText, BiggerFontHandle, SORT_CENTER, (int)ActualPosition.y + (int)(yoffset*0.6f), true, GetColor(255, 255, 255));
     }
     else
     {
@@ -23,7 +23,7 @@ void Button::mainProcess(bool isSelected, bool shadow ,int yoffset)
         ActualPosition2 = VGet(BoxSizeChange(ActualPosition2.x, NotSelectedPosition2.x, false, SelectedPosition2.x), BoxSizeChange(ActualPosition2.y, NotSelectedPosition2.y, false, SelectedPosition2.y), 1);
         //DrawBox((int)Button::ActualPosition.x, (int)Button::ActualPosition.y, (int)Button::ActualPosition2.x, (int)Button::ActualPosition2.y, Button::NotSelectedColor, 1);
         DrawExtendGraph((int)Button::ActualPosition.x, (int)Button::ActualPosition.y, (int)Button::ActualPosition2.x, (int)Button::ActualPosition2.y, GraphHandle, true);
-        buttonTextDraw.DrawTextWithSort((int)ActualPosition.x, (int)ActualPosition2.x, buttonText, fontHandle, SORT_CENTER, (int)ActualPosition.y + (int)yoffset*0.6f, true, GetColor(122,122,122));
+        buttonTextDraw.DrawTextWithSort((int)ActualPosition.x, (int)ActualPosition2.x, buttonText, fontHandle, SORT_CENTER, (int)ActualPosition.y + (int)(yoffset*0.6f), true, GetColor(122,122,122));
     }
     
 }

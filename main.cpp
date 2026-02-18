@@ -11,11 +11,12 @@
 #include "StageBuild.h"
 #include "Stage_Endless.h"
 #include <random>
-
+/* @brief VECTOR型の変数の初期化用 */
+VECTOR zeroVector = VGet(0, 0, 0);
 /** @brief 現在のゲームの場面 */
 int scene = 0;
 /** @brief 現在プレイ中のステージ */
-int stages =0;
+int stages =2;
 /** @brief  照準用の画像ファイルのハンドル*/
 int reticleHandle = 0;
 /** @brief  シャドウマップ用のハンドル*/
@@ -70,7 +71,7 @@ int E_gauge;
 /** @brief  敵の体力ゲージの値*/
 int E_bar;
 /** @brief  エンドレスモードのハイスコア*/
-int highScore;
+float highScore;
 /** @brief  決定した時の効果音*/
 int interectSound;
 /** @brief  選択した時の効果音*/
@@ -313,17 +314,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             {
                 PlaySoundMem(ingameBgm, DX_PLAYTYPE_LOOP);
             }
+            StopSoundMem(titleBgm);
             //変数stagesの値に応じて処理を行うステージのインスタンスを変更する
             switch (stages)
             {
             case STAGE1:
-                stage1.MainProcess();
+                stage1.Main();
                 break;
             case STAGE2:
-                stage2.MainProcess();
+                stage2.Main();
                 break;
             case STAGE3:
-                stage3.MainProcess();
+                stage3.Main();
                 break;
             }
             break;
@@ -337,8 +339,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             stage3.Initialize();
             //インゲームのbgmの再生を止める
             StopSoundMem(ingameBgm);
+            StopSoundMem(titleBgm);
             break;
-            //ステージ制作を行う時の処理
+            //エンドレスモードの操作説明
         case SCENE_INST_EX:
             inst.main(SCENE_EXTRA);
             StopSoundMem(ingameBgm);
@@ -363,7 +366,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             //背景の描画
             DrawGraph3D(0, 600,  1800, backGroundHandle, false);
             //タイトル画面の主要な処理
-            TitleMainProcess();
+            TitleMain();
             //インゲームのbgmを止める
             StopSoundMem(ingameBgm);
             break;
@@ -530,22 +533,22 @@ void Init()
 {
     inst.Init();
     //タイトル画面で最初に一度だけ呼ばれる処理 
-    TitleInitialProcess();
+    TitleSetUp();
     //各ステージの障害物の配置をロードする
     LoadStage1();
     LoadStage2();
     LoadStage3();
     LoadScore();
     //各ステージの初期化
-    stage1.InitialProcess(stage1Obstacle, stage1ObstacleType,stage1movewall);
-    stage2.InitialProcess(stage2Obstacle, stage2ObstacleType, stage2movewall);
-    stage3.InitialProcess(stage3Obstacle, stage3ObstacleType, stage3movewall);
+    stage1.SetUp(stage1Obstacle, stage1ObstacleType,stage1movewall);
+    stage2.SetUp(stage2Obstacle, stage2ObstacleType, stage2movewall);
+    stage3.SetUp(stage3Obstacle, stage3ObstacleType, stage3movewall);
     //ステージ制作画面の初期化 ステージクラスの初期化と同じ内容
-    bil.InitialProcess(stage2Obstacle, stage2ObstacleType, stage2movewall);
+    bil.SetUp(stage2Obstacle, stage2ObstacleType, stage2movewall);
     //クリア画面で最初に一度だけ呼ばれる処理
-    ClearInitialProcess();
+    ClearSetUp();
     //ゲームオーバー画面で最初に一度だけ呼ばれる処理
-    GameOverInitialProcess();
+    GameOverSetUp();
     //各ステージのインスタンスのポインターを指定する
     getStagePointers(&stage1, &stage2, &stage3,&endless);
     GameOverGetStagePointers(&stage1, &stage2, &stage3,&endless);
@@ -583,7 +586,7 @@ void LoadStage3()
     err1 = fopen_s(&file1, "maps/defaultMaps/stage3obs.dat", "rb");
     err2 = fopen_s(&file2, "maps/defaultMaps/stage3wall.dat", "rb");
     //各ファイルを開いたときにエラーが起きていなかったら
-    if (err == 0 || err1 == 0 || err2 == 0)
+    if (err == 0 && err1 == 0 && err2 == 0)
     {
         //ステージ3関連の配列の値をゼロにする
         for (int i = 0; i < 50; i++)
@@ -628,7 +631,7 @@ void LoadStage2()
     err1 = fopen_s(&file1, "maps/defaultMaps/stage2obs.dat", "rb");
     err2 = fopen_s(&file2, "maps/defaultMaps/stage2wall.dat", "rb");
     //各ファイルを開いたときにエラーが起きていなかったら
-    if (err == 0 || err1 == 0 || err2 == 0)
+    if (err == 0 && err1 == 0 && err2 == 0)
     {
         //ステージ3関連の配列の値をゼロにする
         for (int i = 0; i < 50; i++)
@@ -672,7 +675,7 @@ void LoadStage1()
     err1 = fopen_s(&file1, "maps/defaultMaps/stage1obs.dat", "rb");
     err2 = fopen_s(&file2, "maps/defaultMaps/stage1wall.dat", "rb");
     //各ファイルを開いたときにエラーが起きていなかったら
-    if (err == 0 || err1 == 0 || err2 == 0)
+    if (err == 0 && err1 == 0 && err2 == 0)
     {
         //ステージ1関連の配列の値をゼロにする
         for (int i = 0; i < 50; i++)

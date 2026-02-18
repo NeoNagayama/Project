@@ -7,6 +7,7 @@
 Button Next;
 Button BackToTitle;
 UIText ClearText;
+timer TextTimer;
 bool isNextSelected = true;
 bool isSceneChanging = false;
 bool controllable = false;
@@ -19,14 +20,14 @@ bool controllable = false;
      clear_stage2Instance = s2;
      clear_stage3Instance = s3;
  };
-void ClearInitialProcess()
+void ClearSetUp()
 {
     Next.SetButtonPosition(VGet(500, 500, 1), 800, 200, 0.8f, ANCHOR_LEFT);
     BackToTitle.SetButtonPosition(VGet(500, 800, 1), 800, 200, 0.8f, ANCHOR_LEFT);
     Next.init(buttonGraph);
     BackToTitle.init(buttonGraph);
 }
-void ClearMainProcess()
+void ClearMain()
 {
     
     if (controllable)
@@ -42,9 +43,9 @@ void ClearMainProcess()
             isNextSelected = true;
             PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
         }
-        Next.mainProcess(isNextSelected, true, 60);
+        Next.Main(isNextSelected, true, 60);
         Next.SetText("Next Stage");
-        BackToTitle.mainProcess(!isNextSelected, true, 60);
+        BackToTitle.Main(!isNextSelected, true, 60);
         BackToTitle.SetText("Title");
         ClearText.DrawTextWithSort(200, 1920, "STAGE%.f CLEAR", titleFontHandle, SORT_LEFT, 200, true, GetColor(255, 255, 170), GetColor(50, 50, 50), (float)stages + 1);
         if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
@@ -88,6 +89,27 @@ void ClearMainProcess()
             scene = SCENE_INGAME;
             progress = 255;
             StopSoundMem(ingameBgm);
+        }
+    }
+}
+void ClearStage3()
+{
+    ClearText.DrawTextWithSort(200, 1920, "ALL STAGES CLEARED", titleFontHandle, SORT_LEFT, 
+        200, true, GetColor(255, 255, 170), GetColor(50, 50, 50));
+    if (TextTimer.MeasureTimer(4.0f))
+    {
+        isSceneChanging = true;
+    }
+    if (isSceneChanging)
+    {
+        if (fadeout(0.5f))
+        {
+            stages = 0;
+            Titleinitialize();
+            scene = SCENE_TITLE;
+            progress = 255;
+            StopSoundMem(ingameBgm);
+            TextTimer.RestartTimer();
         }
     }
 }

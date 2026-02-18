@@ -10,8 +10,8 @@ private:
     int smokeNum = 0;
 public:
     bool isActivated = false;
-    VECTOR forward;
-    VECTOR position;
-    void mainProcess();
+    VECTOR forward = zeroVector;
+    VECTOR position = zeroVector;
+    void Main();
     void Passive();
 };

@@ -96,9 +96,9 @@ protected:
     bool isQuitting = false;
     bool isObjectiveAppeared = false;
     bool isGetDamage = false;
-    float clearCameraOffsetx;
+    float clearCameraOffsetx = 0;
     int gamePhase = 0;
-    int choosedButton;
+    int choosedButton = 0;
     int countDown = 3;
     float startPosZ = 0;
     Button resume;
@@ -120,15 +120,16 @@ protected:
     UIText playerHealthIndi;
     UIText enemyHealthText;
     UIText missionTime;
-    VECTOR cameraTarget;
-    VECTOR cameraDirection;
+    UIText control;
+    VECTOR cameraTarget = zeroVector;
+    VECTOR cameraDirection = zeroVector;
     float remainingTime = 2;
     timer clearCameraTimer;
-    int GoalRange = 0;
+    float GoalRange = 0;
     timer gameOverTimer;
     timer missionTimer;
     int timeLimit =120;
-    int stageLength = 4000;
+    float stageLength = 4000;
     void Obstacle_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void AAGun_Draw(int i, int pos, bool upper, bool lower, bool right, bool left);
     void ObstacleShadowDraw();
@@ -152,7 +153,7 @@ protected:
     void MoveWallDraw(int i, int pos, bool high, bool mid, bool low);
 public:
     bool isStarted = true;
-    void InitialProcess(int stage[50], int type[50],int movewalls[50]);
-    void MainProcess();
+    void SetUp(int stage[50], int type[50],int movewalls[50]);
+    void Main();
     void Initialize();
 };

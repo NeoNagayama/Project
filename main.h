@@ -4,6 +4,7 @@
 #define PI 3.14159265359f
 /** @brief  一フレーム当たりの秒数*/
 #define oneFlame 0.016f
+extern VECTOR zeroVector;
 /** @brief 現在のゲームの場面 */
 extern int scene;
 /** @brief 現在プレイ中のステージ */
@@ -64,7 +65,7 @@ extern int E_gauge;
 /** @brief  敵の体力ゲージの値*/
 extern int E_bar;
 /** @brief  エンドレスモードのハイスコア*/
-extern int highScore;
+extern float highScore;
 /** @brief  決定した時の効果音*/
 extern int interectSound;
 /** @brief  選択した時の効果音*/
