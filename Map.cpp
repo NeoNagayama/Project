@@ -167,7 +167,7 @@ void antiAir::DrawDamageBoxTransparent(VECTOR edge1, VECTOR edge2)
     {
         if (expls[i].DrawSingleExplosion())
         {
-            expls[i].SetPosition(VGet(get_rand(edge1.x, edge2.x), get_rand(edge1.y, edge2.y), get_rand(edge1.z, edge2.z)));
+            expls[i].SetPosition(VGet((float)get_rand((int)edge1.x, (int)edge2.x), (float)get_rand((int)edge1.y, (int)edge2.y), (float)get_rand((int)edge1.z, (int)edge2.z)));
         }
     }
 

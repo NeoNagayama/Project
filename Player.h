@@ -23,12 +23,12 @@ private:
     float speedLimit = 0.7f;
     static constexpr float moveRange = 11;
     static constexpr float rotateSpeed = 0.08f;
-    float x, y;
+    float x, y = 0;
     void KeyInput();
     void PlayerMoveXY();
     VECTOR targetAnglePitch;
-    float bulletPositionX[50];
-    float bulletPositionY[50];
+    float bulletPositionX[50] = { 0 };
+    float bulletPositionY[50] = { 0 };
     //機銃とフレア用の変数
     float firingTimer = 0;
     float startCameraOffsetx = 6;
@@ -62,10 +62,10 @@ public:
     float forwardSpeed = 2;
     bool isDead = false;
     bool isInvincible;
-    void InitialProcess();
+    void SetUp();
     void Flare();
     void Vulcan();
-    void mainProcess(bool mode);
+    void Main(bool mode);
     void rotatePlayer();
     void pitch();
     void transitionProcess(bool mode);
@@ -76,9 +76,9 @@ public:
         enemyObject = enemy;
     }
     bool Transition();
-    VECTOR CameraPosition;
+    VECTOR CameraPosition = zeroVector;
     void Init();
-    void camSetUp(int pos);
+    void camSetUp(float pos);
     int tailLight;
     bool isImmortal = false;
 };

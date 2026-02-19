@@ -18,10 +18,10 @@ private:
         "‘‰Á‚µ‚½’e”    :%.f",
         "‰ñ•œ—Ê          :%.f"
     };
-    float R_Value[4];
-    float R_Value2[3];
+    float R_Value[4] = { 0,0,0,0 };
+    float R_Value2[3]{ 0,0,0 };
     timer R_Timer;
-    int Round = 0;
+    float Round = 0;
     int resultStage = 0;
     int resultType = 0;
     int negativeResultType = 0;

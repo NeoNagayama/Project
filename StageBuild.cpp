@@ -70,9 +70,9 @@ void builder::main()
     }
     for (int i = 0; i <= pos; i++)
     {
-        maps[i].position.z = 80*i;
-        AAs[i].position.z = 80*i;
-        moveWalls[i].position.z = 80*i;
+        maps[i].position.z = (float)(80*i);
+        AAs[i].position.z = (float)(80 * i);
+        moveWalls[i].position.z = (float)(80 * i);
         maps[i].DrawbaseOutline();
         if (obstacleType[i] < 2)
         {
@@ -84,7 +84,7 @@ void builder::main()
         }
         MoveWalls(i, i);
     }
-    SetCameraPositionAndTarget_UpVecY(VGet(cam.x,cam.y, (pos*80) +cam.z), VGet(0, 0, pos * 80));
+    SetCameraPositionAndTarget_UpVecY(VGet(cam.x,cam.y, (pos*80) +cam.z), VGet(0, 0, (float)(pos * 80)));
     SetupCamera_Perspective(1.2f);
 }
 void builder::Init()
@@ -101,8 +101,8 @@ void builder::save()
     FILE* fileobs;
     FILE* filewall;
     errno_t err = fopen_s(&fileobtype, "maps/defaultMaps/stage2type.dat", "wb");
-    err = fopen_s(&fileobs, "maps/defaultMaps/stage2obs.dat", "wb");
-    err = fopen_s(&filewall, "maps/defaultMaps/stage2wall.dat", "wb");
+    errno_t err1 = fopen_s(&fileobs, "maps/defaultMaps/stage2obs.dat", "wb");
+    errno_t err2 = fopen_s(&filewall, "maps/defaultMaps/stage2wall.dat", "wb");
     int obtype[50];
     int obs[50];
     int wal[50];
@@ -112,10 +112,13 @@ void builder::save()
         obs[i] = obstacle[i];
         wal[i] = moveWallType[i];
     }
-    fwrite(obtype, sizeof(int), 50, fileobtype);
-    fwrite(obs, sizeof(int), 50, fileobs);
-    fwrite(wal, sizeof(int), 50, filewall);
-    fclose(fileobtype);
-    fclose(fileobs);
-    fclose(filewall);
+    if (err == 0 && err1 == 0 && err2 == 0)
+    {
+        fwrite(obtype, sizeof(int), 50, fileobtype);
+        fwrite(obs, sizeof(int), 50, fileobs);
+        fwrite(wal, sizeof(int), 50, filewall);
+        fclose(fileobtype);
+        fclose(fileobs);
+        fclose(filewall);
+    }
 }

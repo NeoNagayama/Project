@@ -4,7 +4,7 @@ bool fadeout(float time)
 {
     float rate = 255 / (time / 0.016f);
     progress += rate;
-    SetDrawBlendMode(DX_BLENDMODE_ALPHA, progress);
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)progress);
     DrawBox(0, 0, 2000, 2000, GetColor(0, 0, 0), true);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
     if (progress >= 255)
@@ -18,7 +18,7 @@ bool fadein(float time)
 {
     float rate = 255 / (time / 0.016f);
     progress -= rate;
-    SetDrawBlendMode(DX_BLENDMODE_ALPHA, progress);
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)progress);
     DrawBox(0, 0, 2000, 2000, GetColor(0, 0, 0), true);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
     if (progress <= 0)

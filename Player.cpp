@@ -7,7 +7,7 @@ int test;
  * @details モデルのロード,初期座標の設定,モデルのスケール等の処理を行う
  */
 
-void Player::InitialProcess()
+void Player::SetUp()
 {
     //プレイヤーのモデルをロードする
     ModelHandle = MV1LoadModel("Resource/PlayerModel.mv1");
@@ -72,7 +72,7 @@ void Player::Init()
  *
  */
 
-void Player::camSetUp(int pos)
+void Player::camSetUp(float pos)
 {
     //カメラの位置をプレイヤーに追従させる位置を設定する
     cameraStartThleshold = pos;
@@ -91,7 +91,7 @@ void Player::camSetUp(int pos)
  * @param bool mode ゲームが追跡フェーズに入っているか
  */
 
-void Player::mainProcess(bool mode)
+void Player::Main(bool mode)
 {
     Immortal();
     //体力が0でないとき
@@ -562,7 +562,7 @@ void Player::VulcanProjectile()
     {
         if (bullets[i].isActivated)//弾が発射された場合
         {
-            if (bullets[i].mainProcess(enemyObject->hitbox1, enemyObject->hitbox2))//弾の毎フレーム呼ばれる処理を行い敵ののヒットボックスに当たった場合
+            if (bullets[i].Main(enemyObject->hitbox1, enemyObject->hitbox2))//弾の毎フレーム呼ばれる処理を行い敵ののヒットボックスに当たった場合
             {
                 if (difficulty == 0)
                 {
@@ -619,7 +619,7 @@ void Player::Flare()
         if (Flares[i].isActivated)//射出されているとき
         {
             //フレアの毎フレーム呼ばれる処理を行う
-            Flares[i].mainProcess();
+            Flares[i].Main();
         }
     }
     FlareCoolDown += oneFlame;//時間計測用の変数に1フレーム分の秒数を足す

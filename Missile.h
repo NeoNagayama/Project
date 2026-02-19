@@ -7,11 +7,11 @@ class Missile :public base
 {
 private:
 	VECTOR Angle = VGet(0,0,1);
-    int MissileHandle;
+    int MissileHandle = 0;
     smoke smokes[180];
     int smokeNum = 0;
 public:
-	void mainProcess(VECTOR targetPosition, float remainingTime,float speed);
+	void Main(VECTOR targetPosition, float remainingTime,float speed);
 	void SetStartPosition(VECTOR StartPosition);
 	void guideLosted();
     void SetUp();

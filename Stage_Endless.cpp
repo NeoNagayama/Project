@@ -10,8 +10,11 @@ void stageEndless::SetUp()
     Buttons[0].SetText("Resume");
     Buttons[1].SetText("Restart");
     Buttons[2].SetText("Quit");
-    player.InitialProcess();
-    enemy.InitialProcess();
+    Buttons[0].init(buttonGraph);
+    Buttons[1].init(buttonGraph);
+    Buttons[2].init(buttonGraph);
+    player.SetUp();
+    enemy.SetUp();
     player.EnemySet(&enemy);
     enemy.PlayerSet(&player);
     for (int i = 0; i < 50; i++)
@@ -52,6 +55,7 @@ void stageEndless::Init()
 }
 void stageEndless::StartWave()
 {
+    missionTimer.RestartTimer();
     enemy.Init();
     gamePhase = PHASE_RUN;
     Round += 1;
@@ -65,7 +69,7 @@ void stageEndless::StartWave()
     isQuitting = false;
     isStarted = true;
     clearCameraOffsetx = 0;
-    stageLength = player.Position.z + GoalRange + 200;
+    stageLength = player.Position.z + GoalRange + 200.0f;
     startPosZ = player.Position.z + 200;
     player.camSetUp(startPosZ);
 }
@@ -130,7 +134,7 @@ void stageEndless::main()
         }
         else if (isCleared)
         {
-            enemy.mainProcess(true);
+            enemy.Main(true);
             player.clearProcess();
             WaveResult();
             if (0 == CheckSoundMem(engineSound))
@@ -140,7 +144,7 @@ void stageEndless::main()
         }
         else if (isGameOver)
         {
-            player.mainProcess(true);
+            player.Main(true);
             enemy.Position.z += 2;
             enemy.Move(enemy.Position);
             IngameToGameoverModified();
@@ -358,11 +362,14 @@ void stageEndless::ReflectToText()
 }
 void stageEndless::HighScore()
 {
-    int score = Round-1;
+    float score = Round-1;
     FILE* file;
     errno_t err = fopen_s(&file, "data/hs.dat", "wb");
-    fwrite(&score, sizeof(float), 1, file);
-    fclose(file);
+    if (err == 0)
+    {
+        fwrite(&score, sizeof(float), 1, file);
+        fclose(file);
+    }
     highScore = score;
 }
 void stageEndless::E_Pause()

@@ -1,7 +1,7 @@
 #pragma once
 #include "DxLib.h"
-void GameOverInitialProcess();
-void GameOverMainProcess();
+void GameOverSetUp();
+void GameOverMain();
 void GameOverInitialize();
 void EndlessGameOver(float round);
 class stage;

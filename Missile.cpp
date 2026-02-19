@@ -1,5 +1,5 @@
 #include "Missile.h"
-void Missile::mainProcess(VECTOR targetPosition ,float remainingTime,float speed)
+void Missile::Main(VECTOR targetPosition ,float remainingTime,float speed)
 {
 	remainingTime = remainingTime / 0.016f;
 	Angle = VScale(VNorm(VGet(targetPosition.x-Position.x, targetPosition.y - Position.y, targetPosition.z - Position.z)), (speed + 0.3f) * timeScale);

@@ -24,14 +24,14 @@ void GameOverGetStagePointers(stage* s1, stage* s2, stage* s3 ,stageEndless* s4)
     G_stage3Instance = s3;
     E_Stage = s4;
 };
-void GameOverInitialProcess()
+void GameOverSetUp()
 {
     Retry.SetButtonPosition(VGet(500, 700, 1), 800, 200, 0.8f);
     GameOverToTitle.SetButtonPosition(VGet(1410, 700, 1), 800, 200, 0.8f);
     Retry.init(buttonGraphRed);
     GameOverToTitle.init(buttonGraphRed);
 }
-void GameOverMainProcess()
+void GameOverMain()
 {
     DrawExtendGraph(-8, 139, 1928, 941, gameOverBackGround, true);
     if (Input_GetKeyboardDown(KEY_INPUT_D) && isRetrySelected == true && !isSceneChangingFromGameOver)
@@ -45,9 +45,9 @@ void GameOverMainProcess()
         PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
     }
 
-    Retry.mainProcess(isRetrySelected, true, 60);
+    Retry.Main(isRetrySelected, true, 60);
     Retry.SetText("Retry");
-    GameOverToTitle.mainProcess(!isRetrySelected, true, 60);
+    GameOverToTitle.Main(!isRetrySelected, true, 60);
     GameOverToTitle.SetText("Title");
     GameOverText.DrawTextWithSort(0, 1920, "Mission Failed", titleFontHandle, SORT_CENTER, 350, true, GetColor(255, 0, 0));
     if (Input_GetKeyboardDown(KEY_INPUT_SPACE))
@@ -109,9 +109,9 @@ void EndlessGameOver(float round)
         PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
     }
 
-    Retry.mainProcess(isRetrySelected, true, 60);
+    Retry.Main(isRetrySelected, true, 60);
     Retry.SetText("Retry");
-    GameOverToTitle.mainProcess(!isRetrySelected, true, 60);
+    GameOverToTitle.Main(!isRetrySelected, true, 60);
     GameOverToTitle.SetText("Title");
     GameOverText.DrawTextWithSort(0, 1920, "You Survived %.f Round", titleFontHandle, SORT_CENTER, 350, true, GetColor(255, 255, 0),GetColor(50,50,50),round-1);
     HighScoreText.DrawTextWithSort(0, 1920, "HighScore:%.fRound", fontHandle, SORT_CENTER, 550, true, GetColor(255, 255, 0), GetColor(50, 50, 50),highScore);

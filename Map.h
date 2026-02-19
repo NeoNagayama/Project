@@ -32,13 +32,13 @@ class Player;
 class mapBase
 {
 private:
-    VECTOR edgePosition1, edgePosition2;
-    int lowerHandle;
-    int upperHandle;
-    int BaseWallHandle;
-    int BaseWallHandleRight;
-    int rightwallHandle;
-    int leftwallHandle;
+    VECTOR edgePosition1 = zeroVector, edgePosition2 = zeroVector;
+    int lowerHandle =0;
+    int upperHandle =0;
+    int BaseWallHandle = 0;
+    int BaseWallHandleRight =0;
+    int rightwallHandle= 0;
+    int leftwallHandle = 0;
     void materialSetUp(int handle);
 public:
     VECTOR position = VGet(0,0,0);
@@ -47,7 +47,7 @@ public:
     void DrawDamageBox(VECTOR edge1,VECTOR edge2);
     bool checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2,bool current);
     void BaseSetUp();
-    bool isHit;
+    bool isHit = false;
 };
 
 class explosion
@@ -78,7 +78,7 @@ private:
     static constexpr float returnThleshold = 50;
     const float moveSpeed = get_rand(1,5) * 0.1f;
     static constexpr float returnPosition = -50;
-    int cargoHandle;
+    int cargoHandle = 0;
 public:
     void MovePosition();
     bool DrawMoveWall(bool high, bool mid, bool low, VECTOR hitbox1, VECTOR hitbox2);

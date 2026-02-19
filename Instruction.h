@@ -7,6 +7,7 @@ class instruction
 {
 private:
     UIText text;
+    UIText info;
     timer showTimer;
     Button normal;
     Button hard;

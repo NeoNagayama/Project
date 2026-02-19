@@ -60,7 +60,7 @@ void getStagePointers(stage* s1, stage* s2, stage* s3,stageEndless* s4) {
     Stage4 = s4;
 }
 
-void TitleInitialProcess()
+void TitleSetUp()
 {
     Start.SetButtonPosition(VGet(1550,445,1),600,150,0.9f,ANCHOR_RIGHT);
     Extra.SetButtonPosition(VGet(1550, 645, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
@@ -69,12 +69,12 @@ void TitleInitialProcess()
     Extra.init(buttonGraph);
     Exit.init(buttonGraph);
     modelhandle[0] = MV1LoadModel("Resource/PlayerModel.mv1");
-    MV1SetPosition(modelhandle[0], VGet(-0.4, 0.2f, -19.2f));
+    MV1SetPosition(modelhandle[0], VGet(-0.4f, 0.2f, -19.2f));
     MV1SetRotationXYZ(modelhandle[0], VGet(0, 2.53f, 0));
     modelhandle[1] = MV1DuplicateModel(modelhandle[0]);
     modelhandle[2] = MV1DuplicateModel(modelhandle[0]);
     modelhandle[3] = MV1DuplicateModel(carrierHandle);
-    MV1SetPosition(modelhandle[3], VGet(0.78, -1.28f, -18.3));
+    MV1SetPosition(modelhandle[3], VGet(0.78f, -1.28f, -18.3f));
     MV1SetRotationXYZ(modelhandle[3], VGet(0, PI, 0));
     for (int j = 0; j < 4; j++)
     {
@@ -89,7 +89,7 @@ void TitleInitialProcess()
     }
     
 }
-void TitleMainProcess()
+void TitleMain()
 {
     
     DrawShadow();
@@ -164,17 +164,17 @@ void DrawModels()
     //DrawCube3D(VGet(-200.0f, -0.01f, -200.0f), VGet(200.0f, -1.1f, 200.0f), GetColor(120, 120, 120), GetColor(120, 120, 120), TRUE);
     if (z < -60)
     {
-        z = get_rand(80, 90);
-        x = -100;
+        z = (float)get_rand(80, 90);
+        x = -100.0f;
     }
 }
 void TitleButtons()
 {
-    Start.mainProcess(selected == 0, true, 30);
+    Start.Main(selected == 0, true, 30);
     Start.SetText("Start");
-    Extra.mainProcess(selected == 1, true, 30);
+    Extra.Main(selected == 1, true, 30);
     Extra.SetText("Endless");
-    Exit.mainProcess(selected == 2, true, 30);
+    Exit.Main(selected == 2, true, 30);
     Exit.SetText("Exit");
 }
 void TitleMenu()

@@ -2,6 +2,7 @@
 #include "DxLib.h"
 #include <string>
 #include"Text.h"
+#include "main.h"
 enum anchorPosition
 {
     ANCHOR_LEFT,
@@ -11,16 +12,16 @@ enum anchorPosition
 class Button
 {
 private:
-    int GraphHandle;
+    int GraphHandle = 0;
     UIText buttonTextDraw;
     std::string buttonText;
-    VECTOR ActualPosition;
-    VECTOR ActualPosition2;
+    VECTOR ActualPosition = zeroVector;
+    VECTOR ActualPosition2 = zeroVector;
     COLOR16 NotSelectedColor = GetColor(1, 8, 60);
     COLOR16 SelectedColor = GetColor(4, 202, 206);
     bool isSelected = false;
 public:
-    void mainProcess(bool isSelected,bool shadow,int yoffset);
+    void Main(bool isSelected,bool shadow,int yoffset);
     void init(int OriginGraphHandle);
     void SetButtonPosition(VECTOR CenterPosition, float width, float height, float reductionRatio, int anchor = ANCHOR_CENTER);
     float BoxSizeChange(float actual,float target,bool mode,float from);

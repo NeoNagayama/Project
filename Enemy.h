@@ -20,7 +20,7 @@ class Enemy:public base
 private:
     UIText MissileAlert;
     //プレイヤーのポインター
-    Player* playerObject;
+    Player* playerObject = NULL;
     explosionEffect exp;
     explosionEffect exp2;
     const float MAX_MOVE_RANGE = 10.0f;
@@ -29,7 +29,7 @@ private:
     const float TRANSITION_MOVE_SPEED = 1.2f;
     const int TRANSITION_OFFSET_X = 3;
     const int TRANSITION_OFFSET_Y = 2;
-    const int FLUC_RANGE = 2;
+    const float FLUC_RANGE = 2;
     const float ROLL_THLESHOLD = 0.05f;
     const float SPEED = 0.1f;
     const float MAX_SPEED = 1.2f;
@@ -45,7 +45,7 @@ private:
     const int BULLET_TARGET_Z = 220;
     const int RETICLE_SIZE = 70;
     const int RETICLE_POS_Z = 50;
-    const int Z_OFFSET = 50;
+    const float Z_OFFSET = 50;
     //左右移動の速度
     const float moveSpeed = 0.65f;
     //ロールの速度
@@ -55,11 +55,11 @@ private:
     //機銃の射撃の間隔
     float firingInterval = 2.0f;
     //機銃の到達する位置
-    VECTOR vulcanTargetPosition;
+    VECTOR vulcanTargetPosition = zeroVector;
     //機銃の弾のクラスの配列
     Bullet bullets[10];
     //画面上に表示されている弾数
-    int LoadedAmmoCount;
+    int LoadedAmmoCount = 0;
     //ミサイルのロックするまでの時間
     float missileCooldown = 5.0f;
     //ミサイルが非表示になるまでの時間
@@ -74,23 +74,23 @@ private:
     void H_Fluctuating();
     //上下に蛇行する関数
     void V_Fluctuating();
-    void EvadeMove(int x ,int y,int count);
+    void EvadeMove(float x , float y,int count);
     void Acceleration();
     void MissileLaunch();
     void FireVulcan(float hormingForcex, float hormingForcey, float distance);
     float EvadePosDistance = 0;
     timer strobo;
-    bool isHide;
+    bool isHide = false;
     //位置フレームあたりに上下左右に移動する速度
     float xSpeed = 0.0f, ySpeed = 0.0f;
-    float pitchAngle;
+    float pitchAngle = 0;
     float targetPitch = PI / 2;
     bool isDown = false;
 public:
     bool isTimeLimit = false;
     float cobraSpeed = 0;
     float forwardSpeed = 2.0f;
-    VECTOR deadPosition;
+    VECTOR deadPosition = zeroVector;
     //機銃を射撃中かどうか
     bool isFiring = false;
     //ミサイルが発射されたかどうか
@@ -114,11 +114,11 @@ public:
     //ミサイルの発射に関する処理
     void missile();
     //起動時に呼び出される処理
-    void InitialProcess();
+    void SetUp();
     //機銃に関する処理
     void Vulcan(bool isCutscene);
     //毎フレーム呼ばれる処理
-    void mainProcess(bool mode);
+    void Main(bool mode);
     //回避軌道を決定する関数
     void run();
     //進行方向に合わせてロールする関数
@@ -140,5 +140,5 @@ public:
      float BULLET_DAMAGE = 5.0f;
      const float MISSILE_DAMAGE = 30.0f;
      void Init();
-     int E_tailLight;
+     int E_tailLight = 0;
 };

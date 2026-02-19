@@ -3,7 +3,7 @@
 class smoke
 {
 private:
-    VECTOR Position;
+    VECTOR Position = zeroVector;
     float progress = 256;
     const float LIFETIME = 3;
 public:

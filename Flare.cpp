@@ -1,5 +1,5 @@
 #include "Flare.h"
-void Flare::mainProcess()
+void Flare::Main()
 {
     timer += 0.016f;
     smokes[smokeNum].SetPosition(position);

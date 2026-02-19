@@ -5,8 +5,8 @@
 #include <string>
 class stage;
 class stageEndless;
-void TitleInitialProcess();
-void TitleMainProcess();
+void TitleSetUp();
+void TitleMain();
 void Titleinitialize();
 void DrawShadow();
 void DrawModels();

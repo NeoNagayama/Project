@@ -3,9 +3,9 @@
 void instruction::Init()
 {
     normal.init(buttonGraph);
-    normal.SetButtonPosition(VGet(960, 540, 1), 400, 100, 0.9f);
-    hard.init(buttonGraph);
-    hard.SetButtonPosition(VGet(960, 740, 1), 400, 100, 0.9f);
+    normal.SetButtonPosition(VGet(1550, 540, 1), 600, 150, 0.9f);
+    hard.init(buttonGraphRed);
+    hard.SetButtonPosition(VGet(1550, 740, 1), 600, 150, 0.9f);
 }
 void instruction::main(int scene)
 {
@@ -41,9 +41,10 @@ void instruction::inst()
 }
 void instruction::choiceDifficulty(int scenea)
 {
-    normal.mainProcess(dif == 0, true, 30);
+    text.DrawTextWithSort(0, 1920, "難易度選択", biggerJpFontHandle, SORT_CENTER, 180, true, GetColor(255, 255, 255));
+    normal.Main(dif == 0, true, 30);
     normal.SetText("NORMAL");
-    hard.mainProcess(dif == 1, true, 30);
+    hard.Main(dif == 1, true, 30);
     hard.SetText("HARD");
     if (Input_GetKeyboardDown(KEY_INPUT_S) || Input_GetKeyboardDown(KEY_INPUT_W))
     {
@@ -56,5 +57,14 @@ void instruction::choiceDifficulty(int scenea)
         scene = scenea;
         pressSpace = false;
         phase = 0;
+    }
+    if (dif == 0)
+    {
+        info.DrawTextWithSort(90, 1920, "障害物にぶつかっても即死しません\nハードよりもダメージが少なくなっています", biggerJpFontHandle, SORT_LEFT, 800, true, GetColor(255, 255, 255));
+    }
+    else
+    {
+        info.DrawTextWithSort(90, 1920, "障害物にぶつかると即死します\n受けるダメージが多くなっています", biggerJpFontHandle, SORT_LEFT, 800, true, GetColor(255, 255, 255));
+
     }
 }
