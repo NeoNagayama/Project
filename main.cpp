@@ -16,7 +16,7 @@ VECTOR zeroVector = VGet(0, 0, 0);
 /** @brief 現在のゲームの場面 */
 int scene = 0;
 /** @brief 現在プレイ中のステージ */
-int stages =2;
+int stages =0;
 /** @brief  照準用の画像ファイルのハンドル*/
 int reticleHandle = 0;
 /** @brief  シャドウマップ用のハンドル*/
