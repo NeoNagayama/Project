@@ -1,18 +1,18 @@
 #include"Trail.h"
 void smoke::DrawSmoke()
 {
-    progress += oneFlame;
-    if (progress > LIFETIME)
+    progress += oneFlame;//描画した時間に一フレーム分の秒数を足す
+    if (progress > LIFETIME)//描画する時間を超えたら
     {
-        return;
+        return;//描画する処理を行わずに終わる
     }
-    SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255*(1-progress/LIFETIME)));
-    DrawBillboard3D(Position, 0.5f, 0.5f, 0.8f,progress, smokeHandle,true);
-    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255*(1-progress/LIFETIME)));//表示された時間に応じて透過度を上げる
+    DrawBillboard3D(Position, 0.5f, 0.5f, 0.8f,progress, smokeHandle,true);//煙のエフェクト用の画像を描画する
+    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//透過をやめる
     return;
 }
 void smoke::SetPosition(VECTOR pos)
 {
-    Position = pos;
-    progress = 0;
+    Position = pos;//描画する位置に引数のposを入れる
+    progress = 0;//描画した時間をリセットする
 }
