@@ -42,7 +42,7 @@ private:
     void materialSetUp(int handle);
 public:
     VECTOR position = VGet(0,0,0);
-    void DrawbaseOutline();
+    void DrawbaseMap();
     bool DamageBox(bool upper, bool lower, bool right, bool left, bool center,VECTOR hitbox1,VECTOR hitbox2);
     void DrawDamageBox(VECTOR edge1,VECTOR edge2);
     bool checkHit(VECTOR edge1, VECTOR edge2, VECTOR playerEdge1, VECTOR playerEdge2,bool current);

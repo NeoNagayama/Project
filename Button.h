@@ -22,7 +22,7 @@ private:
     bool isSelected = false;
 public:
     void Main(bool isSelected,bool shadow,int yoffset);
-    void init(int OriginGraphHandle);
+    void SetGraph(int OriginGraphHandle);
     void SetButtonPosition(VECTOR CenterPosition, float width, float height, float reductionRatio, int anchor = ANCHOR_CENTER);
     float BoxSizeChange(float actual,float target,bool mode,float from);
     void SetText(std::string text);

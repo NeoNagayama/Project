@@ -135,7 +135,7 @@ void Enemy::FireVulcan(float hormingForcex,float hormingForcey,float distance)
             {
                 PlaySoundMem(enemyShotSound, DX_PLAYTYPE_BACK);
                 bullets[i].isActivated = true;
-                bullets[i].StartPosition = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z);
+                bullets[i].Position = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z);
                 bullets[i].target = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + BULLET_TARGET_Z);
                 bullets[i].forward = VGet(0, 0, forwardSpeed + BULLET_FORWARD_VELOCITY);
                 firingTimer = 0;
@@ -273,6 +273,7 @@ void Enemy::MissileLaunch()
                     (*playerObject).Health -= MISSILE_DAMAGE;
                 }
             }
+            shakeScale = 5;
         }
         missileCooldown = (float)get_rand(5, 7);
         exp.SetPosition(playerObject->Position);

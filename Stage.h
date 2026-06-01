@@ -148,6 +148,7 @@ protected:
     void OverShootPhase();
     void ChasePhase();
     void PauseScreen();
+    //–¢Žg—p
     void CameraTargetMove();
     void PauseControll();
     void MoveWallDraw(int i, int pos, bool high, bool mid, bool low);

@@ -5,9 +5,11 @@
 /** @brief  一フレーム当たりの秒数*/
 #define oneFlame 0.016f
 extern VECTOR zeroVector;
-/** @brief 現在のゲームの場面 */
+/** @brief 現在のゲームの場面
+           これの数値を変えることでゲームの場面が変わる */
 extern int scene;
-/** @brief 現在プレイ中のステージ */
+/** @brief 現在プレイ中のステージ
+           これの数値を変えることでステージが変わる*/
 extern int stages;
 /** @brief  シャドウマップ用のハンドル*/
 extern int shadowHandle;
@@ -101,7 +103,7 @@ extern int sideObstacle;
 /** @brief  プレイヤーがダメージを受けたか*/
 extern bool isGetDamaged;
 extern int difficulty;
-
+extern float shakeScale;
 /** @brief 画面識別用のenum */
 enum SCENES
 {

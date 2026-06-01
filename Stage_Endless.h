@@ -36,7 +36,7 @@ private:
     bool isSaved = false;
     void StageRandomize();
     void StartWave();
-    void WaveResult();
+    void RoundResult();
     void ShowResult();
     void ResultType();
     void EffectResult();

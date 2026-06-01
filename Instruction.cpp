@@ -2,9 +2,9 @@
 #include "ui.h"
 void instruction::Init()
 {
-    normal.init(buttonGraph);//難易度ノーマルのボタンの初期化
+    normal.SetGraph(buttonGraph);//難易度ノーマルのボタンの初期化
     normal.SetButtonPosition(VGet(1550, 540, 1), 600, 150, 0.9f);//難易度ノーマルのボタンの位置とサイズの設定
-    hard.init(buttonGraphRed);//難易度ハードのボタンの初期化
+    hard.SetGraph(buttonGraphRed);//難易度ハードのボタンの初期化
     hard.SetButtonPosition(VGet(1550, 740, 1), 600, 150, 0.9f);//難易度ハードの位置とサイズの設定
 }
 void instruction::main(int scene)
