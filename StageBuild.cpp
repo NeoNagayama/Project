@@ -73,7 +73,7 @@ void builder::main()
         maps[i].position.z = (float)(80*i);
         AAs[i].position.z = (float)(80 * i);
         moveWalls[i].position.z = (float)(80 * i);
-        maps[i].DrawbaseOutline();
+        maps[i].DrawbaseMap();
         if (obstacleType[i] < 2)
         {
             Obstacles(i, i);

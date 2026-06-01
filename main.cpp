@@ -112,6 +112,7 @@ float timeScale = 1;
 bool Quit = false;
 int isSucceceed = 0;
 int difficulty = 0;
+float shakeScale = 3;
 /** @brief  ステージ1の障害物の位置*/
 int stage1Obstacle[50] = {
     0,0,0,0,0,
@@ -699,7 +700,6 @@ void LoadStage1()
  * @details エンドレスモードのハイスコアが記録されたバイナリファイルを読み取り
  *          変数highScoreに入れる
  */
-
 void LoadScore()
 {
     FILE* file;
@@ -716,24 +716,20 @@ void LoadScore()
         highScore = 0;
     }
 }
-
 /**
  * @brief 効果音の音量を調整する
  * @details ロードした効果音の音量を調整する
  */
-
 void setVolume()
 {
     ChangeVolumeSoundMem(120, selectSound);
     ChangeVolumeSoundMem(120, interectSound);
     ChangeVolumeSoundMem(60, engineSound);
 }
-
 /**
  * @brief カメラを揺らす
  * @details カメラの座標を1フレームだけずらして視界を揺らす
  */
-
 void CameraShake()
 {
     /** @brief  乱数を取得する際の上限と下限に使用する数値*/
@@ -745,9 +741,13 @@ void CameraShake()
     /** @brief  カメラの向いている座標*/
     VECTOR targetPos = GetCameraTarget();
     /** @brief  カメラが移動する座標*/
-    VECTOR offset = VGet((float)get_rand(-range, range) / mult,(float)get_rand(-range, range) / mult, 0);
+    VECTOR offset = VScale(VGet((float)get_rand(-range, range) / mult,(float)get_rand(-range, range) / mult, 0),shakeScale);
     //カメラの座標をセットする
     SetCameraPositionAndTarget_UpVecY(VAdd(camPos, offset), VAdd(targetPos, offset));
+    if (shakeScale > 3)
+    {
+        shakeScale = 3;
+    }
     //この関数を呼び出す条件のflagを偽にする
     isGetDamaged = false;
 }

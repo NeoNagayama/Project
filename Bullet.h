@@ -10,7 +10,7 @@ public:
     bool isActivated = false;
     VECTOR target = zeroVector;
     VECTOR forward = zeroVector;
-    VECTOR StartPosition = zeroVector;
+    VECTOR Position = zeroVector;
     bool Main(VECTOR hitbox1,VECTOR hitbox2);
     void setUp();
 };

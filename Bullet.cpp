@@ -1,22 +1,22 @@
 #include "Bullet.h"
 bool Bullet::Main(VECTOR hitbox1, VECTOR hitbox2)
 {
-    
-    StartPosition = VAdd(StartPosition, VScale(VGet(forward.x,-forward.y,forward.z * timeScale), 1));
-    MV1SetPosition(handle, StartPosition);
+    //正面方向に移動する
+    Position = VAdd(Position, VScale(VGet(forward.x,-forward.y,forward.z * timeScale), 1));
+    //モデルの移動と描画
+    MV1SetPosition(handle, Position);
     MV1DrawModel(handle);
-    if (StartPosition.z >= target.z)
+    //目標よりも前に飛んだら処理をやめる
+    if (Position.z >= target.z)
     {
         isActivated = false;
     }
-    if (StartPosition.x > hitbox1.x && StartPosition.y > hitbox1.y && StartPosition.z > hitbox1.z && StartPosition.x < hitbox2.x && StartPosition.y < hitbox2.y && StartPosition.z < hitbox2.z)
+    //引数のヒットボックスに入るとtrueを返して処理をやめる
+    if (Position.x > hitbox1.x && Position.y > hitbox1.y && Position.z > hitbox1.z && Position.x < hitbox2.x && Position.y < hitbox2.y && Position.z < hitbox2.z)
     {
-        
         isActivated = false;
         return true;
     }
-    /*clsDx();
-    printfDx("%f %f\n", hitbox1.z, hitbox2.z);*/
     return false;
 }
 void Bullet::setUp()

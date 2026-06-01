@@ -71,7 +71,6 @@ void Player::Init()
  * @param int pos カメラ演出開始時のプレイヤーの座標
  *
  */
-
 void Player::camSetUp(float pos)
 {
     //カメラの位置をプレイヤーに追従させる位置を設定する
@@ -90,7 +89,6 @@ void Player::camSetUp(float pos)
  *
  * @param bool mode ゲームが追跡フェーズに入っているか
  */
-
 void Player::Main(bool mode)
 {
     Immortal();
@@ -126,9 +124,9 @@ void Player::Main(bool mode)
         else
         {
             //カメラの位置をセットする
-            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition));
+            SetCameraPositionAndTarget_UpVecY(VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, TARGET_CAMERA_POSZ), BasePosition));
             //カメラの座標を変数に格納する
-            CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, 20), BasePosition);
+            CameraPosition = VAdd(VGet(offset.x, offset.y + 2, -20), BasePosition), VAdd(VGet(offset.x, offset.y, TARGET_CAMERA_POSZ), BasePosition);
             //フレアの処理
             Flare();
 
@@ -250,7 +248,6 @@ void Player::transitionProcess(bool mode)
  * @brief  クリア時の処理
  * @details クリア時のプレイヤーの移動と回転に関する処理
  */
-
 void Player::clearProcess()
 {
     //障害物を回避する処理
@@ -315,7 +312,9 @@ void Player::KeyInput()
 }
 /*
  * @brief 上方向に移動しているときの処理
- * @details 上方向に移動する捜査をしているときの
+ * @details 上方向に移動する操作をしているときの処理
+ *
+ * @param[in] float speed 一フレーム当たりに移動速度を変化させる値
  */
 void Player::InputUp(float speed)
 {
@@ -352,7 +351,9 @@ void Player::InputUp(float speed)
 }
 /*
  * @brief 下方向に移動しているときの処理
- * @details 下方向に移動する捜査をしているときの
+ * @details 下方向に移動する操作をしているときの処理
+ *
+ * @param[in] float speed 一フレーム当たりに移動速度を変化させる値
  */
 void Player::InputDown(float speed)
 {
@@ -552,7 +553,7 @@ void Player::VulcanProjectile()
                 bullets[i].isActivated = true;                                                              //発射された状態か判断するflagをtrueにする
                 bullets[i].target = VAdd(Position, VGet(0, 0, 90));                                         //弾が到達すべき場所を指定する
                 bullets[i].forward = VGet(0, 0, forwardSpeed + 4);                                          //弾が前進する速度を指定する
-                bullets[i].StartPosition = VAdd(Position, VGet(forward().x, -forward().y, forward().z));    //弾が発射された位置を指定する
+                bullets[i].Position = VAdd(Position, VGet(forward().x, -forward().y, forward().z));    //弾が発射された位置を指定する
                 break;                                                                                      //for文を抜ける
             }
         }

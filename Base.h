@@ -23,8 +23,8 @@ public:
     VECTOR hitbox2 = zeroVector;
     void SetRotation(VECTOR vector);
     void SetHitBox(float width, float height);
-    void TestHitBox();
     void DrawhitBoxToUI();
+    //–¢Žg—p
     void calcBox();
     void Draw();
 };
