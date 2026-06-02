@@ -1,4 +1,5 @@
 #include "StageBuild.h"
+
 void builder::main()
 {
     SetBackgroundColor(80, 80, 80, 255);
@@ -9,7 +10,7 @@ void builder::main()
             pos += 1;
         }
     }
-    if(Input_GetKeyboardDown(KEY_INPUT_S))
+    if (Input_GetKeyboardDown(KEY_INPUT_S))
     {
         if (pos > 0)
         {
@@ -70,7 +71,7 @@ void builder::main()
     }
     for (int i = 0; i <= pos; i++)
     {
-        maps[i].position.z = (float)(80*i);
+        maps[i].position.z = (float)(80 * i);
         AAs[i].position.z = (float)(80 * i);
         moveWalls[i].position.z = (float)(80 * i);
         maps[i].DrawbaseMap();
@@ -84,9 +85,10 @@ void builder::main()
         }
         MoveWalls(i, i);
     }
-    SetCameraPositionAndTarget_UpVecY(VGet(cam.x,cam.y, (pos*80) +cam.z), VGet(0, 0, (float)(pos * 80)));
+    SetCameraPositionAndTarget_UpVecY(VGet(cam.x, cam.y, (pos * 80) + cam.z), VGet(0, 0, (float)(pos * 80)));
     SetupCamera_Perspective(1.2f);
 }
+
 void builder::Init()
 {
     for (int i = 0; i < 50; i++)
@@ -95,11 +97,12 @@ void builder::Init()
         maps[i].BaseSetUp();
     }
 }
+
 void builder::save()
 {
-    FILE* fileobtype;
-    FILE* fileobs;
-    FILE* filewall;
+    FILE *fileobtype;
+    FILE *fileobs;
+    FILE *filewall;
     errno_t err = fopen_s(&fileobtype, "maps/defaultMaps/stage2type.dat", "wb");
     errno_t err1 = fopen_s(&fileobs, "maps/defaultMaps/stage2obs.dat", "wb");
     errno_t err2 = fopen_s(&filewall, "maps/defaultMaps/stage2wall.dat", "wb");

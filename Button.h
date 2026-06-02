@@ -1,17 +1,19 @@
 #pragma once
 #include "DxLib.h"
-#include <string>
-#include"Text.h"
+#include "Text.h"
 #include "main.h"
+#include <string>
+
 enum anchorPosition
 {
     ANCHOR_LEFT,
     ANCHOR_CENTER,
     ANCHOR_RIGHT
 };
+
 class Button
 {
-private:
+  private:
     int GraphHandle = 0;
     UIText buttonTextDraw;
     std::string buttonText;
@@ -20,11 +22,13 @@ private:
     COLOR16 NotSelectedColor = GetColor(1, 8, 60);
     COLOR16 SelectedColor = GetColor(4, 202, 206);
     bool isSelected = false;
-public:
-    void Main(bool isSelected,bool shadow,int yoffset);
+
+  public:
+    void Main(bool isSelected, bool shadow, int yoffset);
     void SetGraph(int OriginGraphHandle);
-    void SetButtonPosition(VECTOR CenterPosition, float width, float height, float reductionRatio, int anchor = ANCHOR_CENTER);
-    float BoxSizeChange(float actual,float target,bool mode,float from);
+    void SetButtonPosition(VECTOR CenterPosition, float width, float height, float reductionRatio,
+                           int anchor = ANCHOR_CENTER);
+    float BoxSizeChange(float actual, float target, bool mode, float from);
     void SetText(std::string text);
     VECTOR NotSelectedPosition1 = VGet(1.0f, 1.0f, 2.0f);
     VECTOR NotSelectedPosition2 = VGet(1.0f, 1.0f, 2.0f);

@@ -1,13 +1,15 @@
-#include"Enemy.h"
+#include "Enemy.h"
 #include <cmath>
 #include <random>
+
 void Enemy::SetUp()
 {
     ModelHandle = MV1LoadModel("Resource/EnemyModel.mv1");
-    MV1SetPosition(ModelHandle, VGet(0,0, 0));
+    MV1SetPosition(ModelHandle, VGet(0, 0, 0));
     MV1SetScale(ModelHandle, VGet(6, 6, 6));
     Position = VGet(0, 0, 0);
     missileObject.SetUp();
+
     for (int i = 0; i < MV1GetMaterialNum(ModelHandle); i++)
     {
         MV1SetMaterialDifColor(ModelHandle, i, GetColorF(0.7f, 0.7f, 0.7f, 1.0f));
@@ -16,11 +18,13 @@ void Enemy::SetUp()
         MV1SetMaterialEmiColor(ModelHandle, i, GetColorF(0.8f, 0.8f, 0.8f, 0.2f));
         MV1SetMaterialSpcPower(ModelHandle, i, 6);
     }
+
     for (int i = 0; i < 10; i++)
     {
         bullets[i].setUp();
     }
 }
+
 void Enemy::Init()
 {
     Health = 100;
@@ -33,18 +37,20 @@ void Enemy::Init()
     isFiring = false;
     cobraSpeed = 0;
     firingTimer = 0;
-    MV1SetRotationXYZ(ModelHandle,VGet(0, 0, 0));
+    MV1SetRotationXYZ(ModelHandle, VGet(0, 0, 0));
     isDead = false;
     isDown = false;
     isTimeLimit = false;
-    //MISSILE_DAMAGE = 30.0f;
+    // MISSILE_DAMAGE = 30.0f;
     BULLET_DAMAGE = 5.0f;
 }
+
 void Enemy::Main(bool mode)
 {
-    
+
     if (Health > 0)
     {
+
         if (mode)
         {
             BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, (float)Z_OFFSET));
@@ -54,7 +60,7 @@ void Enemy::Main(bool mode)
         }
         else
         {
-            BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, (float) - Z_OFFSET));
+            BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, (float)-Z_OFFSET));
             offset = playerObject->offset;
             Vulcan(false);
             missile();
@@ -65,33 +71,37 @@ void Enemy::Main(bool mode)
     }
     else
     {
-        offset.y -= 0.2f*timeScale;
+        offset.y -= 0.2f * timeScale;
         BasePosition.z += forwardSpeed * timeScale;
         MV1SetPosition(ModelHandle, VAdd(BasePosition, offset));
         MV1SetRotationXYZ(ModelHandle, VAdd(MV1GetRotationXYZ(ModelHandle), VGet(0, 0, 0.1f * timeScale)));
+
         if (!isDown && offset.y < -10)
         {
             exp2.SetPosition(VAdd(BasePosition, offset));
             isDown = true;
         }
     }
+
     if (!isDead && Health <= 0)
     {
-        exp.SetPosition(VAdd(Position,VGet(0,0,5)));
+        exp.SetPosition(VAdd(Position, VGet(0, 0, 5)));
         deadPosition = Position;
         PlaySoundMem(explosionSound, DX_PLAYTYPE_BACK);
         isDead = true;
     }
-        Move(VAdd(offset,BasePosition));
+    Move(VAdd(offset, BasePosition));
     SetHitBox(4, 4);
     exp.DrawExprosion();
     exp2.DrawExprosion();
 }
+
 void Enemy::Vulcan(bool isCutscene)
 {
     firingCooldown += oneFlame;
     float hormingForcex = 0, hormingForcey = 0;
     float distance = 0;
+
     if (firingInterval < firingCooldown && !isFiring)
     {
         vulcanTargetPosition = playerObject->Position;
@@ -99,60 +109,72 @@ void Enemy::Vulcan(bool isCutscene)
     }
     else if (isFiring)
     {
-        FireVulcan(hormingForcex,hormingForcey,distance);
+        FireVulcan(hormingForcex, hormingForcey, distance);
     }
     bool isReticleShowUp = false;
+
     for (int i = 0; i < 10; i++)
     {
 
         if (bullets[i].isActivated == true)
         {
-            
+
             if (bullets[i].Main(playerObject->hitbox1, playerObject->hitbox2))
             {
-                 bullets[i].isActivated = false;
-                 if(!playerObject->isImmortal)playerObject->Health -= BULLET_DAMAGE;
-                 isGetDamaged = true;
-                 PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);
+                bullets[i].isActivated = false;
+
+                if (!playerObject->isImmortal)
+                    playerObject->Health -= BULLET_DAMAGE;
+                isGetDamaged = true;
+                PlaySoundMem(hitSound, DX_PLAYTYPE_BACK);
             }
             isReticleShowUp = true;
         }
     }
+
     if (isReticleShowUp && !isCutscene)
     {
-        VECTOR GraphPosition = ConvWorldPosToScreenPos(VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + RETICLE_POS_Z));
-        DrawExtendGraph((int)GraphPosition.x - RETICLE_SIZE, (int)GraphPosition.y - RETICLE_SIZE, (int)GraphPosition.x + RETICLE_SIZE, (int)GraphPosition.y + RETICLE_SIZE, reticleHandle, true);
+        VECTOR GraphPosition = ConvWorldPosToScreenPos(
+            VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + RETICLE_POS_Z));
+        DrawExtendGraph((int)GraphPosition.x - RETICLE_SIZE, (int)GraphPosition.y - RETICLE_SIZE,
+                        (int)GraphPosition.x + RETICLE_SIZE, (int)GraphPosition.y + RETICLE_SIZE, reticleHandle, true);
     }
 }
-void Enemy::FireVulcan(float hormingForcex,float hormingForcey,float distance)
+
+void Enemy::FireVulcan(float hormingForcex, float hormingForcey, float distance)
 {
     firingTimer += oneFlame;
+
     if (firingTimer > firingRate)
     {
+
         for (int i = 0; i < 10; i++)
         {
+
             if (bullets[i].isActivated == false)
             {
                 PlaySoundMem(enemyShotSound, DX_PLAYTYPE_BACK);
                 bullets[i].isActivated = true;
                 bullets[i].Position = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z);
-                bullets[i].target = VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + BULLET_TARGET_Z);
+                bullets[i].target =
+                    VGet(vulcanTargetPosition.x, vulcanTargetPosition.y, BasePosition.z + BULLET_TARGET_Z);
                 bullets[i].forward = VGet(0, 0, forwardSpeed + BULLET_FORWARD_VELOCITY);
                 firingTimer = 0;
                 LoadedAmmoCount += 1;
                 break;
             }
-
         }
-
     }
     hormingForcex = playerObject->Position.x - vulcanTargetPosition.x;
     hormingForcey = playerObject->Position.y - vulcanTargetPosition.y;
     distance = sqrtf((hormingForcex * hormingForcex) + (hormingForcey * hormingForcey));
+
     if (distance > HORMING_THLESHOLD)
     {
-        vulcanTargetPosition = VAdd(VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), HORMING_SPEED_SCALE), vulcanTargetPosition);
+        vulcanTargetPosition =
+            VAdd(VScale(VNorm(VGet(hormingForcex, hormingForcey, 0)), HORMING_SPEED_SCALE), vulcanTargetPosition);
     }
+
     if (LoadedAmmoCount >= MAX_PROJECTILE)
     {
 
@@ -162,10 +184,11 @@ void Enemy::FireVulcan(float hormingForcex,float hormingForcey,float distance)
         firingCooldown = 0;
     }
 }
+
 void Enemy::missile()
 {
     missilecooldowntimer += oneFlame;
-    if (missileCooldown < missilecooldowntimer &&!isLaunched)
+    if (missileCooldown < missilecooldowntimer && !isLaunched)
     {
         isLaunched = true;
         isGuideLost = false;
@@ -174,7 +197,7 @@ void Enemy::missile()
     {
         MissileLaunch();
     }
-    if (isGuideLost &&missileflyingTimer > MISSILE_SHOWUP)
+    if (isGuideLost && missileflyingTimer > MISSILE_SHOWUP)
     {
         if (1 == CheckSoundMem(pitbullSound))
         {
@@ -213,6 +236,7 @@ void Enemy::missile()
         missileCooldown = (float)get_rand(5, 7);
     }
 }
+
 void Enemy::MissileLaunch()
 {
     if (strobo.MeasureTimer(0.3f))
@@ -236,7 +260,7 @@ void Enemy::MissileLaunch()
         {
             PlaySoundMem(pitbullSound, DX_PLAYTYPE_BACK);
         }
-        missileObject.Main(playerObject->Position, MISSILE_HIT_TIME - missileflyingTimer,forwardSpeed);
+        missileObject.Main(playerObject->Position, MISSILE_HIT_TIME - missileflyingTimer, forwardSpeed);
     }
     else
     {
@@ -284,7 +308,8 @@ void Enemy::MissileLaunch()
 
 void Enemy::run()
 {
-    switch (evadetype) {
+    switch (evadetype)
+    {
     case TYPE_BARRELROLL:
         barrelRoll();
         break;
@@ -299,16 +324,17 @@ void Enemy::run()
         break;
     }
 }
+
 void Enemy::EnemyMoveXY()
 {
 
     if (offset.x > moveRangeX || offset.x < minimumMoveRangeX)
     {
-        targetAngle = VNorm(VGet(1-offset.x,1-offset.y,0));
+        targetAngle = VNorm(VGet(1 - offset.x, 1 - offset.y, 0));
     }
     if (offset.y > moveRangeY || offset.y < minimumMoveRangeY)
     {
-        targetAngle = VNorm(VGet(1-offset.x, 1-offset.y, 0));
+        targetAngle = VNorm(VGet(1 - offset.x, 1 - offset.y, 0));
     }
 
     Acceleration();
@@ -324,7 +350,7 @@ void Enemy::EnemyMoveXY()
 
         ySpeed = ySpeed * moveSpeed;
     }
-    
+
     if (Rotation.y == DegToRad(90))
     {
         offset = VAdd(VGet(0, ySpeed, -xSpeed), offset);
@@ -337,20 +363,18 @@ void Enemy::EnemyMoveXY()
     {
         offset = VAdd(VGet(xSpeed, ySpeed, 0), offset);
     }
-    
 }
+
 void Enemy::Acceleration()
 {
     if (targetAngle.x > MOVE_ANGLE_THLESHOLD && xSpeed < MAX_SPEED)
     {
         xSpeed += SPEED;
-
     }
     else if (targetAngle.x < -MOVE_ANGLE_THLESHOLD && xSpeed > -MAX_SPEED)
     {
 
         xSpeed -= SPEED;
-
     }
     else
     {
@@ -369,24 +393,23 @@ void Enemy::Acceleration()
         ySpeed = 0;
     }
 }
+
 void Enemy::roll()
 {
     float x, y;
     x = cos(atan2(upper().y - 0, upper().x - 0));
     y = sin(atan2(upper().y - 0, upper().x - 0));
-    float difInAngle = ((targetAngle.x * y) - (-targetAngle.y  * x));
+    float difInAngle = ((targetAngle.x * y) - (-targetAngle.y * x));
     if (difInAngle > ROLL_THLESHOLD)
     {
         Rotate(VGet(0, 0, -rotateSpeed * smooth(difInAngle, 0, 2)));
-
-
     }
     else if (difInAngle < -ROLL_THLESHOLD)
     {
         Rotate(VGet(0, 0, rotateSpeed * smooth(difInAngle, 0, 2)));
-
     }
 }
+
 void Enemy::barrelRoll()
 {
     EvadePosDistance = 0;
@@ -394,7 +417,8 @@ void Enemy::barrelRoll()
     float lowerX = -MAX_MOVE_RANGE < minimumMoveRangeX ? minimumMoveRangeX : -MAX_MOVE_RANGE;
     float y = MAX_MOVE_RANGE > moveRangeY ? moveRangeY : MAX_MOVE_RANGE;
     float lowerY = -MAX_MOVE_RANGE < minimumMoveRangeY ? minimumMoveRangeY : -MAX_MOVE_RANGE;
-    switch (evadeCount) {
+    switch (evadeCount)
+    {
     case 1:
 
         EvadeMove(x, y, 2);
@@ -413,12 +437,14 @@ void Enemy::barrelRoll()
         break;
     }
 }
+
 void Enemy::H_Fluctuating()
 {
     EvadePosDistance = 0;
     float x = MAX_MOVE_RANGE > moveRangeX ? moveRangeX : MAX_MOVE_RANGE;
     float lowerX = -MAX_MOVE_RANGE < minimumMoveRangeX ? minimumMoveRangeX : -MAX_MOVE_RANGE;
-    switch (evadeCount) {
+    switch (evadeCount)
+    {
     case 1:
 
         EvadeMove(x, FLUC_RANGE, 2);
@@ -435,12 +461,14 @@ void Enemy::H_Fluctuating()
         break;
     }
 }
+
 void Enemy::V_Fluctuating()
 {
     EvadePosDistance = 0;
     float y = MAX_MOVE_RANGE > moveRangeY ? moveRangeY : MAX_MOVE_RANGE;
     float lowerY = -MAX_MOVE_RANGE < minimumMoveRangeY ? minimumMoveRangeY : -MAX_MOVE_RANGE;
-    switch (evadeCount) {
+    switch (evadeCount)
+    {
     case 1:
         EvadeMove(FLUC_RANGE, y, 2);
         break;
@@ -455,7 +483,8 @@ void Enemy::V_Fluctuating()
         break;
     }
 }
-void Enemy::EvadeMove(float x, float y,int count)
+
+void Enemy::EvadeMove(float x, float y, int count)
 {
     targetAngle = VGet(x - offset.x, y - offset.y, 0);
     EvadePosDistance = sqrtf((targetAngle.x * targetAngle.x) + (targetAngle.y * targetAngle.y));
@@ -469,6 +498,7 @@ void Enemy::EvadeMove(float x, float y,int count)
         }
     }
 }
+
 bool Enemy::Transition()
 {
     /*playerObject->BasePosition.z += 1;
@@ -493,25 +523,28 @@ bool Enemy::Transition()
     }
     else if (transitionMoveZaxis >= TRANSITION_TARGET_POSZ)
     {
-        Move(VAdd(VGet(playerObject->offset.x + TRANSITION_OFFSET_X, playerObject->offset.y - TRANSITION_OFFSET_Y, 0), BasePosition));
+        Move(VAdd(VGet(playerObject->offset.x + TRANSITION_OFFSET_X, playerObject->offset.y - TRANSITION_OFFSET_Y, 0),
+                  BasePosition));
         return false;
     }
     else
     {
         BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, transitionMoveZaxis));
         transitionMoveZaxis += TRANSITION_MOVE_SPEED;
-        Move(VAdd(VGet(playerObject->offset.x + TRANSITION_OFFSET_X, playerObject->offset.y - TRANSITION_OFFSET_Y, 0), BasePosition));
+        Move(VAdd(VGet(playerObject->offset.x + TRANSITION_OFFSET_X, playerObject->offset.y - TRANSITION_OFFSET_Y, 0),
+                  BasePosition));
         return false;
     }
 }
-void  Enemy::Cobra()
+
+void Enemy::Cobra()
 {
     isTimeLimit = true;
-    MV1DrawModel(ModelHandle);/*
-    EvadeMove(0, 0, 6);
-    EnemyMoveXY();*/
+    MV1DrawModel(ModelHandle); /*
+     EvadeMove(0, 0, 6);
+     EnemyMoveXY();*/
     roll();
-    
+
     if (BasePosition.z < playerObject->Position.z - TRANSITION_TARGET_POSZ)
     {
         MissileLaunch();
@@ -521,7 +554,7 @@ void  Enemy::Cobra()
     }
     else
     {
-        Rotate(VGet(-(targetPitch * (oneFlame*2)), 0, 0));
+        Rotate(VGet(-(targetPitch * (oneFlame * 2)), 0, 0));
         if (cobraSpeed < 1)
         {
             cobraSpeed += 1 * oneFlame;
