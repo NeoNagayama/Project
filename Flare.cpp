@@ -8,9 +8,18 @@
  */
 void Flare::Main()
 {
-    timer += 0.016f;
+    timer += oneFlame;
     // ‰Œ‚ÌˆÊ’u‚Ìİ’è
-    smokes[smokeNum].SetPosition(position);
+    if (interbal < 0)
+    {
+        smokes[smokeNum].SetPosition(position);
+        smokeNum++;
+        interbal = INTERBAL_FRAME;
+    }
+    else
+    {
+        interbal--;
+    }
     // ƒtƒŒƒA‚ğˆÚ“®‚³‚¹‚é
     position = VAdd(position, forward);
     DrawBillboard3D(position, 0.5f, 0.5f, 10, 0, missileBurnerHandle, true);
@@ -20,7 +29,6 @@ void Flare::Main()
         isActivated = false;
         timer = 0;
     }
-    smokeNum++;
     if (smokeNum >= 180)
     {
         smokeNum = 0;
@@ -36,8 +44,11 @@ void Flare::Main()
 void Flare::Passive()
 {
     // ‰Œ‚Ìˆ—
-    for (int i = 0; i < 180; i++)
+    for (int i = 0; i < 60; i++)
     {
-        smokes[i].DrawSmoke();
+        if (smokes[i].isActive = true)
+        {
+            smokes[i].DrawSmoke();
+        }
     }
 }

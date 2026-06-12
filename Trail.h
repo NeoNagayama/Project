@@ -14,4 +14,5 @@ public:
     void DrawSmoke();
     /* @brief •`‰æ‚·‚éˆÊ’u‚ğİ’è‚·‚é */
     void SetPosition(VECTOR pos);
+    bool isActive = false;
 };
