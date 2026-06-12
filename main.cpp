@@ -11,6 +11,18 @@
 #include "TitleScene.h"
 #include "gameOver.h"
 #include <random>
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+    // NVIDIAのプレミアムグラフィックス（dGPU）を強制する
+    __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
+
+    // AMDのハイパフォーマンスグラフィックスを強制する（念のため）
+    __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+#ifdef __cplusplus
+}
+#endif
 /* @brief VECTOR型の変数の初期化用 */
 VECTOR zeroVector = VGet(0, 0, 0);
 /** @brief 現在のゲームの場面 */
@@ -160,6 +172,7 @@ int DirectionalLightHandle;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     SetGraphMode(1920, 1080, 32), ChangeWindowMode(false), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);
+    SetUseDirect3D11AdapterIndex(0);
     // SetFullScreenResolutionMode(DX_FSRESOLUTIONMODE_MAXIMUM);
     // 奥行0.1～1000までをカメラの描画範囲とする
     SetCameraNearFar(0.1f, 5000.0f);

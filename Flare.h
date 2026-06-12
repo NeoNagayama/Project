@@ -3,15 +3,19 @@
 #include "Trail.h"
 class smoke;
 
+constexpr int INTERBAL_FRAME = 3;
+
 class Flare
 {
   private:
     /* @brief フレアの描画時間を計る変数 */
     float timer = 0;
     /* @brief 煙のエフェクトの配列 */
-    smoke smokes[180];
+    smoke smokes[60];
     /* @brief そのフレームで新しく描画する煙のエフェクトの番号 */
     int smokeNum = 0;
+
+    int interbal = INTERBAL_FRAME;
 
   public:
     /* @brief フレアを描画するか */
