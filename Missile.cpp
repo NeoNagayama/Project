@@ -1,5 +1,24 @@
 #include "Missile.h"
 
+void Missile::SpawnSmoke()
+{
+    if (smokeInterval > 0)
+    {
+        smokeInterval--;
+        return;
+    }
+
+    smokes[smokeNum].SetPosition(Position);
+    smokeNum++;
+    hasActiveSmoke = true;
+    smokeInterval = SMOKE_SPAWN_INTERVAL;
+
+    if (smokeNum >= MISSILE_SMOKE_COUNT)
+    {
+        smokeNum = 0;
+    }
+}
+
 /**
  * @brief ミサイルの主要な処理
  * @details 移動とモデル、エフェクトの描画
@@ -15,26 +34,17 @@
 void Missile::Main(VECTOR targetPosition, float remainingTime, float speed)
 {
     remainingTime = remainingTime / 0.016f;
-    // ミサイルとプレイヤーの位置から角度を求める
     Angle =
         VScale(VNorm(VGet(targetPosition.x - Position.x, targetPosition.y - Position.y, targetPosition.z - Position.z)),
                (speed + 0.3f) * timeScale);
-    // 求めた角度の方向に移動する
     Position = VAdd(Position, Angle);
     MV1SetPosition(MissileHandle, Position);
     MV1SetRotationXYZ(MissileHandle, VNorm(VGet(targetPosition.x - Position.x, targetPosition.y - Position.y,
                                                 targetPosition.z - Position.z)));
     MV1DrawModel(MissileHandle);
-    // ミサイルのエンジンの火の描画
     DrawBillboard3D(VAdd(VScale(MV1GetRotationXYZ(MissileHandle), -2.6f), Position), 0.5f, 0.49f, 4, 0,
                     missileBurnerHandle, true);
-    // 煙の位置の設定
-    smokes[smokeNum].SetPosition(Position);
-    smokeNum++;
-    if (smokeNum >= 180)
-    {
-        smokeNum = 0;
-    }
+    SpawnSmoke();
 }
 
 /**
@@ -57,17 +67,10 @@ void Missile::SetStartPosition(VECTOR StartPosition)
  */
 void Missile::guideLosted()
 {
-    // 現在の向いている方向に進み続ける
     Position = VAdd(Position, Angle);
     MV1SetPosition(MissileHandle, Position);
     MV1DrawModel(MissileHandle);
-    // 影の位置の設定
-    smokes[smokeNum].SetPosition(Position);
-    smokeNum++;
-    if (smokeNum >= 180)
-    {
-        smokeNum = 0;
-    }
+    SpawnSmoke();
 }
 
 /**
@@ -76,9 +79,7 @@ void Missile::guideLosted()
  */
 void Missile::SetUp()
 {
-    // モデルのロード
     MissileHandle = MV1LoadModel("Resource/MissileModel.mv1");
-    // ミサイルの3Dモデルのマテリアルの設定
     for (int i = 0; i < MV1GetMaterialNum(MissileHandle); i++)
     {
         MV1SetMaterialDifColor(MissileHandle, i, GetColorF(0.7f, 0.7f, 0.7f, 1.0f));
@@ -95,11 +96,21 @@ void Missile::SetUp()
  * @note ミサイルが当たった後に不自然に煙がすべて消えないように呼び出し続ける必要があるため
  *       この処理はほかのミサイル関連の処理とは別に毎フレーム呼び出す
  */
-void Missile::Passive()
+void Missile::Passive(float cameraZ)
 {
-    // 煙の処理
-    for (int i = 0; i < 180; i++)
+    if (!hasActiveSmoke)
     {
-        smokes[i].DrawSmoke();
+        return;
     }
+
+    bool anyActive = false;
+    for (int i = 0; i < MISSILE_SMOKE_COUNT; i++)
+    {
+        if (smokes[i].isActive)
+        {
+            smokes[i].DrawSmoke(cameraZ);
+            anyActive = true;
+        }
+    }
+    hasActiveSmoke = anyActive;
 }

@@ -110,8 +110,6 @@ void stage::Main()
         //インゲーム中の処理
         if (!isPause &&!isCleared && !isGameOver )
         {
-            //プレイヤーのヒットボックスの設定
-            player.SetHitBox(2, 2);
             //インゲームの処理
             Ingame();
             //エンジン音が鳴っていなければ鳴らす

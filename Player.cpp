@@ -627,9 +627,14 @@ void Player::VulcanProjectile()
  */
 void Player::Flare()
 {
-    for (int i = 0; i < 10; i++) // フレアのインスタンスの数繰り返す
+    const float cameraZ = CameraPosition.z;
+
+    for (int i = 0; i < 10; i++)
     {
-        Flares[i].Passive(); // 射出されていないときも常に呼ばれる処理
+        if (Flares[i].hasActiveSmoke || Flares[i].isActivated)
+        {
+            Flares[i].Passive(cameraZ);
+        }
     }
 
     // スペースキーが押されていてクールダウンが終わっていてすでに発射されていないとき

@@ -50,8 +50,6 @@ void base::SetHitBox(float width, float height)
     // 引数の高さと幅からヒットボックスを設定する
     hitbox1 = VGet(Position.x - width / 2, Position.y + 0.5f - height / 2, Position.z - width);
     hitbox2 = VGet(Position.x + width / 2, Position.y + 0.5f + height / 2, Position.z + width);
-    // calcBox();
-    DrawhitBoxToUI();
 }
 
 // 未使用

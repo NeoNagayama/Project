@@ -21,9 +21,10 @@ Button Exit;
 UIText GameTitle;
 UIText info;
 int modelhandle[4];
-smoke smokes1[180];
-smoke smokes2[180];
+smoke smokes1[MISSILE_SMOKE_COUNT];
+smoke smokes2[MISSILE_SMOKE_COUNT];
 int smokenum;
+int titleSmokeInterval = 0;
 stage *stage1Instance;
 stage *stage2Instance;
 stage *stage3Instance;
@@ -31,28 +32,28 @@ stageEndless *Stage4;
 
 std::string WStringToString(std::wstring oWString)
 {
-    // wstring ¨ SJIS
+    // wstring â†’ SJIS
     int iBufferSize = WideCharToMultiByte(CP_OEMCP, 0, oWString.c_str(), -1, (char *)NULL, 0, NULL, NULL);
 
-    // ƒoƒbƒtƒ@‚Ìæ“¾
+    // ãƒãƒƒãƒ•ã‚¡ã®å–å¾—
     CHAR *cpMultiByte = new CHAR[iBufferSize];
 
-    // wstring ¨ SJIS
+    // wstring â†’ SJIS
     WideCharToMultiByte(CP_OEMCP, 0, oWString.c_str(), -1, cpMultiByte, iBufferSize, NULL, NULL);
 
-    // string‚Ì¶¬
+    // stringã®ç”Ÿæˆ
     std::string oRet(cpMultiByte, cpMultiByte + iBufferSize - 1);
 
-    // ƒoƒbƒtƒ@‚Ì”jŠü
+    // ãƒãƒƒãƒ•ã‚¡ã®ç ´æ£„
     delete[] cpMultiByte;
 
-    // •ÏŠ·Œ‹‰Ê‚ğ•Ô‚·
+    // å¤‰æ›çµæœã‚’è¿”ã™
     return (oRet);
 }
 
 void getStagePointers(stage *s1, stage *s2, stage *s3, stageEndless *s4)
 {
-    // ŠeƒXƒe[ƒW‚Ìƒ|ƒCƒ“ƒ^‚ğó‚¯æ‚é
+    // å„ã‚¹ãƒ†ãƒ¼ã‚¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å—ã‘å–ã‚‹
     stage1Instance = s1;
     stage2Instance = s2;
     stage3Instance = s3;
@@ -61,15 +62,15 @@ void getStagePointers(stage *s1, stage *s2, stage *s3, stageEndless *s4)
 
 void TitleSetUp()
 {
-    // Šeƒ{ƒ^ƒ“‚ÌˆÊ’u‚ğİ’è‚·‚é
+    // å„ãƒœã‚¿ãƒ³ã®ä½ç½®ã‚’è¨­å®šã™ã‚‹
     Start.SetButtonPosition(VGet(1550, 445, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
     Extra.SetButtonPosition(VGet(1550, 645, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
     Exit.SetButtonPosition(VGet(1550, 845, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
-    // Šeƒ{ƒ^ƒ“‚Ì‰æ‘œ‚ğİ’è‚·‚é
+    // å„ãƒœã‚¿ãƒ³ã®ç”»åƒã‚’è¨­å®šã™ã‚‹
     Start.SetGraph(buttonGraph);
     Extra.SetGraph(buttonGraph);
     Exit.SetGraph(buttonGraph);
-    // g—p‚³‚ê‚éƒ‚ƒfƒ‹‚Ìƒ[ƒh‚ÆˆÊ’u‚ÆŠp“x‚Ìİ’è
+    // ä½¿ç”¨ã•ã‚Œã‚‹ãƒ¢ãƒ‡ãƒ«ã®ãƒ­ãƒ¼ãƒ‰ã¨ä½ç½®ã¨è§’åº¦ã®è¨­å®š
     modelhandle[0] = MV1LoadModel("Resource/PlayerModel.mv1");
     MV1SetPosition(modelhandle[0], VGet(-0.4f, 0.2f, -19.2f));
     MV1SetRotationXYZ(modelhandle[0], VGet(0, 2.53f, 0));
@@ -78,7 +79,7 @@ void TitleSetUp()
     modelhandle[3] = MV1DuplicateModel(carrierHandle);
     MV1SetPosition(modelhandle[3], VGet(0.78f, -1.28f, -18.3f));
     MV1SetRotationXYZ(modelhandle[3], VGet(0, PI, 0));
-    // g—p‚³‚ê‚éŠeƒ‚ƒfƒ‹‚Ìƒ}ƒeƒŠƒAƒ‹‚Ìİ’è
+    // ä½¿ç”¨ã•ã‚Œã‚‹å„ãƒ¢ãƒ‡ãƒ«ã®ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¨­å®š
     for (int j = 0; j < 4; j++)
     {
         for (int i = 0; i < MV1GetMaterialNum(modelhandle[j]); i++)
@@ -94,18 +95,18 @@ void TitleSetUp()
 
 void TitleMain()
 {
-    // ƒVƒƒƒhƒEƒ}ƒbƒvŠÖ˜A‚Ìˆ—
+    // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—é–¢é€£ã®å‡¦ç†
     DrawShadow();
     SetUseShadowMap(0, titleShadowHandle);
-    // ƒJƒƒ‰‚Ìİ’è
+    // ã‚«ãƒ¡ãƒ©ã®è¨­å®š
     SetupCamera_Perspective(0.55f);
     SetCameraPositionAndTarget_UpVecY(VGet(0, 0.2f, -22), VGet(0, 1.2f, -12));
-    // bgm‚ª—¬‚ê‚Ä‚¢‚È‚¯‚ê‚Î—¬‚·
+    // bgmãŒæµã‚Œã¦ã„ãªã‘ã‚Œã°æµã™
     if (CheckSoundMem(titleBgm) == 0)
     {
         PlaySoundMem(titleBgm, DX_PLAYTYPE_LOOP);
     }
-    // WSƒL[‚Å‘I‘ğ‚µ‚Ä‚¢‚éƒ{ƒ^ƒ“‚ğØ‚è‘Ö‚¦‚é
+    // WSã‚­ãƒ¼ã§é¸æŠã—ã¦ã„ã‚‹ãƒœã‚¿ãƒ³ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
     if ((Input_GetKeyboardDown(KEY_INPUT_S) || Input_GetKeyboardDown(KEY_INPUT_DOWN)) && !sceneChanging && selected < 2)
     {
         selected++;
@@ -116,12 +117,19 @@ void TitleMain()
         selected--;
         PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
     }
-    // ƒ‚ƒfƒ‹‚Ì•`‰æ
+    // ãƒ¢ãƒ‡ãƒ«ã®æç”»
     DrawModels();
-    for (int i = 0; i < 180; i++)
+    const float cameraZ = GetCameraPosition().z;
+    for (int i = 0; i < MISSILE_SMOKE_COUNT; i++)
     {
-        smokes1[i].DrawSmoke();
-        smokes2[i].DrawSmoke();
+        if (smokes1[i].isActive)
+        {
+            smokes1[i].DrawSmoke(cameraZ);
+        }
+        if (smokes2[i].isActive)
+        {
+            smokes2[i].DrawSmoke(cameraZ);
+        }
     }
     DrawExtendGraph(1000, -200, 2131, 1832, menuBackground, true);
     TitleMenu();
@@ -141,10 +149,10 @@ void Titleinitialize()
 
 void DrawShadow()
 {
-    // ƒVƒƒƒhƒEƒ}ƒbƒv‚Ì•`‰æ”ÍˆÍ‚Ìİ’è‚ğ‚·‚é
+    // ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®æç”»ç¯„å›²ã®è¨­å®šã‚’ã™ã‚‹
     SetShadowMapDrawArea(titleShadowHandle, VGet(-200.0f, -100.0f, -200.0f), VGet(200.0f, 100.0f, 200.0f));
     ShadowMap_DrawSetup(titleShadowHandle);
-    // Šeƒ‚ƒfƒ‹‚Ì•`‰æ
+    // å„ãƒ¢ãƒ‡ãƒ«ã®æç”»
     MV1DrawModel(modelhandle[1]);
     MV1DrawModel(modelhandle[2]);
     MV1DrawModel(modelhandle[0]);
@@ -158,26 +166,34 @@ void DrawModels()
     x += 0.24f;
 
     // MV1SetPosition(carrierHandle,test);
-    // ”wŒi‚Å”ò‚ñ‚Å‚¢‚é‹@‘Ì‚ÌˆÚ“®‚Ìˆ—
+    // èƒŒæ™¯ã§é£›ã‚“ã§ã„ã‚‹æ©Ÿä½“ã®ç§»å‹•ã®å‡¦ç†
     MV1SetPosition(modelhandle[1], VGet(x, 3, z));
     MV1SetPosition(modelhandle[2], VGet(x - 3, 3, z - 2));
-    // ‰Œ‚ÌˆÊ’u‚Ìİ’è
-    smokes1[smokenum].SetPosition(VGet(x - 0.24f, 3, z + 0.2f));
-    smokes2[smokenum].SetPosition(VGet(x - 3 - 0.24f, 3, z - 2 + 0.2f));
-    smokenum++;
-    if (smokenum >= 180)
+    // ?????u????
+    if (titleSmokeInterval <= 0)
     {
-        smokenum = 0;
+        smokes1[smokenum].SetPosition(VGet(x - 0.24f, 3, z + 0.2f));
+        smokes2[smokenum].SetPosition(VGet(x - 3 - 0.24f, 3, z - 2 + 0.2f));
+        smokenum++;
+        titleSmokeInterval = SMOKE_SPAWN_INTERVAL;
+        if (smokenum >= MISSILE_SMOKE_COUNT)
+        {
+            smokenum = 0;
+        }
     }
-    // ƒ‚ƒfƒ‹‚ÌŠp“x‚Ìİ’è
+    else
+    {
+        titleSmokeInterval--;
+    }
+    // ???f????p?x????
     MV1SetRotationXYZ(modelhandle[1], VGet(0, 2.1f, 0));
     MV1SetRotationXYZ(modelhandle[2], VGet(0, 2.1f, 0));
-    // ƒ‚ƒfƒ‹‚Ì•`‰æ
+    // ãƒ¢ãƒ‡ãƒ«ã®æç”»
     MV1DrawModel(modelhandle[1]);
     MV1DrawModel(modelhandle[2]);
     MV1DrawModel(modelhandle[0]);
     MV1DrawModel(modelhandle[3]);
-    // ”wŒi‚Å”ò‚ñ‚Å‚¢‚é‹@‘Ì‚ª“Á’è‚ÌˆÊ’u‚Ü‚Ås‚Á‚½‚çŒ³‚ÌˆÊ’u‚©‚çƒ‰ƒ“ƒ_ƒ€‚É‚¸‚ç‚µ‚½ˆÊ’u‚É–ß‚é
+    // èƒŒæ™¯ã§é£›ã‚“ã§ã„ã‚‹æ©Ÿä½“ãŒç‰¹å®šã®ä½ç½®ã¾ã§è¡Œã£ãŸã‚‰å…ƒã®ä½ç½®ã‹ã‚‰ãƒ©ãƒ³ãƒ€ãƒ ã«ãšã‚‰ã—ãŸä½ç½®ã«æˆ»ã‚‹
     if (z < -60)
     {
         z = (float)get_rand(80, 90);
@@ -187,7 +203,7 @@ void DrawModels()
 
 void TitleButtons()
 {
-    // ƒ{ƒ^ƒ“‚Ìˆ—
+    // ãƒœã‚¿ãƒ³ã®å‡¦ç†
     Start.Main(selected == 0, true, 30);
     Start.SetText("Start");
     Extra.Main(selected == 1, true, 30);
@@ -198,22 +214,22 @@ void TitleButtons()
 
 void TitleMenu()
 {
-    // ƒ{ƒ^ƒ“‚Ìˆ—
+    // ãƒœã‚¿ãƒ³ã®å‡¦ç†
     TitleButtons();
     GameTitle.DrawTextWithSort(1000, 1920, "CANYON RUN", titleFontHandle, SORT_CENTER, 200, true,
                                GetColor(255, 255, 255));
-    // spaceƒL[‚Åê–Ê‚Ì‘JˆÚ‚ğn‚ß‚é
+    // spaceã‚­ãƒ¼ã§å ´é¢ã®é·ç§»ã‚’å§‹ã‚ã‚‹
     if ((Input_GetKeyboardDown(KEY_INPUT_SPACE) || Input_GetKeyboardDown(KEY_INPUT_RETURN)))
     {
         sceneChanging = true;
         PlaySoundMem(interectSound, DX_PLAYTYPE_BACK, true);
         StopSoundMem(titleBgm);
     }
-    // ‘I‘ğ‚³‚ê‚Ä‚¢‚éƒ{ƒ^ƒ“‚É‰‚¶‚½ˆ—
+    // é¸æŠã•ã‚Œã¦ã„ã‚‹ãƒœã‚¿ãƒ³ã«å¿œã˜ãŸå‡¦ç†
     switch (selected)
     {
     case 0:
-        // ƒXƒe[ƒW1‚Ö‚Ì‘JˆÚ
+        // ã‚¹ãƒ†ãƒ¼ã‚¸1ã¸ã®é·ç§»
         if (sceneChanging)
         {
             if (fadeout(0.5f))
@@ -224,11 +240,11 @@ void TitleMenu()
                 scene = SCENE_INSTRUCTION;
             }
         }
-        info.DrawTextWithSort(90, 1920, "ƒQ[ƒ€‚ğƒXƒe[ƒW1‚©‚çŠJn‚µ‚Ü‚·", biggerJpFontHandle, SORT_LEFT, 800, true,
+        info.DrawTextWithSort(90, 1920, "ã‚²ãƒ¼ãƒ ã‚’ã‚¹ãƒ†ãƒ¼ã‚¸1ã‹ã‚‰é–‹å§‹ã—ã¾ã™", biggerJpFontHandle, SORT_LEFT, 800, true,
                               GetColor(255, 255, 255));
         break;
     case 1:
-        // ƒGƒ“ƒhƒŒƒXƒ‚[ƒh‚Ö‚Ì‘JˆÚ
+        // ã‚¨ãƒ³ãƒ‰ãƒ¬ã‚¹ãƒ¢ãƒ¼ãƒ‰ã¸ã®é·ç§»
         if (sceneChanging)
         {
             if (fadeout(0.5f))
@@ -239,16 +255,16 @@ void TitleMenu()
                 scene = SCENE_INST_EX;
             }
         }
-        info.DrawTextWithSort(90, 1920, "ƒGƒ“ƒhƒŒƒXƒ‚[ƒh‚ğŠJn‚µ‚Ü‚·\n‚“ïˆÕ“x‚Å‚·", biggerJpFontHandle, SORT_LEFT,
+        info.DrawTextWithSort(90, 1920, "ã‚¨ãƒ³ãƒ‰ãƒ¬ã‚¹ãƒ¢ãƒ¼ãƒ‰ã‚’é–‹å§‹ã—ã¾ã™\né«˜é›£æ˜“åº¦ã§ã™", biggerJpFontHandle, SORT_LEFT,
                               800, true, GetColor(255, 255, 255));
         break;
     default:
-        // ƒQ[ƒ€‚ğI—¹‚·‚é
+        // ã‚²ãƒ¼ãƒ ã‚’çµ‚äº†ã™ã‚‹
         if (sceneChanging)
         {
             Quit = true;
         }
-        info.DrawTextWithSort(90, 1920, "ƒQ[ƒ€‚ğI—¹‚µ‚Ü‚·", biggerJpFontHandle, SORT_LEFT, 800, true,
+        info.DrawTextWithSort(90, 1920, "ã‚²ãƒ¼ãƒ ã‚’çµ‚äº†ã—ã¾ã™", biggerJpFontHandle, SORT_LEFT, 800, true,
                               GetColor(255, 255, 255));
         break;
     }

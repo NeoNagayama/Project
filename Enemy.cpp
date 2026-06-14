@@ -64,7 +64,7 @@ void Enemy::Main(bool mode)
             offset = playerObject->offset;
             Vulcan(false);
             missile();
-            missileObject.Passive();
+            missileObject.Passive(playerObject->CameraPosition.z);
         }
 
         Position = MV1GetPosition(ModelHandle);
