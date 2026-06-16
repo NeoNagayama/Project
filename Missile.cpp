@@ -31,7 +31,7 @@ void Missile::Main(VECTOR targetPosition, float remainingTime, float speed)
     // ‰Œ‚ÌˆÊ’u‚Ìİ’è
     smokes[smokeNum].SetPosition(Position);
     smokeNum++;
-    if (smokeNum >= 180)
+    if (smokeNum >= 60)
     {
         smokeNum = 0;
     }
@@ -64,10 +64,13 @@ void Missile::guideLosted()
     // ‰e‚ÌˆÊ’u‚Ìİ’è
     smokes[smokeNum].SetPosition(Position);
     smokeNum++;
-    if (smokeNum >= 180)
+    if (smokeNum >= 60)
     {
         smokeNum = 0;
     }
+
+    DrawBillboard3D(VAdd(VScale(MV1GetRotationXYZ(MissileHandle), -2.6f), Position), 0.5f, 0.49f, 4, 0,
+                    missileBurnerHandle, true);
 }
 
 /**
@@ -98,7 +101,7 @@ void Missile::SetUp()
 void Missile::Passive()
 {
     // ‰Œ‚Ìˆ—
-    for (int i = 0; i < 180; i++)
+    for (int i = 0; i < 60; i++)
     {
         smokes[i].DrawSmoke();
     }
