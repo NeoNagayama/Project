@@ -11,7 +11,7 @@ private:
     /* @brief ミサイルのモデルのハンドル */
     int MissileHandle = 0;
     /* @brief 煙のエフェクトの配列 */
-    smoke smokes[180];
+    smoke smokes[60];
     /* @brief そのフレームで新しく描画する煙のエフェクトの番号 */
     int smokeNum = 0;
 public:
