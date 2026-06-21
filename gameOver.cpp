@@ -122,6 +122,14 @@ void GameOverInitialize()
 {
     isRetrySelected = true;
     isSceneChangingFromGameOver = false;
+    if (1 == CheckSoundMem(pitbullSound))
+    {
+        StopSoundMem(pitbullSound);
+    }
+    if (1 == CheckSoundMem(missileAlertSound))
+    {
+        StopSoundMem(missileAlertSound);
+    }
 }
 
 void EndlessGameOver(float round)

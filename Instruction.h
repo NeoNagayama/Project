@@ -26,7 +26,7 @@ public:
     //ボタンの初期化
     void Init();
     //
-    void main(int scene);
+    void Update(int scene);
     /* @brief 操作説明 */
     void inst();
     /* @brief 難易度の選択 */

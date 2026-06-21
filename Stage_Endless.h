@@ -47,5 +47,5 @@ private:
 public:
     void SetUp();
     void Init();
-    void main();
+    void Update();
 };

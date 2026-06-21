@@ -92,8 +92,6 @@ void stage::Main()
         DrawBackWards();
         //敵の移動処理
         enemy.Move(VGet(0, -3, player.Position.z - 70));
-        //敵が演出中も攻撃するようにする
-        enemy.Vulcan(true);
         //ゲーム開始時のクリア目標の説明
         Briefing();
         //エンジン音が鳴っていなければ鳴らす

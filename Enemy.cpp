@@ -61,7 +61,6 @@ void Enemy::Main(bool mode)
         else
         {
             BasePosition = VAdd(playerObject->BasePosition, VGet(0, 0, (float)-Z_OFFSET));
-            offset = playerObject->offset;
             Vulcan(false);
             missile();
             missileObject.Passive();

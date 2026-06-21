@@ -9,7 +9,7 @@ void instruction::Init()
     hard.SetButtonPosition(VGet(1550, 740, 1), 600, 150, 0.9f); // 難易度ハードの位置とサイズの設定
 }
 
-void instruction::main(int scene)
+void instruction::Update(int scene)
 {
     if (Input_GetKeyboardDown(KEY_INPUT_SPACE)) // スペースキーが押されたら
     {

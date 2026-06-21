@@ -268,7 +268,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             // 操作説明画面の処理
         case SCENE_INSTRUCTION:
             // 操作説明画面のインスタンスのメインの処理
-            inst.main(SCENE_INGAME);
+            inst.Update(SCENE_INGAME);
             // 操作説明終了後に処理を行う各ステージのインスタンスの初期化
             stage1.Initialize();
             stage2.Initialize();
@@ -279,18 +279,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             break;
             // エンドレスモードの操作説明
         case SCENE_INST_EX:
-            inst.main(SCENE_EXTRA);
+            inst.Update(SCENE_EXTRA);
             StopSoundMem(ingameBgm);
             break;
         case SCENE_STAGEBUILD:
             // ステージ制作画面の主要な処理
-            bil.main();
+            bil.Update();
             // インゲームのbgmを止める
             StopSoundMem(ingameBgm);
             break;
             // エンドレスモードの処理
         case SCENE_EXTRA:
-            endless.main();
+            endless.Update();
             // bgmが流れていなければ再生する
             if (CheckSoundMem(ingameBgm) == 0)
             {

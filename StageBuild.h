@@ -13,6 +13,6 @@ private:
 
     void save();
 public:
-    void main();
+    void Update();
     void Init();
 };

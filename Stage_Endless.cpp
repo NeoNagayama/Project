@@ -56,7 +56,7 @@ void stageEndless::Init()
     choosedButton = 0;
     gamePhase = 0;
     isKilled = false;
-    stageLength = 800;
+    stageLength = 4000;
     GoalRange = 0;
     baseAmmo = 200;
     baseHealth = 100;
@@ -107,7 +107,7 @@ void stageEndless::StageRandomize()
     }
 }
 
-void stageEndless::main()
+void stageEndless::Update()
 {
     // シャドウマップ描画範囲の設定
     SetShadowMapDrawArea(shadowHandle, VGet(-120.0f, -1.0f, -220.0f + player.CameraPosition.z),

@@ -1,6 +1,6 @@
 #include "StageBuild.h"
 
-void builder::main()
+void builder::Update()
 {
     SetBackgroundColor(80, 80, 80, 255);
     if (Input_GetKeyboardDown(KEY_INPUT_W))
