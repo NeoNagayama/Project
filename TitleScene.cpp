@@ -18,6 +18,7 @@ VECTOR test = VGet(0, 0, 0);
 Button Start;
 Button Extra;
 Button Exit;
+Button Credit;
 UIText GameTitle;
 UIText info;
 int modelhandle[4];
@@ -62,13 +63,15 @@ void getStagePointers(stage *s1, stage *s2, stage *s3, stageEndless *s4)
 void TitleSetUp()
 {
     // 各ボタンの位置を設定する
-    Start.SetButtonPosition(VGet(1550, 445, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
-    Extra.SetButtonPosition(VGet(1550, 645, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
-    Exit.SetButtonPosition(VGet(1550, 845, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
+    Start.SetButtonPosition(VGet(1550, 425, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
+    Extra.SetButtonPosition(VGet(1550, 595, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
+    Exit.SetButtonPosition(VGet(1550, 765, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
+    Credit.SetButtonPosition(VGet(1550, 935, 1), 600, 150, 0.9f, ANCHOR_RIGHT);
     // 各ボタンの画像を設定する
     Start.SetGraph(buttonGraph);
     Extra.SetGraph(buttonGraph);
     Exit.SetGraph(buttonGraph);
+    Credit.SetGraph(buttonGraph);
     // 使用されるモデルのロードと位置と角度の設定
     modelhandle[0] = MV1LoadModel("Resource/PlayerModel.mv1");
     MV1SetPosition(modelhandle[0], VGet(-0.4f, 0.2f, -19.2f));
@@ -106,7 +109,7 @@ void TitleMain()
         PlaySoundMem(titleBgm, DX_PLAYTYPE_LOOP);
     }
     // WSキーで選択しているボタンを切り替える
-    if ((Input_GetKeyboardDown(KEY_INPUT_S) || Input_GetKeyboardDown(KEY_INPUT_DOWN)) && !sceneChanging && selected < 2)
+    if ((Input_GetKeyboardDown(KEY_INPUT_S) || Input_GetKeyboardDown(KEY_INPUT_DOWN)) && !sceneChanging && selected < 3)
     {
         selected++;
         PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
@@ -194,6 +197,8 @@ void TitleButtons()
     Extra.SetText("Endless");
     Exit.Main(selected == 2, true, 30);
     Exit.SetText("Exit");
+    Credit.Main(selected == 3, true, 30);
+    Credit.SetText("Credit");
 }
 
 void TitleMenu()
@@ -240,6 +245,18 @@ void TitleMenu()
             }
         }
         info.DrawTextWithSort(90, 1920, "エンドレスモードを開始します\n高難易度です", biggerJpFontHandle, SORT_LEFT,
+                              800, true, GetColor(255, 255, 255));
+        break;
+    case 3:
+        if (sceneChanging)
+        {
+            if (fadeout(0.5f))
+            {
+                progress = 255;
+                scene = SCENE_CREDIT;
+            }
+        }
+        info.DrawTextWithSort(90, 1920, "クレジットです", biggerJpFontHandle, SORT_LEFT,
                               800, true, GetColor(255, 255, 255));
         break;
     default:

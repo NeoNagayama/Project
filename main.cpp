@@ -9,6 +9,7 @@
 #include "Stage_Endless.h"
 #include "Text.h"
 #include "TitleScene.h"
+#include "Credit.h"
 #include "gameOver.h"
 #include <random>
 #ifdef __cplusplus
@@ -18,7 +19,7 @@ extern "C"
     // NVIDIAのプレミアムグラフィックス（dGPU）を強制する
     __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
 
-    // AMDのハイパフォーマンスグラフィックスを強制する（念のため）
+    // AMDのハイパフォーマンスグラフィックスを強制する
     __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 #ifdef __cplusplus
 }
@@ -165,6 +166,8 @@ instruction inst;
 /** @brief  builder型のbilを宣言*/
 builder bil;
 
+CreditScene credit;
+
 /** @brief  ゲーム全体に使用されるディレクショナルライトのハンドル*/
 int DirectionalLightHandle;
 
@@ -296,6 +299,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             {
                 PlaySoundMem(ingameBgm, DX_PLAYTYPE_LOOP);
             }
+            break;
+        case SCENE_CREDIT:
+            credit.update();
+            StopSoundMem(titleBgm);
             break;
             // タイトル画面の処理
         default:
@@ -501,6 +508,7 @@ void Init()
     endless.SetUp();
     // エンドレスモードの初期化
     endless.Init();
+    credit.start();
 }
 
 /**
