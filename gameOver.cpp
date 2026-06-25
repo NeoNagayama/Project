@@ -62,9 +62,9 @@ void GameOverMain()
     }
     // ボタンの処理
     // isRetrySelectedの値によってどちらのボタンが選ばれているかを判断する
-    Retry.Main(isRetrySelected, true, 60);
+    Retry.Update(isRetrySelected, true, 60);
     Retry.SetText("Retry");
-    GameOverToTitle.Main(!isRetrySelected, true, 60);
+    GameOverToTitle.Update(!isRetrySelected, true, 60);
     GameOverToTitle.SetText("Title");
     // テキストの描画
     GameOverText.DrawTextWithSort(0, 1920, "Mission Failed", titleFontHandle, SORT_CENTER, 350, true,
@@ -140,9 +140,9 @@ void EndlessGameOver(float round)
         PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
     }
     // ボタンの処理
-    Retry.Main(isRetrySelected, true, 60);
+    Retry.Update(isRetrySelected, true, 60);
     Retry.SetText("Retry");
-    GameOverToTitle.Main(!isRetrySelected, true, 60);
+    GameOverToTitle.Update(!isRetrySelected, true, 60);
     GameOverToTitle.SetText("Title");
     // テキストの描画
     GameOverText.DrawTextWithSort(0, 1920, "You Survived %.f Round", titleFontHandle, SORT_CENTER, 350, true,

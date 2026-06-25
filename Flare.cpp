@@ -6,7 +6,7 @@
  * @note フレアの移動方向と初期座標を設定する分は含まれていないので
  *       プレイヤーのスクリプトに用意する必要がある
  */
-void Flare::Main()
+void Flare::Update()
 {
     timer += oneFlame;
     // 煙の位置の設定

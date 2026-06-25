@@ -8,7 +8,7 @@ int test;
  * @details モデルのロード,初期座標の設定,モデルのスケール等の処理を行う
  */
 
-void Player::SetUp()
+void Player::Start()
 {
     // プレイヤーのモデルをロードする
     ModelHandle = MV1LoadModel("Resource/PlayerModel.mv1");
@@ -92,7 +92,7 @@ void Player::camSetUp(float pos)
  *
  * @param bool mode ゲームが追跡フェーズに入っているか
  */
-void Player::Main(bool mode)
+void Player::Update(bool mode)
 {
     Immortal();
     // 体力が0でないとき
@@ -603,7 +603,7 @@ void Player::VulcanProjectile()
     {
         if (bullets[i].isActivated) // 弾が発射された場合
         {
-            if (bullets[i].Main(
+            if (bullets[i].Update(
                     enemyObject->hitbox1,
                     enemyObject->hitbox2)) // 弾の毎フレーム呼ばれる処理を行い敵ののヒットボックスに当たった場合
             {
@@ -668,7 +668,7 @@ void Player::Flare()
         if (Flares[i].isActivated) // 射出されているとき
         {
             // フレアの毎フレーム呼ばれる処理を行う
-            Flares[i].Main();
+            Flares[i].Update();
         }
     }
     FlareCoolDown += oneFlame; // 時間計測用の変数に1フレーム分の秒数を足す

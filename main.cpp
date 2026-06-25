@@ -258,13 +258,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             switch (stages)
             {
             case STAGE1:
-                stage1.Main();
+                stage1.Update();
                 break;
             case STAGE2:
-                stage2.Main();
+                stage2.Update();
                 break;
             case STAGE3:
-                stage3.Main();
+                stage3.Update();
                 break;
             }
             break;
@@ -489,11 +489,11 @@ void Init()
     LoadStage3();
     LoadScore();
     // 各ステージの初期化
-    stage1.SetUp(stage1Obstacle, stage1ObstacleType, stage1movewall);
-    stage2.SetUp(stage2Obstacle, stage2ObstacleType, stage2movewall);
-    stage3.SetUp(stage3Obstacle, stage3ObstacleType, stage3movewall);
+    stage1.Start(stage1Obstacle, stage1ObstacleType, stage1movewall);
+    stage2.Start(stage2Obstacle, stage2ObstacleType, stage2movewall);
+    stage3.Start(stage3Obstacle, stage3ObstacleType, stage3movewall);
     // ステージ制作画面の初期化 ステージクラスの初期化と同じ内容
-    bil.SetUp(stage2Obstacle, stage2ObstacleType, stage2movewall);
+    bil.Start(stage2Obstacle, stage2ObstacleType, stage2movewall);
     // クリア画面で最初に一度だけ呼ばれる処理
     ClearSetUp();
     // ゲームオーバー画面で最初に一度だけ呼ばれる処理
@@ -505,7 +505,7 @@ void Init()
     // ステージ制作画面特有の要素の初期化
     bil.Init();
     // エンドレスモードの一度だけ呼ばれる処理
-    endless.SetUp();
+    endless.Start();
     // エンドレスモードの初期化
     endless.Init();
     credit.start();

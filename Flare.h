@@ -30,7 +30,7 @@ class Flare
      * @note フレアの移動方向と初期座標を設定する分は含まれていないので
      *       プレイヤーのスクリプトに用意する必要がある
      */
-    void Main();
+    void Update();
     /**
      * @brief 煙の描画の処理
      * @details 煙のエフェクトの描画

@@ -50,9 +50,9 @@ void instruction::choiceDifficulty(int scenea)
 {
     // 難易度選択を画面上部に表示する
     text.DrawTextWithSort(0, 1920, "難易度選択", biggerJpFontHandle, SORT_CENTER, 180, true, GetColor(255, 255, 255));
-    normal.Main(dif == 0, true, 30); // ノーマルのボタンを描画
+    normal.Update(dif == 0, true, 30); // ノーマルのボタンを描画
     normal.SetText("NORMAL");        // ボタンのテキストを描画
-    hard.Main(dif == 1, true, 30);   // ハードのボタンを描画
+    hard.Update(dif == 1, true, 30);   // ハードのボタンを描画
     hard.SetText("HARD");            // ボタンのテキスト描画
     if (Input_GetKeyboardDown(KEY_INPUT_S) || Input_GetKeyboardDown(KEY_INPUT_W))
     {

@@ -93,7 +93,7 @@ void builder::Init()
 {
     for (int i = 0; i < 50; i++)
     {
-        moveWalls[i].SetUp();
+        moveWalls[i].Start();
         maps[i].BaseSetUp();
     }
 }

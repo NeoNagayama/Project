@@ -27,7 +27,7 @@ public:
  *       ミサイルを飛ばしてから着弾するまでは毎フレーム呼び出す必要がある
  * 
  */
-	void Main(VECTOR targetPosition, float remainingTime,float speed);
+	void Update(VECTOR targetPosition, float remainingTime,float speed);
     /**
  * @brief ミサイルの開始地点を設定する
  * @details ミサイルの座標を引数の座標に設定する
@@ -47,7 +47,7 @@ public:
  * @brief ミサイルのモデルのロード
  * @details ミサイルのモデルのロードとマテリアルの設定
  */
-    void SetUp();
+    void Start();
     /**
  * @brief 煙の描画の処理
  * @details 煙のエフェクトの描画

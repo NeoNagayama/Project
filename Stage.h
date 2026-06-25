@@ -154,7 +154,7 @@ protected:
     void MoveWallDraw(int i, int pos, bool high, bool mid, bool low);
 public:
     bool isStarted = true;
-    void SetUp(int stage[50], int type[50],int movewalls[50]);
-    void Main();
+    void Start(int stage[50], int type[50],int movewalls[50]);
+    void Update();
     void Initialize();
 };

@@ -83,5 +83,5 @@ public:
     void MovePosition();
     bool DrawMoveWall(bool high, bool mid, bool low, VECTOR hitbox1, VECTOR hitbox2);
     void DrawHole(VECTOR edge1, VECTOR edge2);
-    void SetUp();
+    void Start();
 };

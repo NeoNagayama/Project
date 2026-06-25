@@ -158,7 +158,7 @@ public:
      * @brief 起動時に1度だけ呼び出される処理
      * @details モデルのロード,初期座標の設定,モデルのスケール等の処理を行う
      */
-    void SetUp();
+    void Start();
     /*
      * @brief フレアの処理
      * @details フレアのクールダウン,UIの表示の処理を行う
@@ -175,7 +175,7 @@ public:
      *
      * @param bool mode ゲームが追跡フェーズに入っているか
      */
-    void Main(bool mode);
+    void Update(bool mode);
     /*
      * @brief プレイヤーの回転
      * @details 操作しているキーやtargetAngleの数値をもとに
