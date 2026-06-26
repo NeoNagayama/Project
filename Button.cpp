@@ -7,7 +7,7 @@ void Button::SetGraph(int OriginGraphHandle)
     GraphHandle = OriginGraphHandle;
 }
 
-void Button::Main(bool isSelected, bool shadow, int yoffset)
+void Button::Update(bool isSelected, bool shadow, int yoffset)
 {
     // ƒ{ƒ^ƒ“‚ª‘I‘ğ‚³‚ê‚Ä‚¢‚é‚Æ‚«‚Ìˆ—
     if (isSelected)

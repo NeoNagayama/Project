@@ -12,7 +12,7 @@
  *       ミサイルを飛ばしてから着弾するまでは毎フレーム呼び出す必要がある
  *
  */
-void Missile::Main(VECTOR targetPosition, float remainingTime, float speed)
+void Missile::Update(VECTOR targetPosition, float remainingTime, float speed)
 {
     remainingTime = remainingTime / 0.016f;
     // ミサイルとプレイヤーの位置から角度を求める
@@ -77,7 +77,7 @@ void Missile::guideLosted()
  * @brief ミサイルのモデルのロード
  * @details ミサイルのモデルのロードとマテリアルの設定
  */
-void Missile::SetUp()
+void Missile::Start()
 {
     // モデルのロード
     MissileHandle = MV1LoadModel("Resource/MissileModel.mv1");

@@ -298,7 +298,7 @@ void wallmove::DrawHole(VECTOR edge1, VECTOR edge2)
     SetWriteZBuffer3D(TRUE);
 }
 
-void wallmove::SetUp()
+void wallmove::Start()
 {
     cargoHandle = MV1DuplicateModel(cargoModelOrigin);
     MV1SetRotationXYZ(cargoHandle, VGet(0, PI / 2, 0));

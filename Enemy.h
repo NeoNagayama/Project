@@ -116,11 +116,11 @@ class Enemy : public base
     // ミサイルの発射に関する処理
     void missile();
     // 起動時に呼び出される処理
-    void SetUp();
+    void Start();
     // 機銃に関する処理
     void Vulcan(bool isCutscene);
     // 毎フレーム呼ばれる処理
-    void Main(bool mode);
+    void Update(bool mode);
     // 回避軌道を決定する関数
     void run();
     // 進行方向に合わせてロールする関数

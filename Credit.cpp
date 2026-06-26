@@ -10,7 +10,7 @@ void CreditScene::start()
 void CreditScene::update()
 {
     TextBox.DrawTextWithSort(TEXT_X_L, TEXT_X_R, text, japaneseFontHandle, SORT_LEFT, TEXT_Y, false, fontColor);
-    Exit.Main(true, false, BUTTON_OFFSET);
+    Exit.Update(true, false, BUTTON_OFFSET);
     if (Input_GetKeyboardDown(KEY_INPUT_ESCAPE))
     {
         scene = SCENE_TITLE;

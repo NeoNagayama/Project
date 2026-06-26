@@ -13,6 +13,6 @@ class Bullet
     VECTOR target = zeroVector;
     VECTOR forward = zeroVector;
     VECTOR Position = zeroVector;
-    bool Main(VECTOR hitbox1, VECTOR hitbox2);
+    bool Update(VECTOR hitbox1, VECTOR hitbox2);
     void setUp();
 };

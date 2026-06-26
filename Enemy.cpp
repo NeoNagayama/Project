@@ -2,13 +2,13 @@
 #include <cmath>
 #include <random>
 
-void Enemy::SetUp()
+void Enemy::Start()
 {
     ModelHandle = MV1LoadModel("Resource/EnemyModel.mv1");
     MV1SetPosition(ModelHandle, VGet(0, 0, 0));
     MV1SetScale(ModelHandle, VGet(6, 6, 6));
     Position = VGet(0, 0, 0);
-    missileObject.SetUp();
+    missileObject.Start();
 
     for (int i = 0; i < MV1GetMaterialNum(ModelHandle); i++)
     {
@@ -45,7 +45,7 @@ void Enemy::Init()
     BULLET_DAMAGE = 5.0f;
 }
 
-void Enemy::Main(bool mode)
+void Enemy::Update(bool mode)
 {
 
     if (Health > 0)
@@ -119,7 +119,7 @@ void Enemy::Vulcan(bool isCutscene)
         if (bullets[i].isActivated == true)
         {
 
-            if (bullets[i].Main(playerObject->hitbox1, playerObject->hitbox2))
+            if (bullets[i].Update(playerObject->hitbox1, playerObject->hitbox2))
             {
                 bullets[i].isActivated = false;
 
@@ -252,29 +252,21 @@ void Enemy::MissileLaunch()
     missileflyingTimer += oneFlame;
     if (missileflyingTimer > MISSILE_SHOWUP)
     {
-        if (1 == CheckSoundMem(missileAlertSound))
-        {
-            StopSoundMem(missileAlertSound);
-        }
-        if (0 == CheckSoundMem(pitbullSound))
-        {
-            PlaySoundMem(pitbullSound, DX_PLAYTYPE_BACK);
-        }
-        missileObject.Main(playerObject->Position, MISSILE_HIT_TIME - missileflyingTimer, forwardSpeed);
+        missileObject.Update(playerObject->Position, MISSILE_HIT_TIME - missileflyingTimer, forwardSpeed);
     }
     else
     {
         missileObject.SetStartPosition(VGet(BasePosition.x, BasePosition.y, BasePosition.z + MISSILE_SPAWN_OFFSET));
         if (0 == CheckSoundMem(missileAlertSound))
         {
-            PlaySoundMem(missileAlertSound, DX_PLAYTYPE_BACK);
+            PlaySoundMem(missileAlertSound, DX_PLAYTYPE_LOOP);
         }
     }
     if (missileflyingTimer > MISSILE_HIT_TIME)
     {
-        if (1 == CheckSoundMem(pitbullSound))
+        if (1 == CheckSoundMem(missileAlertSound))
         {
-            StopSoundMem(pitbullSound);
+            StopSoundMem(missileAlertSound);
         }
         isLaunched = false;
         missileflyingTimer = 0;

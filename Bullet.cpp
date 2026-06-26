@@ -1,6 +1,6 @@
 #include "Bullet.h"
 
-bool Bullet::Main(VECTOR hitbox1, VECTOR hitbox2)
+bool Bullet::Update(VECTOR hitbox1, VECTOR hitbox2)
 {
     // ê≥ñ ï˚å¸Ç…à⁄ìÆÇ∑ÇÈ
     Position = VAdd(Position, VScale(VGet(forward.x, -forward.y, forward.z * timeScale), 1));

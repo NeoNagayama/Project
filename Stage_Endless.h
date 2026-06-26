@@ -45,7 +45,7 @@ private:
     void HighScore();
     void E_Pause();
 public:
-    void SetUp();
+    void Start();
     void Init();
     void main();
 };

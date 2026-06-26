@@ -191,13 +191,13 @@ void DrawModels()
 void TitleButtons()
 {
     // ƒ{ƒ^ƒ“‚Ìˆ—
-    Start.Main(selected == 0, true, 30);
+    Start.Update(selected == 0, true, 30);
     Start.SetText("Start");
-    Extra.Main(selected == 1, true, 30);
+    Extra.Update(selected == 1, true, 30);
     Extra.SetText("Endless");
-    Exit.Main(selected == 2, true, 30);
+    Exit.Update(selected == 2, true, 30);
     Exit.SetText("Exit");
-    Credit.Main(selected == 3, true, 30);
+    Credit.Update(selected == 3, true, 30);
     Credit.SetText("Credit");
 }
 

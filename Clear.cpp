@@ -60,9 +60,9 @@ void ClearMain()
             PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
         }
         // É{É^ÉìÇÃèàóù
-        Next.Main(isNextSelected, true, 60);
+        Next.Update(isNextSelected, true, 60);
         Next.SetText("Next Stage");
-        BackToTitle.Main(!isNextSelected, true, 60);
+        BackToTitle.Update(!isNextSelected, true, 60);
         BackToTitle.SetText("Title");
         ClearText.DrawTextWithSort(200, 1920, "STAGE%.f CLEAR", titleFontHandle, SORT_LEFT, 200, true,
                                    GetColor(255, 255, 170), GetColor(50, 50, 50), (float)stages + 1);

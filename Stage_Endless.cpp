@@ -1,6 +1,6 @@
 #include "Stage_Endless.h"
 
-void stageEndless::SetUp()
+void stageEndless::Start()
 {
     // ボタンの位置の設定
     resume.SetButtonPosition(VGet(960, 540, 1), 400, 100, 0.9f);
@@ -19,15 +19,15 @@ void stageEndless::SetUp()
     Buttons[1].SetGraph(buttonGraph);
     Buttons[2].SetGraph(buttonGraph);
     // プレイヤーと敵の初期設定
-    player.SetUp();
-    enemy.SetUp();
+    player.Start();
+    enemy.Start();
     // プレイヤーと敵のポインタをお互いに渡す
     player.EnemySet(&enemy);
     enemy.PlayerSet(&player);
     // 障害物の初期設定
     for (int i = 0; i < 50; i++)
     {
-        moveWalls[i].SetUp();
+        moveWalls[i].Start();
         maps[i].BaseSetUp();
     }
     // 後方のマップの初期設定
@@ -56,7 +56,7 @@ void stageEndless::Init()
     choosedButton = 0;
     gamePhase = 0;
     isKilled = false;
-    stageLength = 800;
+    stageLength = 4000;
     GoalRange = 0;
     baseAmmo = 200;
     baseHealth = 100;
@@ -175,7 +175,7 @@ void stageEndless::main()
         // クリア画面の処理
         else if (isCleared)
         {
-            enemy.Main(true);
+            enemy.Update(true);
             player.clearProcess();
             // ラウンドの結果の表示
             RoundResult();
@@ -187,7 +187,7 @@ void stageEndless::main()
         // ゲームオーバー画面の処理
         else if (isGameOver)
         {
-            player.Main(true);
+            player.Update(true);
             enemy.Position.z += 2;
             enemy.Move(enemy.Position);
             // ゲームオーバー画面への移行の処理

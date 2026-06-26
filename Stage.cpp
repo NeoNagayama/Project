@@ -4,7 +4,7 @@
 #define MOVERANGE 10
 
 
-void stage::SetUp(int obst[50],int type[50],int movewalls[50])
+void stage::Start(int obst[50],int type[50],int movewalls[50])
 {
     //使用されるボタンの位置とサイズを設定する
     resume.SetButtonPosition(VGet(960, 540, 1), 400, 100, 0.9f);
@@ -23,8 +23,8 @@ void stage::SetUp(int obst[50],int type[50],int movewalls[50])
     Buttons[1].SetGraph(buttonGraph);
     Buttons[2].SetGraph(buttonGraph);
     //プレイヤーと敵の初期設定
-    player.SetUp();
-    enemy.SetUp();
+    player.Start();
+    enemy.Start();
     //プレイヤーと敵にお互いのポインタを渡す
     player.EnemySet(&enemy);
     enemy.PlayerSet(&player);
@@ -38,7 +38,7 @@ void stage::SetUp(int obst[50],int type[50],int movewalls[50])
         obstacleType[i] = type[i];
         moveWallType[i] = movewalls[i];
         //障害物の初期化
-        moveWalls[i].SetUp();
+        moveWalls[i].Start();
         maps[i].BaseSetUp();
     }
     for (int i = 0; i < 30; i++)
@@ -47,7 +47,7 @@ void stage::SetUp(int obst[50],int type[50],int movewalls[50])
         backWards[i].BaseSetUp();
     }
 }
-void stage::Main()
+void stage::Update()
 {
     //シャドウマップの設定
     SetShadowMapDrawArea(shadowHandle, VGet(-120.0f, -1.0f, -220.0f + player.CameraPosition.z), VGet(120.0f, 240.0f, 220.0f + player.CameraPosition.z));
@@ -92,8 +92,6 @@ void stage::Main()
         DrawBackWards();
         //敵の移動処理
         enemy.Move(VGet(0, -3, player.Position.z - 70));
-        //敵が演出中も攻撃するようにする
-        enemy.Vulcan(true);
         //ゲーム開始時のクリア目標の説明
         Briefing();
         //エンジン音が鳴っていなければ鳴らす
@@ -124,7 +122,7 @@ void stage::Main()
         else if (isCleared)
         {
             //敵とプレイヤーの処理
-            enemy.Main(true);
+            enemy.Update(true);
             player.clearProcess();
             //インゲームからクリア画面に移動するまでの処理
             IngameToClear();
@@ -139,7 +137,7 @@ void stage::Main()
         {
             //敵とプレイヤーの処理
             MV1DrawModel(enemy.ModelHandle);
-            player.Main(true);
+            player.Update(true);
             enemy.Position.z += 2;
             enemy.Move(enemy.Position);
             //インゲームからゲームオーバー画面に遷移するまでの処理
@@ -749,8 +747,8 @@ void stage::RunPhase()
     DrawExtendGraph(1716, 100, 1820, 980, gaugeHandle, true);
     DrawRectExtendGraph(1738, (int)(135 + (810 -810* ((player.BasePosition.z - startPosZ) / (stageLength - startPosZ)))), 1798, 945, 0, (int)(2097 - (2097 * (player.BasePosition.z - startPosZ) / (stageLength - startPosZ))), 156, (int)(2097 * (player.BasePosition.z - startPosZ) / (stageLength - startPosZ)), barHandle, true);
     //プレイヤーと敵の処理
-    player.Main(false);
-    enemy.Main(false);
+    player.Update(false);
+    enemy.Update(false);
 }
 void stage::OverShootPhase()
 {
@@ -797,7 +795,7 @@ void stage::ChasePhase()
         DrawExtendGraph(450, 50,1470,241, E_gauge, true);
         DrawRectExtendGraph(476 ,65, (int)(476  + (968 * ((float)enemy.Health / 100))),165,0,0, (int)(3305 * ((float)enemy.Health / 100)), 376, E_bar, true);
         enemyHealthText.DrawTextWithSort(0, 1920, "ENEMY HP", BiggerFontHandle, SORT_CENTER, 180, true, GetColor(255, 0, 0));
-        player.Main(true);
+        player.Update(true);
     }
     //クリア目標の表示
     objectiveText.DrawTextWithSort(70, 1920, "目標:敵機を撃墜しろ", japaneseFontHandle, SORT_LEFT, 60, true, GetColor(0, 255, 0), GetColor(50, 50, 50));
@@ -809,7 +807,7 @@ void stage::ChasePhase()
     //時間切れでないときの処理
     else
     {
-        enemy.Main(true);
+        enemy.Update(true);
         //残り時間の表示
         missionTime.DrawTextWithSort(0, 1920, "Remaining time : %.f/120 sec", fontHandle, SORT_CENTER, 230, false, GetColor(0, 255, 0), GetColor(0, 255, 0),(float)(timeLimit-(int)missionTimer.GetElapsed(true)));
     }
@@ -853,7 +851,7 @@ void stage::PauseControll()
     //ポーズメニューのボタンを描画する
     for (int i = 0; i < 3; i++)
     {
-        Buttons[i].Main(choosedButton == i, true, 40);
+        Buttons[i].Update(choosedButton == i, true, 40);
     }
     //選択されたボタン別の処理
     switch (choosedButton) {

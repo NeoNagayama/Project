@@ -24,7 +24,7 @@ class Button
     bool isSelected = false;
 
   public:
-    void Main(bool isSelected, bool shadow, int yoffset);
+    void Update(bool isSelected, bool shadow, int yoffset);
     void SetGraph(int OriginGraphHandle);
     void SetButtonPosition(VECTOR CenterPosition, float width, float height, float reductionRatio,
                            int anchor = ANCHOR_CENTER);
