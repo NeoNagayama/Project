@@ -153,6 +153,8 @@ int stage1movewall[50] = {3, 1, 5, 3, 2, 1, 4, 5, 2, 1, 1, 3, 5, 2, 3, 1, 5, 1, 
 int stage2movewall[50] = {3, 1, 5, 3, 2, 1, 4, 5, 2, 1, 1, 3, 5, 2, 3, 1, 5, 1, 2, 4, 1, 5, 3, 2, 4,
                           1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1};
 
+
+
 /** @brief  stage型のstage1を宣言*/
 stage stage1;
 /** @brief  stage型のstage2を宣言*/
@@ -178,7 +180,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetUseDirect3D11AdapterIndex(0);
     // SetFullScreenResolutionMode(DX_FSRESOLUTIONMODE_MAXIMUM);
     // 奥行0.1～1000までをカメラの描画範囲とする
-    SetCameraNearFar(0.1f, 5000.0f);
+    SetCameraNearFar(CAMERA_NEAR, 5000.0f);
     // ライティング処理を行う
     SetUseLighting(TRUE);
     // ライトを有効にする
@@ -203,15 +205,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // Materialのパラメーターの宣言
     MATERIALPARAM Material;
     // ディフューズカラーの設定
-    Material.Diffuse = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
-    // アンビエントカラーの設定の設定
-    Material.Ambient = GetColorF(0.2f, 0.2f, 0.24f, 0.1f);
+    Material.Diffuse = MAT_DIF;
+                           // アンビエントカラーの設定の設定
+    Material.Ambient = MAT_AMB;
     // スぺキュラカラーの設定
-    Material.Specular = GetColorF(0.2f, 0.2f, 0.2f, 0.2f);
+    Material.Specular = MAT_SPC;
     // エミッシブカラーの設定
-    Material.Emissive = GetColorF(0.1f, 0.1f, 0.1f, 0.0f);
+    Material.Emissive = MAT_EMI;
     // スペキュラの強さの設定
-    Material.Power = 0.1f;
+    Material.Power = MAT_POW;
     // 使用されるマテリアルのパラメーターを設定する
     SetMaterialParam(Material);
     // ディレクショナルライトのハンドルを生成する
@@ -308,6 +310,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         default:
             // 背景の描画
             DrawGraph3D(0, 600, 1800, backGroundHandle, false);
+            
             // タイトル画面の主要な処理
             TitleMain();
             // インゲームのbgmを止める

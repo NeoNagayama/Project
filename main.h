@@ -104,6 +104,34 @@ extern int sideObstacle;
 extern bool isGetDamaged;
 extern int difficulty;
 extern float shakeScale;
+
+
+//カメラの描画範囲
+constexpr float CAMERA_NEAR = 0.1f;
+constexpr float CAMERA_FAR = 5000.0f;
+//カメラ座標
+constexpr VECTOR CAM_POS = {0.0f, 0.0f, -20.0f};
+//カメラの焦点
+constexpr VECTOR CAM_ANGLE = {0.0f, 0.0f, 0.0f};
+
+
+//マテリアルのディフューズカラー
+constexpr COLOR_F MAT_DIF = {0.2f, 0.2f, 0.2f, 0.2f};
+
+//マテリアルのアンビエントカラー
+constexpr COLOR_F MAT_AMB = {0.2f, 0.2f, 0.24f, 0.1f};
+
+//マテリアルのスペキュラカラー
+constexpr COLOR_F MAT_SPC = {0.2f, 0.2f, 0.2f, 0.2f};
+
+//マテリアルのエミッシブカラー
+constexpr COLOR_F MAT_EMI = {0.1f, 0.1f, 0.1f, 0.0f};
+
+//スペキュラの強さ
+constexpr float MAT_POW = 0.1f;
+
+
+//ディレクショナルライトの角度
 /** @brief 画面識別用のenum */
 enum SCENES
 {
